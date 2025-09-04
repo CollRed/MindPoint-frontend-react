@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
+import rightImage from "@assets/flower-reg1.1.png";
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -38,8 +39,15 @@ export default function LoginPage() {
 
     return (
         <div className="login-page">
+            {/* Логотип */}
+            <div className="login-logo">
+                <span className="logo-text">MINDPOINT</span>
+                <div className="logo-underline" />
+            </div>
+
+            {/* Основной контейнер формы */}
             <div className="login-card">
-                <h2>Вход</h2>
+                <h2>Авторизация</h2>
                 <form onSubmit={handleLogin}>
                     <input
                         type="text"
@@ -55,12 +63,15 @@ export default function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button type="submit">Войти</button>
+                    <button type="submit">Зарегистрироваться</button>
                 </form>
                 <p className="register-link">
                     Нет аккаунта? <a href="/register">Зарегистрироваться</a>
                 </p>
             </div>
+
+            {/* Цветок справа */}
+            <img src={rightImage} alt="Цветок" className="login-flower" />
         </div>
     );
 }

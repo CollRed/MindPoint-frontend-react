@@ -1,0 +1,30 @@
+.app-footer {
+    background-color: #fff;
+    border-top: 1px solid #e5e5e5;
+    padding: 20px 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: #888;
+    text-align: center;
+    height: 75px;
+    width: 100vw;
+    box-sizing: border-box;
+}
+
+
+.footer-links {
+    display: flex;
+    justify-content: space-between;
+    width: 1126px;
+    height: 28px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.footer-links span {
+    font-size: 24px;
+    color: #4D4D4D66;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+}

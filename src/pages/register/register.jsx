@@ -1,7 +1,7 @@
 import './register.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import leftImage from '@assets/left-back.png';
+import leftImage from '@assets/flower-reg1.1.png';
 import rightImage from '@assets/right-back.png';
 
 export default function RegisterPage() {
@@ -60,12 +60,6 @@ export default function RegisterPage() {
             {/* Форма */}
             <div
                 className="register-card"
-                style={{
-                    backgroundImage: `url(${rightImage})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right center',
-                    backgroundSize: '40%',
-                }}
             >
                 <h2>Регистрация</h2>
                 <form className="form" onSubmit={handleRegister}>

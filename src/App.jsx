@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RegisterPage from './pages/register/register.jsx';
 import LoginPage from './pages/login/LoginPage.jsx';
 import HomePage from './pages/home/HomePage.jsx';
+import EmployeesPage from './pages/employees/employees.jsx';
+import MainLayout from './layouts/main.jsx';
 
 function App() {
     return (
@@ -9,8 +11,27 @@ function App() {
             <Routes>
                 <Route path="/" element={<Navigate to="/login" />} />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/home" element={<HomePage />} />
                 <Route path="/register" element={<RegisterPage />} />
+
+                {/* Статистика */}
+                <Route
+                    path="/home"
+                    element={
+                        <MainLayout>
+                            <HomePage />
+                        </MainLayout>
+                    }
+                />
+
+                {/* Сотрудники */}
+                <Route
+                    path="/employees"
+                    element={
+                        <MainLayout>
+                            <EmployeesPage />
+                        </MainLayout>
+                    }
+                />
             </Routes>
         </BrowserRouter>
     );

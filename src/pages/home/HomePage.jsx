@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import MainLayout from '../../layouts/main.jsx';
 import './home.css';
 
 
@@ -41,15 +42,17 @@ function HomePage() {
     };
 
     return (
-        <div className="home-container">
-            <h2>Home Page</h2>
-            <button onClick={handleLogout}>Выйти</button>
+            <div className="home-wrapper">
+                <div className="home-container">
+                    <h2>Home Page</h2>
+                    <button onClick={handleLogout}>Выйти</button>
 
-            <hr />
+                    <hr />
 
-            <button onClick={handleApiCheck}>Проверить API</button>
-            <p>Ответ API: {apiResponse}</p>
-        </div>
+                    <button onClick={handleApiCheck}>Проверить API</button>
+                    <p>Ответ API: {apiResponse}</p>
+                </div>
+            </div>
     );
 }
 

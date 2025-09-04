@@ -1,12 +1,21 @@
 .home-container {
     max-width: 600px;
-    margin: 60px auto;
+    margin: 0 auto;
     padding: 20px;
     background-color: #f9f9ff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     font-family: sans-serif;
     text-align: center;
+
+}
+.home-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 75px); /* 100% экрана минус футер */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .home-container h2 {
