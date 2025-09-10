@@ -43,26 +43,24 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="register-wrapper">
-            {/* Логотип */}
-            <div className="logo-wrapper">
-                <div className="logo">
-                    MINDPOINT
-                    <div className="logo-underline" />
-                </div>
-            </div>
+        <div className="register-bg">
+            <div className="ellipse ellipse-left"></div>
+            <div className="ellipse ellipse-right"></div>
 
-            {/* Левый фон */}
-            <div className="left-side">
+            <header className="register-header">
+                <div className="register-logo">
+                    MINDPOINT
+                    <div className="register-underline" />
+                </div>
+            </header>
+
+            <div className="register-flower">
                 <img src={leftImage} alt="Цветок" />
             </div>
 
-            {/* Форма */}
-            <div
-                className="register-card"
-            >
-                <h2>Регистрация</h2>
-                <form className="form" onSubmit={handleRegister}>
+            <div className="register-card">
+                <h2 className="register-title">Регистрация</h2>
+                <form className="register-form" onSubmit={handleRegister}>
                     <input
                         type="text"
                         name="full_name"
@@ -95,10 +93,12 @@ export default function RegisterPage() {
                         onChange={handleChange}
                         required
                     />
-                    <button type="submit">Зарегистрироваться</button>
+                    <button type="submit" className="register-btn">
+                        <span className="register-btn-text">Зарегистрироваться</span>
+                    </button>
                 </form>
-                <p className="login-link">
-                    Уже есть аккаунт? <a href="/login">Войти</a>
+                <p className="register-link">
+                    У вас уже есть аккаунт? <a href="/login">Войти</a>
                 </p>
             </div>
         </div>

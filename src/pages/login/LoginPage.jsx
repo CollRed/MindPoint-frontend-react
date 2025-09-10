@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 import rightImage from "@assets/flower-reg1.1.png";
@@ -6,46 +6,63 @@ import rightImage from "@assets/flower-reg1.1.png";
 export default function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const access = localStorage.getItem('access');
+        const isManager = localStorage.getItem('isManager') === 'true';
+
+        if (access) {
+            if (isManager) {
+                navigate('/home');
+            } else {
+                navigate('/employee-dashboard');
+            }
+        }
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setErrorMessage(''); // очистим старую ошибку
 
-        const data = {
-            username,
-            password,
-        };
+        const data = { username, password };
 
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
-                credentials: 'include', // 👈 обязательно, чтобы записать refresh_token куку
+                credentials: 'include',
             });
 
             if (!response.ok) {
-                throw new Error('Ошибка авторизации');
+                setErrorMessage('Неправильный логин или пароль');
+                return;
             }
 
-            const { access } = await response.json();
-            localStorage.setItem('access', access); // 👈 только access
+            const result = await response.json();
+            localStorage.setItem('access', result.access);
+            localStorage.setItem('isManager', result.isManager);
 
-            navigate('/home');
+            if (result.isManager) {
+                navigate('/home');
+            } else {
+                navigate('/employee-dashboard');
+            }
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            setErrorMessage('Ошибка подключения к серверу');
         }
     };
 
     return (
         <div className="login-page">
-            {/* Логотип */}
             <div className="login-logo">
                 <span className="logo-text">MINDPOINT</span>
                 <div className="logo-underline" />
             </div>
 
-            {/* Основной контейнер формы */}
             <div className="login-card">
                 <h2>Авторизация</h2>
                 <form onSubmit={handleLogin}>
@@ -63,14 +80,18 @@ export default function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button type="submit">Зарегистрироваться</button>
+                    <button type="submit">Войти</button>
+
+                    {errorMessage && (
+                        <p className="login-error">{errorMessage}</p>
+                    )}
                 </form>
+
                 <p className="register-link">
                     Нет аккаунта? <a href="/register">Зарегистрироваться</a>
                 </p>
             </div>
 
-            {/* Цветок справа */}
             <img src={rightImage} alt="Цветок" className="login-flower" />
         </div>
     );
