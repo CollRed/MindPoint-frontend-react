@@ -1,135 +1,159 @@
 .login-page {
-    position: relative;
+    min-height: 100vh;
     width: 100vw;
-    height: 100vh;
-    background: linear-gradient(135deg, #f0f3ff 0%, #fdf5ff 100%);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Raleway', sans-serif;
+    background: no-repeat center center;
+    background-size: cover;
+    position: relative;
+    overflow-x: hidden;
 }
 
+
+/* ЛОГО */
 .login-logo {
-    display: inline-block;
-    position: absolute;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 10;
-}
-
-.logo-text {
-    display: inline-block;
-    font-size: 32px;
-    font-weight: 600;
-    color: #4D4D4D;
-    font-family: 'Raleway', sans-serif;
-    line-height: 100%;
-}
-
-.logo-underline {
-    width: 176px;
-    height: 6px;
-    flex-shrink: 0;
-    border-radius: 5px;
-    background: var(--green, linear-gradient(210deg, #A6E8FF 13.4%, #B280F5 86.6%));
-    margin: 0 auto;
-    margin-top: 6px;
-}
-
-.login-flower {
-    position: absolute;
-    top: 83px;
-    right: 112px;
-    bottom: 0;
-    height: 1020px;
-    transform: scaleX(-1);
-    object-fit: contain;
-    pointer-events: none;
-    z-index: 1;
-}
-
-
-.login-card {
-    background-color: white;
-    border-radius: 30px;
-    padding: 40px 32px;
-    width: 568px;
-    height: 358px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    z-index: 2;
-    position: absolute;
-    top: 50%;
-    left: 15%;
-    transform: translateY(-50%);
+    margin-top: 20px;
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.login-card h2 {
-    font-size: 24px;
+.logo-text {
+    color: #4D4D4D;
+    font-family: 'Raleway', Arial, sans-serif;
+    font-size: 32px;
+    font-style: normal;
     font-weight: 600;
-    margin-bottom: 24px;
-    color: #333;
+    line-height: normal;
+    display: inline-block;
+}
+
+.logo-underline-img {
+    width: 176px;
+    height: 6px;
+    display: block;
+    margin: 4px auto 0 auto;
+}
+
+
+/* КАРТОЧКА */
+.login-card {
+    width: 568px;
+    height: 358px;
+    border-radius: 30px;
+    left: 303px;
+    top: 298px;
+    bottom: 353px;
+    background: #FFF;
+    box-shadow: 0 23px 15px -8px rgba(182, 177, 186, 0.91);
+    padding: 42px 52px 24px 53px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.login-card h2 {
+    color: #4D4D4D;
     text-align: center;
+    font-family: 'Raleway', Arial, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 24px;
+
+}
+
+/* Форма */
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
 }
 
 .login-card input {
-    width: 100%;
-    color: #333;
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    outline: none;
-    transition: border 0.2s ease;
-    background-color: white;
-}
-
-.login-card input:focus {
-    border-color: #9D6BFF;
+    width: 520px;
+    height: 40px;
+    border: 1px solid #E6E6E6;
+    border-radius: 15px;
+    padding: 0 18px;
+    font-size: 16px;
+    font-family: Raleway, sans-serif;;
+    background: #FFF;
+    color: #4D4D4D;
+    box-sizing: border-box;
 }
 
 .login-card button {
-    width: 100%;
-    padding: 12px 16px;
-    background-color: #9D6BFF;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 20px;
+    display: flex;
+    width: 520px;
+    height: 45px;
+    padding: 6.4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #722ED1;
+    color: #FFF;
+    font-size: 16px;         /* ← по фигме */
+    font-weight: 400;        /* ← по фигме */
+    font-family: 'Roboto', Arial, sans-serif; /* ← всегда явно пиши, иначе унаследуется что-то другое */
+    line-height: 24px;       /* ← по фигме */
+    text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    margin-top: 8px;
+    transition: background 0.2s;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
 }
 
 .login-card button:hover {
-    background-color: #a67fff;
+    background: #8c47e2;
 }
 
 .login-error {
-    margin-top: 12px;
-    color: #ff4d4f;
-    font-size: 14px;
+    color: #E93333;
+    font-size: 15px;
+    margin-bottom: 0;
     text-align: center;
-    font-weight: 500;
 }
 
+/* Блок регистрации */
 .register-link {
-    margin-top: 12px;
-    font-size: 14px;
-    color: #555;
-    text-align: center;
+    width: 100%;                 /* пусть занимает всю ширину родителя */
+    margin-top: 24px;
+    color: #4D4D4D;
+    text-align: center;          /* чтобы было по центру */
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
-
 .register-link a {
-    color: #9D6BFF;
+    color: #7029CC;
     text-decoration: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    /* маленький отступ если надо */
 }
 
-.register-link a:hover {
-    text-decoration: underline;
+
+
+.login-flower {
+    position: absolute;
+    top: 95px;            /* отступ сверху по фигме */
+    right: 140px;
+    left: 968px;/* отступ справа по фигме */
+    width: 812px;         /* ширина картинки */
+    height: 980px;
+    pointer-events: none;
+    object-fit: cover;/* не мешает клику по форме */
+    z-index: 1;           /* подними/опусти при необходимости */
+    transform: scaleX(-1);
 }
+

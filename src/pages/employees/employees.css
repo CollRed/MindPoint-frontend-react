@@ -1,37 +1,71 @@
-.employees-wrapper {
+.employees-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #E3D8F6 0%, #B6F0FF 100%);
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: calc(100vh - 75px); /* если футер 75px */
-    box-sizing: border-box;
-    padding: 20px;
+    align-items: flex-start;
+    padding-top: 260px;
 }
 
-.employees-container {
-    text-align: center;
-    background-color: #f4f4f8;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.employees-block {
+    width: 1360px; /* пример по макету, подгони под свой */
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 6px 24px rgba(182, 177, 186, 0.28);
+    padding: 0;
+    overflow: hidden;
 }
 
-.employees-container h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
+.employees-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    font-size: 15px;
+    background: #fff;
+    table-layout: fixed; /* !!! Фиксированные колонки !!! */
+}
+
+.employees-table thead tr {
+    background: #F5F2FA;
+    height: 54px;
+}
+
+.employees-table th,
+.employees-table td {
+    padding: 12px 0 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid #E3D8F6;
+    color: #333;
+    font-weight: 400;
+    height: 44px;
+    font-size: 16px;
+    /* Гарантированная высота строки */
+}
+
+.employees-table th {
+    font-weight: 600;
+    font-size: 16px;
     color: #333;
 }
 
-.employees-container button {
-    padding: 10px 24px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    background-color: #4f46e5;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+.employees-table tr:last-child td {
+    border-bottom: none;
 }
 
-.employees-container button:hover {
-    background-color: #4338ca;
+.dashed-border {
+    border-left: 2px dashed #43b5e7 !important;
+    border-right: 2px dashed #43b5e7 !important;
+    text-align: center;
+}
+
+/* Жёстко фиксируем ширины по макету */
+.employees-table th:nth-child(1), .employees-table td:nth-child(1) { width: 320px; }
+.employees-table th:nth-child(2), .employees-table td:nth-child(2) { width: 240px; }
+.employees-table th:nth-child(3), .employees-table td:nth-child(3) { width: 190px; }
+.employees-table th:nth-child(4), .employees-table td:nth-child(4) { width: 190px; }
+.employees-table th:nth-child(5), .employees-table td:nth-child(5) { width: 190px; }
+
+.employees-table tbody tr:hover {
+    background: #F3F5FF;
+    transition: background 0.15s;
 }

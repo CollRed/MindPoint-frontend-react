@@ -2,6 +2,7 @@ import './header.css';
 import avatar from '@assets/avatar.png';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
+import underlineImg from '@assets/logo-underline.png';
 
 export default function Header() {
     const location = useLocation();
@@ -44,7 +45,12 @@ export default function Header() {
                     </NavLink>
 
                     {/* Градиентная линия */}
-                    <div className="tab-underline" style={underlineStyle} />
+                    <img
+                        src={underlineImg}
+                        alt=""
+                        className="logo-underline-img1"
+                        style={underlineStyle}
+                    />
                 </div>
 
                 <div className="header-avatar">

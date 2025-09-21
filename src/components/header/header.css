@@ -62,10 +62,10 @@
     color: #4D4D4D;
 }
 
-.tab-underline {
+.logo-underline-img1 {
     position: absolute;
     width: 178px;
-    bottom: -4px;
+    bottom: -6px;
     height: 6px;
     border-radius: 5px;
     background: linear-gradient(to right, #B280F5, #A6E8FF);

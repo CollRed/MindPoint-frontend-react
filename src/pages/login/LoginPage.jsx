@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 import rightImage from "@assets/flower-reg1.1.png";
+import loginBg from '@assets/background-login.png';
+import underlineImg from '@assets/underline.png';
+import { authFetch } from "../../utils/authFetch.js";
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -10,7 +13,7 @@ export default function LoginPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const access = localStorage.getItem('access');
+        const access = localStorage.getItem('access_token');
         const isManager = localStorage.getItem('isManager') === 'true';
 
         if (access) {
@@ -20,16 +23,16 @@ export default function LoginPage() {
                 navigate('/employee-dashboard');
             }
         }
-    }, []);
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // очистим старую ошибку
+        setErrorMessage('');
 
         const data = { username, password };
 
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await authFetch('/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -42,7 +45,7 @@ export default function LoginPage() {
             }
 
             const result = await response.json();
-            localStorage.setItem('access', result.access);
+            localStorage.setItem('access_token', result.access); // <-- ВАЖНО!
             localStorage.setItem('isManager', result.isManager);
 
             if (result.isManager) {
@@ -57,10 +60,13 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="login-page">
+        <div
+            className="login-page"
+            style={{ backgroundImage: `url(${loginBg})` }}
+        >
             <div className="login-logo">
                 <span className="logo-text">MINDPOINT</span>
-                <div className="logo-underline" />
+                <img src={underlineImg} alt="" className="logo-underline-img" />
             </div>
 
             <div className="login-card">
@@ -88,7 +94,7 @@ export default function LoginPage() {
                 </form>
 
                 <p className="register-link">
-                    Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+                    Нету аккаунта? <a href="/register">Зарегистрироваться</a>
                 </p>
             </div>
 

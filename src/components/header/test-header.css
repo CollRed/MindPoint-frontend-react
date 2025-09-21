@@ -1,0 +1,59 @@
+.test-header {
+    width: 100vw;
+    height: 80px;
+    background: #FFF;
+    position: relative;
+    top: 0;
+    left: 0;
+    background: rgba(255,255,255,0.84);
+    backdrop-filter: blur(16px);
+}
+
+.test-header-avatar {
+    position: absolute;
+    top: 8px;
+    left: 1714px;
+    width: 65px;
+    height: 65px;
+    border-radius: 65px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 141px;
+
+}
+
+.test-header-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 65px;
+}
+
+.test-header-title {
+    color: #4D4D4D;
+    text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    position: absolute;
+    left: 849px;
+    top: 20px;
+}
+
+.logo-underline-img3 {
+    position: absolute;
+    left: 849px;
+    top: 62px;
+    width: 221px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    display: block;
+    object-fit: contain;
+}
+
+

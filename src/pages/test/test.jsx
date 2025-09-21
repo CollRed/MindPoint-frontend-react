@@ -2,17 +2,25 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authFetch } from '../../utils/authFetch';
 import './test.css';
+import StepHeader from "../../components/header/step-header.jsx";
+import Footer from "../../components/footer/footer";
+import rightImage1 from "@assets/hello-flower.svg";
+import pychaQuest from '@assets/pycha-quest.svg';
+import testCloud from '@assets/test-cloud.svg';
+import testShadow from '@assets/test-shadow.svg';
+import testText from '@assets/test-text.svg';
 
 export default function TestingPage() {
-    const [step, setStep] = useState('intro'); // 'intro' | 'question' | 'finish'
+    const [step, setStep] = useState('intro');
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState({});
+    const [selected, setSelected] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         authFetch('/dass9/random', {
-            credentials: 'include' // если backend проверяет refresh_token
+            credentials: 'include'
         })
             .then(res => res.json())
             .then(data => setQuestions(data))
@@ -36,15 +44,21 @@ export default function TestingPage() {
             setCurrentIndex(currentIndex + 1);
         } else {
             setStep('finish');
-            saveResults(); // 👈 сохраняем результаты
         }
     };
+
+    useEffect(() => {
+        if (step === 'finish' && Object.keys(answers).length === questions.length) {
+            saveResults();
+        }
+        // eslint-disable-next-line
+    }, [step, answers, questions]);
 
     const saveResults = async () => {
         const grouped = {
             depression: 0,
             stress: 0,
-            anxiety: 0
+            anxiety: 0,
         };
 
         questions.forEach((q) => {
@@ -74,14 +88,44 @@ export default function TestingPage() {
         }
     };
 
+    // Сброс выбора при смене вопроса
+    useEffect(() => {
+        setSelected(null);
+    }, [currentIndex]);
+
     return (
-        <div className="testing-wrapper">
+        <div className={`testing-wrapper ${
+            step === 'intro' ? 'intro-bg' : step === 'question' ? 'question-bg' : ''
+        }`}>
+
+            {/* Цветок только на intro */}
+            {step === 'intro' && (
+                <img src={rightImage1} alt="Цветок" className="hello-flower" />
+            )}
+
+            {step === 'question' && (
+                <img src={pychaQuest} alt="Пуча" className="pycha-quest" />
+            )}
+            {step === 'question' && (
+                <img src={testCloud} alt="Облако" className="test-cloud" />
+
+            )}
+            {step === 'question' && (
+                <img src={testText} alt="Текст" className="test-text" />
+
+            )}
+            {step === 'question' && (
+                <img src={testShadow} alt="Тень Пучи" className="test-shadow" />
+            )}
+
+            <StepHeader step={step} />
+
             {step === 'intro' && (
                 <div className="intro-block">
                     <h2>Перед вами тест из 9 вопросов</h2>
                     <p>
-                        Отвечайте честно, исходя из того, что вы чувствовали со вчерашнего дня.
-                        Это займет менее 1 минуты.
+                        Пожалуйста, отвечайте честно, исходя из того, что вы чувствовали со вчерашнего дня. Ваши ответы помогут системе лучше понять ваше самочувствие.
+                        <br />Это займёт менее 1 минуты.
                     </p>
                     <button className="primary-btn" onClick={startTest}>
                         Пройти тестирование
@@ -91,21 +135,40 @@ export default function TestingPage() {
 
             {step === 'question' && questions.length > 0 && (
                 <div className="question-block">
-                    <div className="question-header">
-                        Вопрос {currentIndex + 1} / {questions.length}
+
+                    <div className="question-row">
+                        <div className="question-header">
+                            <span className="q-num">{currentIndex + 1}</span>
+                            <span className="q-slash">/</span>
+                            <span className="q-total">{questions.length}</span>
+                        </div>
+                        <div className="question-text">
+                            {questions[currentIndex].text}
+                        </div>
                     </div>
-                    <div className="question-text">{questions[currentIndex].text}</div>
                     <div className="answers-block">
                         {Object.entries(questions[currentIndex].answers).map(([key, value]) => (
                             <button
                                 key={key}
-                                className="answer-btn"
-                                onClick={() => handleAnswer(key)}
+                                className={`answer-btn${selected === key ? ' selected' : ''}`}
+                                onClick={() => setSelected(key)}
+                                type="button"
                             >
                                 {value}
                             </button>
                         ))}
                     </div>
+                    <button
+                        className="choose-btn"
+                        disabled={!selected}
+                        onClick={() => {
+                            handleAnswer(selected);
+                            setSelected(null);
+                        }}
+                        type="button"
+                    >
+                        Выбрать
+                    </button>
                 </div>
             )}
 
@@ -115,6 +178,8 @@ export default function TestingPage() {
                     <p>Отличная динамика, продолжай в том же духе!</p>
                 </div>
             )}
+
+            <Footer />
         </div>
     );
 }
