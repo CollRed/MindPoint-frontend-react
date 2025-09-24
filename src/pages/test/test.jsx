@@ -9,6 +9,10 @@ import pychaQuest from '@assets/pycha-quest.svg';
 import testCloud from '@assets/test-cloud.svg';
 import testShadow from '@assets/test-shadow.svg';
 import testText from '@assets/test-text.svg';
+import finishPycha from '@assets/finish-pycha.svg';
+import finishText from '@assets/finish-text.svg';
+import finishGalka from '@assets/finish-galka.svg';
+import finishCloud from '@assets/finish-cloud.svg';
 
 export default function TestingPage() {
     const [step, setStep] = useState('intro');
@@ -118,6 +122,21 @@ export default function TestingPage() {
                 <img src={testShadow} alt="Тень Пучи" className="test-shadow" />
             )}
 
+            {step === 'finish' && (
+                <img src={finishPycha} alt="Пуча" className="finish-pycha" />
+            )}
+            {step === 'finish' && (
+                <img src={finishText} alt="Облако" className="finish-text" />
+
+            )}
+            {step === 'finish' && (
+                <img src={finishGalka} alt="Тень Пучи" className="finish-galka" />
+            )}
+
+            {step === 'finish' && (
+                <img src={finishCloud} alt="Тень Пучи" className="finish-cloud" />
+            )}
+
             <StepHeader step={step} />
 
             {step === 'intro' && (
@@ -173,9 +192,11 @@ export default function TestingPage() {
             )}
 
             {step === 'finish' && (
-                <div className="finish-block">
-                    <h2>Спасибо за прохождение тестирования!</h2>
-                    <p>Отличная динамика, продолжай в том же духе!</p>
+                <div className="finish-bg">
+                    <div className="finish-block">
+                        <h2>Спасибо за прохождение тестирования!</h2>
+                        <p>Отличная динамика, продолжай в том же духе!</p>
+                    </div>
                 </div>
             )}
 
