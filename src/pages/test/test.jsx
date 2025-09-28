@@ -5,6 +5,7 @@ import './test.css';
 import StepHeader from "../../components/header/step-header.jsx";
 import Footer from "../../components/footer/footer";
 import rightImage1 from "@assets/hello-flower.svg";
+import rightImageMob from "@assets/hello-flower-mob.svg";
 import pychaQuest from '@assets/pycha-quest.svg';
 import testCloud from '@assets/test-cloud.svg';
 import testShadow from '@assets/test-shadow.svg';
@@ -85,7 +86,7 @@ export default function TestingPage() {
 
             setTimeout(() => {
                 navigate('/employee-dashboard');
-            }, 2000);
+            }, 5000);
 
         } catch (error) {
             console.error('Ошибка при сохранении:', error);
@@ -104,7 +105,11 @@ export default function TestingPage() {
 
             {/* Цветок только на intro */}
             {step === 'intro' && (
+                <>
                 <img src={rightImage1} alt="Цветок" className="hello-flower" />
+
+                <img src={rightImageMob} alt="Цветок" className="hello-flower-mob" />
+                </>
             )}
 
             {step === 'question' && (
@@ -142,9 +147,15 @@ export default function TestingPage() {
             {step === 'intro' && (
                 <div className="intro-block">
                     <h2>Перед вами тест из 9 вопросов</h2>
-                    <p>
+                    <p className="intro-desc-desktop">
                         Пожалуйста, отвечайте честно, исходя из того, что вы чувствовали со вчерашнего дня. Ваши ответы помогут системе лучше понять ваше самочувствие.
                         <br />Это займёт менее 1 минуты.
+                    </p>
+                    <p className="intro-desc-mobile">
+                        Пожалуйста, отвечайте честно,<br />
+                        исходя из того, что вы чувствовали со вчерашнего дня.<br />
+                        Ваши ответы помогут системе лучше понять ваше самочувствие.<br />
+                        Это займёт менее 1 минуты.
                     </p>
                     <button className="primary-btn" onClick={startTest}>
                         Пройти тестирование

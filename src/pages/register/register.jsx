@@ -1,8 +1,9 @@
 import './register.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import leftImage from '@assets/flower-reg1.1.png';
-import rightImage from '@assets/right-back.png';
+import leftImageDesk from '@assets/reg-flower.svg';
+import leftImageMob from '@assets/reg-flower-mob.svg';
+import regUnderlineImg from '@assets/underline-h.svg';;
 
 export default function RegisterPage() {
     const [form, setForm] = useState({
@@ -44,18 +45,18 @@ export default function RegisterPage() {
 
     return (
         <div className="register-bg">
-            <div className="ellipse ellipse-left"></div>
-            <div className="ellipse ellipse-right"></div>
-
             <header className="register-header">
                 <div className="register-logo">
                     MINDPOINT
-                    <div className="register-underline" />
+                    <img src={regUnderlineImg} alt="" className="reg-logo-underline" />
                 </div>
             </header>
 
             <div className="register-flower">
-                <img src={leftImage} alt="Цветок" />
+                <img src={leftImageDesk} alt="Цветок" />
+            </div>
+            <div className="register-flower-mob">
+                <img src={leftImageMob} alt="Цветок" />
             </div>
 
             <div className="register-card">

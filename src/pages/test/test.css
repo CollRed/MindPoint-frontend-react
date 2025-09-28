@@ -8,7 +8,7 @@
     margin-top: auto;
 
 }
-
+        /*Блок Интро*/
 .intro-bg {
     background-image: url('/intro-back.svg');;
     background-size: cover;
@@ -43,7 +43,7 @@
     margin-left: 77px;
     margin-bottom: 27px;
 }
-.intro-block p {
+.intro-desc-desktop {
     width: 551px;
     text-align: center;
     color: #4D4D4D;
@@ -54,11 +54,26 @@
     line-height: normal;
     margin-bottom: 24px;
 }
+.intro-desc-mobile {
+    width: 551px;
+    text-align: center;
+    color: #4D4D4D;
+    font-family: Raleway, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 24px;
+    display: none;
+}
 
 .hello-flower{
     position: absolute;
     margin-left: 1135px;
     margin-top: 91px;
+}
+.hello-flower-mob{
+    display: none;
 }
 
 .primary-btn {
@@ -87,12 +102,14 @@
 .primary-btn:hover {
     background-color: #A259D9;
 }
-
+    /*Блок Тестирования*/
 .question-block {
     align-self: flex-start;
     position: relative;
-    width: 806px;
-    height: 626px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 806px;
     background: #F5F7FF;
     box-shadow: 0 23px 15px -8px rgba(182, 177, 186, 0.91);
     border-radius: 28px;
@@ -107,6 +124,7 @@
 .question-row {
     display: flex;
     width: 758px;
+    flex-direction: row;
     align-items: flex-start;
     gap: 10px;
     flex-shrink: 0;
@@ -156,8 +174,10 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    margin-bottom: 40px;
-    margin-top: 40px;
+    width: 100%;
+    margin-top: 22px;
+    margin-bottom: 24px;
+    align-items: center;
 }
 .answer-btn {
     display: flex;
@@ -179,7 +199,6 @@
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
-    margin-left: 87px;
 }
 .answer-btn:hover,.answer-btn:focus {
     color: #9854F6;
@@ -241,7 +260,7 @@
     margin-left: 1154px;
 
 }
-
+    /*Блок Финиша*/
 .finish-block {
     align-self: flex-start;
     position: relative;
@@ -319,4 +338,79 @@
     margin-left: 224px;
     background-size: contain;
     object-fit: contain;
+}
+@media (max-width: 360px) {
+    .testing-wrapper {
+        width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        margin-top: auto;
+    }
+
+    /*Блок Интро*/
+    .intro-bg {
+        background-image: url('/intro-back-mob.svg');;
+        background-size: cover;
+
+    }
+    .hello-flower{
+        display: none;
+    }
+
+    .hello-flower-mob{
+        display: block;
+        position: static;
+        margin-top: 81px;
+        margin-left: 5px;
+        width: 100vw;
+    }
+
+    .intro-block {
+        width: 340px;
+        height: auto;
+        margin: -60px auto 0 auto;
+        padding: 24px 25px;
+        text-align: center;
+    }
+
+    .intro-block h2 {
+        width: 100%;
+        height: 46px;
+        font-size: 20px;
+        margin-left: 0;
+        text-align: left;
+        margin-bottom: 18px;
+    }
+    .intro-desc-desktop {
+        display: none;
+    }
+    .intro-desc-mobile {
+        display: block;
+        width: 292px;
+        text-align: left;
+        font-size: 16px;
+
+    }
+    .primary-btn {
+        width: 100%;
+        height: 36px;
+        margin: 0;
+        font-size: 16px;
+    }
+    /*Блок Тестирования*/
+    /*Блок Финиша*/
+    .testing-header {
+        display: none;
+    }
+    .test-header{
+        display: none;
+    }
+
+    .app-footer {
+        display: none;
+    }
 }

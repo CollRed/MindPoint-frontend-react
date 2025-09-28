@@ -1,19 +1,20 @@
 .login-page {
     min-height: 100vh;
     width: 100vw;
-    background: no-repeat center center;
-    background-size: cover;
     position: relative;
     overflow-x: hidden;
+    background-image: url('/login-back.svg');;
+    background-size: cover;
 }
-
 
 /* ЛОГО */
 .login-logo {
-    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #FFF;
+    width: 100%;
+    height: 80px;
 }
 
 .logo-text {
@@ -24,6 +25,7 @@
     font-weight: 600;
     line-height: normal;
     display: inline-block;
+    margin-top: 20px;
 }
 
 .logo-underline-img {
@@ -39,16 +41,15 @@
     width: 568px;
     height: 358px;
     border-radius: 30px;
-    left: 303px;
-    top: 298px;
-    bottom: 353px;
+    margin-left: 303px;
+    margin-top: 289px;
     background: #FFF;
     box-shadow: 0 23px 15px -8px rgba(182, 177, 186, 0.91);
-    padding: 42px 52px 24px 53px;
+    padding: 40px 24px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    position: relative;
+    position: absolute;
 }
 
 .login-card h2 {
@@ -66,22 +67,35 @@
 /* Форма */
 .login-card form {
     display: flex;
+    width: 520px;
     flex-direction: column;
-    gap: 18px;
+    gap: 24px;
     align-items: center;
 }
 
 .login-card input {
-    width: 520px;
+    width: 100%;
     height: 40px;
     border: 1px solid #E6E6E6;
     border-radius: 15px;
-    padding: 0 18px;
+    padding: 0 12px;
+    font-family: Roboto, sans-serif;
     font-size: 16px;
-    font-family: Raleway, sans-serif;;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
     background: #FFF;
     color: #4D4D4D;
     box-sizing: border-box;
+
+}
+.login-card input::placeholder {
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    color: rgba(0, 0, 0, 0.25);
 }
 
 .login-card button {
@@ -97,13 +111,12 @@
     border: 1px solid #722ED1;
     background: #722ED1;
     color: #FFF;
-    font-size: 16px;         /* ← по фигме */
-    font-weight: 400;        /* ← по фигме */
-    font-family: 'Roboto', Arial, sans-serif; /* ← всегда явно пиши, иначе унаследуется что-то другое */
-    line-height: 24px;       /* ← по фигме */
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 24px;
     text-align: center;
     cursor: pointer;
-    margin-top: 8px;
     transition: background 0.2s;
     box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
 }
@@ -121,10 +134,10 @@
 
 /* Блок регистрации */
 .register-link {
-    width: 100%;                 /* пусть занимает всю ширину родителя */
+    width: 100%;
     margin-top: 24px;
     color: #4D4D4D;
-    text-align: center;          /* чтобы было по центру */
+    text-align: center;
     font-family: Roboto, Arial, sans-serif;
     font-size: 16px;
     font-style: normal;
@@ -139,21 +152,67 @@
     font-weight: inherit;
     line-height: inherit;
     cursor: pointer;
-    /* маленький отступ если надо */
+    margin-left: 0;
+
 }
-
-
 
 .login-flower {
     position: absolute;
-    top: 95px;            /* отступ сверху по фигме */
-    right: 140px;
-    left: 968px;/* отступ справа по фигме */
-    width: 812px;         /* ширина картинки */
-    height: 980px;
-    pointer-events: none;
-    object-fit: cover;/* не мешает клику по форме */
-    z-index: 1;           /* подними/опусти при необходимости */
-    transform: scaleX(-1);
+    margin-top: 15px;
+    margin-left: 968px;
+
+}
+.login-flower-mob{
+    display: none;
+}
+@media (max-width: 360px) {
+    .login-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;    /* Центрирует всё горизонтально */
+        justify-content: flex-start; /* Если нужно по центру — center */
+        min-height: 100vh;
+        width: 100vw;
+        position: relative;
+        overflow-x: hidden;
+        background-image: url('/login-back-mob.svg');
+        background-size: cover;
+    }
+    .login-logo{
+        display: none;
+    }
+    .login-flower {
+       display: none;
+    }
+    .login-flower-mob{
+        display: block;
+        position: static;
+        text-align: center;
+        margin-top: 130px;
+        margin-left: 20px;
+
+    }
+    .login-card{
+        position: relative;
+        width: 328px;
+        margin: -45px 0 auto;
+        padding: 15px 24px 24px 24px;
+        height: auto;
+        box-sizing: border-box;
+
+    }
+    .login-card h2{
+        font-size: 20px;
+        margin-bottom: 18px;
+    }
+    .login-card form {
+        width: 100%;
+    }
+    .login-card input {
+        width: 100%;
+    }
+    .login-card button {
+        width: 100%;
+    }
 }
 

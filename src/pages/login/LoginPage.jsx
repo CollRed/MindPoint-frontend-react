@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
-import rightImage from "@assets/flower-reg1.1.png";
+import rightImage from "@assets/flower.svg";
+import rightImageMob from "@assets/flower-mob.svg";
 import loginBg from '@assets/background-login.png';
 import underlineImg from '@assets/underline.png';
 import { authFetch } from "../../utils/authFetch.js";
@@ -60,18 +61,21 @@ export default function LoginPage() {
     };
 
     return (
-        <div
-            className="login-page"
-            style={{ backgroundImage: `url(${loginBg})` }}
-        >
+        <div className="login-page">
             <div className="login-logo">
                 <span className="logo-text">MINDPOINT</span>
                 <img src={underlineImg} alt="" className="logo-underline-img" />
             </div>
+            <div className="login-flower">
+                <img src={rightImage} alt="Цветок" />
+            </div>
+            <div className="login-flower-mob">
+                <img src={rightImageMob} alt="Цветок" />
+            </div>
 
             <div className="login-card">
                 <h2>Авторизация</h2>
-                <form onSubmit={handleLogin}>
+                <form className="login-form" onSubmit={handleLogin}>
                     <input
                         type="text"
                         placeholder="Логин"
@@ -97,8 +101,6 @@ export default function LoginPage() {
                     Нету аккаунта? <a href="/register">Зарегистрироваться</a>
                 </p>
             </div>
-
-            <img src={rightImage} alt="Цветок" className="login-flower" />
         </div>
     );
 }
