@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './login.css';
 import rightImage from "@assets/flower.svg";
 import rightImageMob from "@assets/flower-mob.svg";
+import rightImageTab from "@assets/login-flower-tab.svg"
 import loginBg from '@assets/background-login.png';
 import underlineImg from '@assets/underline.png';
 import { authFetch } from "../../utils/authFetch.js";
+import Footer from "../../components/footer/footer.jsx";
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -62,45 +64,51 @@ export default function LoginPage() {
 
     return (
         <div className="login-page">
-            <div className="login-logo">
+            <header className="login-header">
                 <span className="logo-text">MINDPOINT</span>
                 <img src={underlineImg} alt="" className="logo-underline-img" />
-            </div>
-            <div className="login-flower">
-                <img src={rightImage} alt="Цветок" />
-            </div>
-            <div className="login-flower-mob">
-                <img src={rightImageMob} alt="Цветок" />
-            </div>
+            </header>
+            <div className="login-content">
+                <div className="login-flower">
+                    <img src={rightImage} alt="Цветок" />
+                </div>
+                <div className="login-flower-tab">
+                    <img src={rightImageTab} alt="Цветок" />
+                </div>
+                <div className="login-flower-mob">
+                    <img src={rightImageMob} alt="Цветок" />
+                </div>
 
-            <div className="login-card">
-                <h2>Авторизация</h2>
-                <form className="login-form" onSubmit={handleLogin}>
-                    <input
-                        type="text"
-                        placeholder="Логин"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Пароль"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <button type="submit">Войти</button>
+                <div className="login-card">
+                    <h2>Авторизация</h2>
+                    <form className="login-form" onSubmit={handleLogin}>
+                        <input
+                            type="text"
+                            placeholder="Логин"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Пароль"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <button type="submit">Войти</button>
 
-                    {errorMessage && (
-                        <p className="login-error">{errorMessage}</p>
-                    )}
-                </form>
+                        {errorMessage && (
+                            <p className="login-error">{errorMessage}</p>
+                        )}
+                    </form>
 
-                <p className="register-link">
-                    Нету аккаунта? <a href="/register">Зарегистрироваться</a>
-                </p>
+                    <p className="register-link">
+                        Нету аккаунта? <a href="/register">Зарегистрироваться</a>
+                    </p>
+                </div>
             </div>
+            <Footer />
         </div>
     );
 }

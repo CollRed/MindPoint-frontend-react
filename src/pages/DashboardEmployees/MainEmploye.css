@@ -11,6 +11,7 @@
     border-radius: 12px;
     color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
 }
 
 .dashboard-content {

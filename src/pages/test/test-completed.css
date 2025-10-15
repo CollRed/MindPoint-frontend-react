@@ -1,0 +1,197 @@
+.test-completed-page {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    background-image: url('/intro-back.svg');
+    background-size: cover;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.test-completed-page::-webkit-scrollbar {
+    display: none;
+}
+
+.test-completed-content {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    max-width: 1610px;
+    width: 100%;
+    padding: 0 20px;
+    max-height: 820px;
+    box-sizing: border-box;
+    gap: clamp(50px, 8vw, 200px);
+}
+
+.test-completed-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 761px;
+    height: 100%;
+    padding: 0 24px 40px 24px;
+    border-radius: 28px;
+    background: #F5F7FF;
+    box-shadow: 0 23px 15px -8px rgba(182, 177, 186, 0.91);
+}
+
+.test-completed-block h2 {
+    width: 100%;
+    min-height: 41px;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 14px;
+}
+
+.test-completed-block p {
+    width: 620px;
+    min-height: 144px;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.completed-galka-desk {
+    display: flex;
+    width: 151px;
+    height: 151px;
+    margin-top: -74px;
+}
+.completed-flower-desk {
+    display: flex;
+    margin-top: 5px;
+}
+
+.completed-flower-tablet  {
+    display: none;
+}
+
+.completed-flower-mobile {
+    display: none;
+}
+
+.completed-galka-mob {
+    display: none;
+}
+
+@media (max-width: 1470px) {
+    .test-completed-page {
+        background-image: url('/complited-back.svg');
+    }
+
+    .test-completed-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        max-width: 761px;
+        min-height: 785px;
+        gap: 45px;
+    }
+    .test-completed-block {
+        display: flex;
+        max-width: 761px;
+        width: 100%;
+    }
+    .test-completed-block h2 {
+        min-height: 28px;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        width: 100%;
+
+    }
+    .test-completed-block p {
+        font-size: 20px;
+        font-weight: 400;
+        min-height: 46px;
+        width: 100%;
+    }
+    .completed-flower-tablet {
+        display: flex;
+        margin-top: 5px;
+    }
+    .completed-flower-desk {
+        display: none;
+    }
+
+    .completed-flower-mobile {
+        display: none;
+    }
+
+    .completed-galka-mob {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .test-completed-page{
+        background-image: url('/register-back-mob.svg');
+    }
+    .test-completed-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        min-width: 200px;
+        min-height: 785px;
+        gap: 0;
+    }
+    .test-completed-block {
+        display: flex;
+        min-width: 340px;
+        margin-top: -55px;
+    }
+    .test-completed-block h2 {
+        min-height: 28px;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 18px;
+        width: 100%;
+    }
+    .test-completed-block p {
+        font-size: 16px;
+        font-family: Roboto, sans-serif;
+        font-weight: 300;
+        max-height: 76px;
+        width: 100%;
+    }
+    .completed-flower-mobile {
+        display: flex;
+        margin-top: 5px;
+    }
+    .completed-galka-mob {
+        display: flex;
+        margin-top: -55px;
+    }
+    .completed-flower-desk {
+        display: none;
+    }
+
+    .completed-flower-tablet {
+        display: none;
+    }
+
+    .completed-galka-desk {
+        display: none;
+    }
+    .app-footer {
+        display: none;
+    }
+    .testing-header {
+        display: none;
+    }
+}

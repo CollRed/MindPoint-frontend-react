@@ -12,16 +12,17 @@ body,
   padding: 0;
   background-color: #f4f6fa;
   font-family: Raleway, Roboto, Arial, sans-serif;
+    overflow-x: hidden;
 }
 
-/* Центровка только здесь — этого достаточно */
+
+
 #root {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: block;
 }
 
-/* Дополнительные стили — по желанию */
+
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

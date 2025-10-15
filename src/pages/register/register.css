@@ -1,18 +1,28 @@
-.register-bg {;
+.register-bg {
     width: 100vw;
     height: 100vh;
-    position: relative;
+    display: flex;
+    flex-direction: column;
     overflow-x: hidden;
     background-image: url('/register-back.svg');;
     background-size: cover;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+}
+
+.register-bg::-webkit-scrollbar {
+    display: none;
 }
 
 .register-header {
-    width: 100vw;
-    height: 80px;
-    text-align: center;
-    position: absolute;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #FFF;
+    width: 100%;
+    min-height: 80px;
 }
 .register-logo {
     font-family: 'Raleway', 'Segoe UI', Arial, sans-serif;
@@ -22,22 +32,37 @@
     font-weight: 600;
     line-height: normal;
     display: inline-block;
-    position: relative;
-    margin-top: 20px;
+    margin: 0;
 }
 .reg-logo-underline {
     width: 176px;
     height: 6px;
-    display: block;
+    display: flex;
     margin-top: 5px;
+}
+
+.register-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    min-width: 1520px;
+    width: 100%;
+    max-height: 790px;
+    box-sizing: border-box;
+    gap: clamp(10px, 11vw, 200px);
 }
 
 
 
 .register-flower {
-    position: absolute;
-    margin-left: 140px;
-    margin-top: 99px;
+    min-width: 680px;
+    height: auto;
+    display: flex;
+    z-index: 1;
+    margin-top: 70px;
+
 
 }
 
@@ -45,21 +70,19 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    pointer-events: none;
-    user-select: none;
     display: block;
 }
 
-.register-flower-mob{
+.register-flower-mob {
+    display: none;
+}
+.register-flower-tab {
     display: none;
 }
 
 .register-card {
-    position: absolute;
-    top: 57%;
-    left: 1113px;
-    transform: translateY(-50%);
-    width: 527px;
+    width: 100%;
+    max-width: 527px;
     height: 486px;
     padding: 40px 24px;
     background: #FFFFFF;
@@ -68,7 +91,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 3;
+    z-index: 1;
 }
 
 .register-title {
@@ -80,6 +103,7 @@
     line-height: normal;
     text-align: center;
     margin-bottom: 24px;
+    display: flex;
 }
 
 .register-form {
@@ -102,6 +126,8 @@
     background: #FFF;
     color: #4D4D4D;
     box-sizing: border-box;
+    outline: none;
+    display: flex;
 }
 .register-form input::placeholder {
     font-family: Roboto, sans-serif;
@@ -112,16 +138,18 @@
     color: rgba(0, 0, 0, 0.25);
 }
 .register-form input:focus {
-    border-color: #bfa5ff;
+    border: 1px solid #40A9FF;
+    outline: none;
 }
 .register-btn {
     display: flex;
-    width: 479px;
+    width: 100%;
     padding: 9.5px 15px;
     justify-content: center;
     align-items: center;
     gap: 10px;
     flex-shrink: 0;
+    margin-bottom: 24px;
 
     border-radius: 15px;
     border: 1px solid #722ED1;
@@ -153,24 +181,24 @@
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
+    display: flex;
 }
 
 
-.register-link {
-    width: 422px;
-    margin-bottom: 24px;
-    margin-top: 0;
+.login-link {
+    width: 100%;
     text-align: center;
+    justify-content: center;
     color: #4D4D4D;
     font-family: Roboto, Arial, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    display: flex;
 }
-.register-link a {
+.login-link a {
     color: #7029CC;
-    text-decoration: underline;
     font-family: inherit;
     font-size: inherit;
     font-style: inherit;
@@ -178,62 +206,142 @@
     line-height: inherit;
     margin-left: 2px;
     cursor: pointer;
+    display: flex;
 }
 
 
-.register-link a:hover {
+.login-link a:hover {
     color: #9d6bff;
 }
 
-@media (max-width: 360px) {
-    .register-bg {;
+
+@media (max-width: 1470px) {
+    .register-bg {
         width: 100vw;
-        height: 800px;
+        height: 100vh;
         position: relative;
         overflow-x: hidden;
-        overflow-y: hidden;
-        background-image: url('/register-back-mob.svg');;
+        background-image: url('/register-back.svg');
         background-size: cover;
     }
+
     .register-header {
-        display: none;
+        width: 100vw;
+        height: 80px;
+    }
+    .register-flower-tab {
+        display: flex;
     }
     .register-flower-mob {
-        position: static;
-        margin-left: 43px;
-        margin-top: 50px;
-        display: block;
+        display: none;
 
     }
     .register-flower {
         display: none;
     }
+    .register-content {
+        flex-direction: column;
+        min-width: 700px;
+        width: 100%;
+        margin-top: 10px;
+        gap: 10px;
+    }
 
     .register-card {
         position: static;
-        width: 328px;
-        height: auto;
-        padding: 24px 24px 12px 24px;
+        display: flex;
+        max-width: 700px;
+        height: 486px;
+        padding: 40px 24px 40px 24px;
         border-radius: 28px;
         box-shadow: 0 23px 15px -8px rgba(182, 177, 186, 0.91);
-        margin-top: 130px;
-        margin-left: 16px;
+        gap: 24px;
+        margin-bottom: 24px;
     }
     .register-title {
-        font-size: 20px;
-        margin-bottom: 18px;
+        font-size: 32px;
+        margin-bottom: 0;
+    }
+    .register-form {
+        display: flex;
+    }
+    .register-btn {
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .login-link {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .register-bg {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        background-image: url('/register-back-mob.svg') !important;
+        background-size: cover;
+    }
+    .register-header {
+        display: none;
+    }
+    .register-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        min-height: 800px;
+        min-width: 300px;
+        padding: 16px;
+        margin: 0;
+    }
+
+    .register-flower {
+        display: none;
+    }
+    .register-flower-tab {
+        display: none;
+    }
+
+    .register-flower-mob {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 360px;
+        margin-left: 10px;
+        margin-top: 30px;
+    }
+
+    .register-flower-mob img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .register-card {
+        position: static;
+        max-width: 650px;
+        height: 403px;
+        padding: 24px 24px 24px 24px;
+        border-radius: 28px;
+        box-shadow: 0 23px 15px -8px rgba(182, 177, 186, 0.91);
+        margin-top: -100px;
+        z-index: 0;
+        gap: 18px;
+    }
+    .register-title {
+        font-size: 22px;
     }
     .register-form {
         gap: 18px;
     }
-    .register-btn{
+    .register-btn {
         width: 100%;
     }
-    .register-link {
+    .login-link {
         width: 100%;
-        margin-bottom: 12px;
+        margin-bottom: 0;
     }
 
 }
-
-

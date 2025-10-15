@@ -1,10 +1,10 @@
-import './footer.css';
+import './test-footer.css';
 
-export default function Footer() {
+export default function TestFooter() {
     return (
-        <footer className="app-footer">
-            <div className="footer-gradient"></div>
-            <div className="footer-links">
+        <footer className="test-app-footer">
+            <div className="test-footer-gradient"></div>
+            <div className="test-footer-links">
                 <span>Поддержка</span>
                 <span>Документы</span>
                 <span>Конфиденциальность</span>

@@ -14,10 +14,10 @@ export default function MainEmploye() {
     const handleStartTesting = async () => {
         try {
             const res = await authFetch('/dass9/check', { credentials: 'include' });
-            const data = await res.json(); // <-- теперь жди JSON!
+            const data = await res.json();
 
             if (data.passed_today) {
-                alert('Вы уже проходили тест сегодня!');
+                navigate('/test-completed'); // 🔄 перенаправляем на нужную страницу
                 return;
             }
             navigate('/testing');

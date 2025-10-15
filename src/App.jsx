@@ -6,6 +6,7 @@ import EmployeesPage from './pages/employees/employees.jsx';
 import MainLayout from './layouts/main.jsx';
 import EmployeeDashboardPage from './pages/DashboardEmployees/MainEmploye.jsx';
 import TestingPage from './pages/test/test.jsx';
+import TestCompleted from './pages/test/test-completed.jsx';
 function App() {
     return (
         <BrowserRouter>
@@ -35,6 +36,7 @@ function App() {
                 />
                 <Route path="/employee-dashboard" element={<EmployeeDashboardPage />} />
                 <Route path="/testing" element={<TestingPage />} />
+                <Route path="/test-completed" element={<TestCompleted />} />
             </Routes>
         </BrowserRouter>
     );

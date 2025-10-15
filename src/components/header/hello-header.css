@@ -1,19 +1,17 @@
 .testing-header {
     width: 100vw;
     height: 80px;
-    position: relative;
-    top: 0;
-    left: 0;
-    background-image: url('/header-back.svg');;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: clamp(400px, 70vw, 1354px);
+    background-image: url('/header-back.svg');
     backdrop-filter: blur(16px);
 
 }
 
 
 .testing-header-avatar {
-    position: absolute;
-    top: 8px;
-    left: 1714px;
     width: 65px;
     height: 65px;
     border-radius: 65px;
@@ -21,7 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 141px;
+    margin-top: 8px;
 
 }
 
@@ -40,21 +38,25 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    position: absolute;
-    left: 139px;
-    top: 20px;
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 4px;
 }
 
 .logo-underline-img2 {
-    position: absolute;
-    left: 139px;
-    top: 61px;
+    display: flex;
     width: 221px;
     height: 6px;
-    flex-shrink: 0;
     border-radius: 5px;
-    display: block;
     object-fit: contain;
 }
 
+@media (max-width: 1470px) {
+    .testing-header {
+        gap: 0;
+    }
+    .testing-header-avatar {
+        display: none;
+    }
+}
 

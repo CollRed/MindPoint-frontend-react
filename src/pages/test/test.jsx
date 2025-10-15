@@ -3,17 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { authFetch } from '../../utils/authFetch';
 import './test.css';
 import StepHeader from "../../components/header/step-header.jsx";
-import Footer from "../../components/footer/footer";
+import StepFooter from "../../components/footer/step-footer.jsx";
 import rightImage1 from "@assets/hello-flower.svg";
 import rightImageMob from "@assets/hello-flower-mob.svg";
-import pychaQuest from '@assets/pycha-quest.svg';
-import testCloud from '@assets/test-cloud.svg';
+import pychaQuest from '@assets/pycha-test.svg';
+import pychaQuestTab from '@assets/test-pycha-tab.svg';
+import pychaQuestMob from '@assets/test-pycha-mob.svg';
+import testCloud from '@assets/test-cloud1.png';
+import testCloudMob from '@assets/test-cloud-mob.png';
 import testShadow from '@assets/test-shadow.svg';
-import testText from '@assets/test-text.svg';
+import testText from '@assets/test-text.png';
 import finishPycha from '@assets/finish-pycha.svg';
 import finishText from '@assets/finish-text.svg';
 import finishGalka from '@assets/finish-galka.svg';
-import finishCloud from '@assets/finish-cloud.svg';
+import finishCloud from '@assets/finish-cloud.png';
 
 export default function TestingPage() {
     const [step, setStep] = useState('intro');
@@ -84,9 +87,6 @@ export default function TestingPage() {
             const data = await response.json();
             console.log('Результат сохранён:', data);
 
-            setTimeout(() => {
-                navigate('/employee-dashboard');
-            }, 5000);
 
         } catch (error) {
             console.error('Ошибка при сохранении:', error);
@@ -100,118 +100,132 @@ export default function TestingPage() {
 
     return (
         <div className={`testing-wrapper ${
-            step === 'intro' ? 'intro-bg' : step === 'question' ? 'question-bg' : ''
+            step === 'intro' ? 'intro-bg' :
+                step === 'question' ? 'question-bg' :
+                    step === 'finish' ? 'finish-bg' : ''
         }`}>
-
-            {/* Цветок только на intro */}
-            {step === 'intro' && (
-                <>
-                <img src={rightImage1} alt="Цветок" className="hello-flower" />
-
-                <img src={rightImageMob} alt="Цветок" className="hello-flower-mob" />
-                </>
-            )}
-
-            {step === 'question' && (
-                <img src={pychaQuest} alt="Пуча" className="pycha-quest" />
-            )}
-            {step === 'question' && (
-                <img src={testCloud} alt="Облако" className="test-cloud" />
-
-            )}
-            {step === 'question' && (
-                <img src={testText} alt="Текст" className="test-text" />
-
-            )}
-            {step === 'question' && (
-                <img src={testShadow} alt="Тень Пучи" className="test-shadow" />
-            )}
-
-            {step === 'finish' && (
-                <img src={finishPycha} alt="Пуча" className="finish-pycha" />
-            )}
-            {step === 'finish' && (
-                <img src={finishText} alt="Облако" className="finish-text" />
-
-            )}
-            {step === 'finish' && (
-                <img src={finishGalka} alt="Тень Пучи" className="finish-galka" />
-            )}
-
-            {step === 'finish' && (
-                <img src={finishCloud} alt="Тень Пучи" className="finish-cloud" />
-            )}
 
             <StepHeader step={step} />
 
             {step === 'intro' && (
-                <div className="intro-block">
-                    <h2>Перед вами тест из 9 вопросов</h2>
-                    <p className="intro-desc-desktop">
-                        Пожалуйста, отвечайте честно, исходя из того, что вы чувствовали со вчерашнего дня. Ваши ответы помогут системе лучше понять ваше самочувствие.
-                        <br />Это займёт менее 1 минуты.
-                    </p>
-                    <p className="intro-desc-mobile">
-                        Пожалуйста, отвечайте честно,<br />
-                        исходя из того, что вы чувствовали со вчерашнего дня.<br />
-                        Ваши ответы помогут системе лучше понять ваше самочувствие.<br />
-                        Это займёт менее 1 минуты.
-                    </p>
-                    <button className="primary-btn" onClick={startTest}>
-                        Пройти тестирование
-                    </button>
+                <div className="intro-container">
+                    <div className="hello-flower">
+                        <img src={rightImage1} alt="Цветок" />
+                    </div>
+                    <div className="hello-flower-mob">
+                        <img src={rightImageMob} alt="Цветок" />
+                    </div>
+                    <div className="intro-block">
+                        <h2>Перед вами тест из 9 вопросов</h2>
+                        <p className="intro-desc-desktop">
+                            Пожалуйста, отвечайте честно, исходя из того, что вы чувствовали со вчерашнего дня. Ваши ответы помогут системе лучше понять ваше самочувствие.
+                            <br />Это займёт менее 1 минуты.
+                        </p>
+                        <p className="intro-desc-mobile">
+                            Пожалуйста, отвечайте честно,<br />
+                            исходя из того, что вы чувствовали со вчерашнего дня.<br />
+                            Ваши ответы помогут системе лучше понять ваше самочувствие.<br />
+                            Это займёт менее 1 минуты.
+                        </p>
+                        <button className="primary-btn" onClick={startTest}>
+                            Пройти тестирование
+                        </button>
+                    </div>
                 </div>
             )}
 
             {step === 'question' && questions.length > 0 && (
-                <div className="question-block">
+                <div className="question-container">
+                    <div className="question-image-container">
 
-                    <div className="question-row">
-                        <div className="question-header">
-                            <span className="q-num">{currentIndex + 1}</span>
-                            <span className="q-slash">/</span>
-                            <span className="q-total">{questions.length}</span>
+                        <div className="test-cloud">
+                            <img src={testCloud} alt="Тень Пучи" className="test-cloud" />
                         </div>
-                        <div className="question-text">
-                            {questions[currentIndex].text}
+
+                        <div className="test-cloud-mob">
+                            <img src={testCloudMob} alt="Тень Пучи" className="test-cloud" />
                         </div>
+
+                        <div className="pycha-quest">
+                            <img src={pychaQuest} alt="Пуча" className="pycha-quest" />
+                        </div>
+
+                        <div className="pycha-quest-tab">
+                            <img src={pychaQuestTab} alt="Пуча"  />
+                        </div>
+
+                        <div className="pycha-quest-mob">
+                            <img src={pychaQuestMob} alt="Пуча" className="pycha-quest" />
+                        </div>
+
+                        <div className="test-shadow">
+                            <img src={testShadow} alt="Тень Пучи" className="test-shadow" />
+                        </div>
+
                     </div>
-                    <div className="answers-block">
-                        {Object.entries(questions[currentIndex].answers).map(([key, value]) => (
-                            <button
-                                key={key}
-                                className={`answer-btn${selected === key ? ' selected' : ''}`}
-                                onClick={() => setSelected(key)}
-                                type="button"
-                            >
-                                {value}
-                            </button>
-                        ))}
+                    <div className="question-block">
+                        <div className="question-row">
+                            <div className="question-header">
+                                <span className="q-num">{currentIndex + 1}</span>
+                                <span className="q-slash">/</span>
+                                <span className="q-total">{questions.length}</span>
+                            </div>
+                            <div className="question-text">
+                                {questions[currentIndex].text}
+                            </div>
+                        </div>
+                        <div className="answers-block">
+                            {Object.entries(questions[currentIndex].answers).map(([key, value]) => (
+                                <button
+                                    key={key}
+                                    className={`answer-btn${selected === key ? ' selected' : ''}`}
+                                    onClick={() => setSelected(key)}
+                                    type="button"
+                                >
+                                    {value}
+                                </button>
+                            ))}
+                        </div>
+                        <button
+                            className="choose-btn"
+                            disabled={!selected}
+                            onClick={() => {
+                                handleAnswer(selected);
+                                setSelected(null);
+                            }}
+                            type="button"
+                        >
+                            Выбрать
+                        </button>
                     </div>
-                    <button
-                        className="choose-btn"
-                        disabled={!selected}
-                        onClick={() => {
-                            handleAnswer(selected);
-                            setSelected(null);
-                        }}
-                        type="button"
-                    >
-                        Выбрать
-                    </button>
                 </div>
             )}
 
             {step === 'finish' && (
-                <div className="finish-bg">
+                <div className="finish-container">
+                    <div className="finish-image-container">
+                        <div className="finish-cloud">
+                            <img src={finishCloud} alt="Тень Пучи" className="finish-cloud" />
+                        </div>
+
+                        <div className="finish-pycha">
+                            <img src={finishPycha} alt="Тень Пучи" className="finish-pycha" />
+                        </div>
+                    </div>
+
                     <div className="finish-block">
+                        <img src={finishGalka} alt="Тень Пучи" className="finish-galka" />
                         <h2>Спасибо за прохождение тестирования!</h2>
                         <p>Отличная динамика, продолжай в том же духе!</p>
+
+                        <button onClick={() => navigate('/employee-dashboard')}>
+                            На главную
+                        </button>
                     </div>
                 </div>
             )}
 
-            <Footer />
+            <StepFooter step={step} />
         </div>
     );
 }
