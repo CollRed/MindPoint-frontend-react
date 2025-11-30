@@ -17,16 +17,34 @@ export default function LoginPage() {
 
     useEffect(() => {
         const access = localStorage.getItem('access_token');
-        const isManager = localStorage.getItem('isManager') === 'true';
+        const isManager = localStorage.getItem('is_manager') === 'true';
 
-        if (access) {
+        if (!access) return;
+
+        const autoRedirect = async () => {
             if (isManager) {
                 navigate('/home');
             } else {
-                navigate('/employee-dashboard');
+                try {
+                    const testRes = await authFetch('/dass9/check', { credentials: 'include' });
+                    const testData = await testRes.json();
+
+                    if (testData.passed_today) {
+                        navigate('/test-completed');
+                    } else {
+                        navigate('/testing');
+                    }
+                } catch (err) {
+                    console.error("Ошибка авто-чека теста", err);
+                    navigate('/testing');
+                }
             }
-        }
+        };
+
+        autoRedirect();
     }, [navigate]);
+
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -48,19 +66,39 @@ export default function LoginPage() {
             }
 
             const result = await response.json();
-            localStorage.setItem('access_token', result.access); // <-- ВАЖНО!
-            localStorage.setItem('isManager', result.isManager);
 
-            if (result.isManager) {
+            // Сохраняем все нужные данные
+            localStorage.setItem('access_token', result.access);
+            localStorage.setItem('user_id', result.userId);
+            localStorage.setItem('email', result.email);
+            localStorage.setItem('username', result.username);
+            localStorage.setItem('fullname', result.fullname);
+            localStorage.setItem('is_manager', result.is_manager);
+
+            // Для менеджера — сразу переход
+            if (result.is_manager) {
                 navigate('/home');
             } else {
-                navigate('/employee-dashboard');
+                // Для сотрудника — проверка прохождения теста
+                const testRes = await authFetch('/dass9/check', {
+                    credentials: 'include',
+                });
+
+                const testData = await testRes.json();
+
+                if (testData.passed_today) {
+                    navigate('/test-completed');
+                } else {
+                    navigate('/testing');
+                }
             }
         } catch (err) {
             console.error(err);
             setErrorMessage('Ошибка подключения к серверу');
         }
     };
+
+
 
     return (
         <div className="login-page">

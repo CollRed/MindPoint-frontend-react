@@ -1,0 +1,519 @@
+.profile-page-employee {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: hidden;
+    background-image: url('/back-profile.svg');
+    background-size: cover;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    z-index: 0;
+}
+
+.profile-content-employee {
+    display: flex;
+    flex-direction: column;
+    width: 1223px;
+    height: 677px;
+    border-radius: 20px;
+    padding: 24px;
+    background: #FFF;
+    margin-top: 34px;
+    margin-bottom: 34px;
+}
+.profile-header-employee {
+    display: flex;
+    flex-direction: row;
+    gap: 589px;
+    margin-bottom: 23px;
+}
+
+.profile-title-employee {
+    display: flex;
+    width: 418px;
+    height: 39px;
+
+    color: #4D4D4D;
+    font-family: Raleway, sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.exit-button {
+    display: flex;
+    width: 168px;
+    height: 36px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #FFF;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #793CAE;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+.exit-button:focus {
+    outline: none;
+}
+.profile-line-employee {
+    display: flex;
+    width: 1175px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.20);
+    margin-bottom: 64px;
+}
+
+.profile-main-employee {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.profile-img {
+    display: flex;
+    margin-right: 25px;
+    margin-top: -40px;
+}
+
+.login-employee {
+    display: flex;
+    width: 403px;
+    height: 22px;
+    align-items: center;
+    gap: 10px;
+
+    color: #4D4D4D;
+
+    font-family: Roboto, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    margin-right: 364px;
+}
+
+.edit-button-employee {
+    width: 233px;
+    height: 36px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    color: #FFF;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    display: none;
+}
+
+.work {
+    display: flex;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 22px;
+    margin-left: 175px;
+    margin-top: -64px;
+}
+
+.profile-line1-employee {
+    display: flex;
+    width: 694px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.20);
+    margin-left: -75px;
+    margin-top: -18px;
+}
+
+.profile-info-employee {
+    display: flex;
+    flex-direction: row;
+    gap: 165px;
+    margin-bottom: 40px;
+}
+
+.email-title-employee {
+    display: flex;
+    width: 263px;
+    height: 22px;
+    align-items: center;
+    gap: 10px;
+    margin-left: 178px;
+
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 22px;
+    margin-bottom: 14px;
+}
+
+.email-employee {
+    display: flex;
+    width: 263px;
+    height: 22px;
+    align-items: center;
+    gap: 10px;
+
+    color: #4D4D4D;
+
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    margin-left: 178px;
+
+}
+
+.login-title-employee {
+    display: flex;
+    width: 263px;
+    height: 22px;
+    align-items: center;
+    gap: 10px;
+
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 22px;
+    margin-bottom: 14px;
+}
+
+.username-employee {
+    display: flex;
+    width: 263px;
+    height: 22px;
+    align-items: center;
+    gap: 10px;
+
+    color: #4D4D4D;
+
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+
+}
+
+.profile-invite {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.my-invite {
+    display: flex;
+    width: 418px;
+    height: 39px;
+    color: #4D4D4D;
+
+    font-family: Raleway, sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    margin-bottom: 16px;
+}
+
+.profile-line-employee3 {
+    display: flex;
+    width: 1175px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.20);
+    margin-bottom: 24px;
+}
+
+.profile-invite-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-container {
+    display: flex;
+    width: 945px;
+    height: 38px;
+    padding: 8px;
+    align-items: center;
+    gap: 301px;
+    border-radius: 20px 20px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: #D3E3FB;
+}
+
+.profile-container-company {
+    display: flex;
+    width: 73px;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+.profile-container-status {
+    display: flex;
+    width: 82px;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+.profile-container-date {
+    display: flex;
+    width: 124px;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+.profile-status {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 945px;
+    height: 38px;
+    padding: 8px;
+    align-items: center;
+    gap: 293px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: #EBF2F6;
+}
+
+.profile-status-list .profile-status:last-child {
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 14px;
+}
+
+
+.profile-status-date {
+    display: flex;
+    width: 132px;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 22px;
+}
+
+.profile-status-company {
+    display: flex;
+    width: 82px;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.profile-status-status {
+    display: flex;
+    width: 129px;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 600;
+    line-height: 22px;
+}
+
+.pagination-pe {
+    display: flex;
+    margin-left: 860px;
+
+}
+
+
+.button-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Зеленый цвет — подтверждено */
+.profile-status-status.approved {
+    color: #02E719;
+}
+
+/* Оранжевый — в ожидании */
+.profile-status-status.pending {
+    color: #D4A910;
+}
+
+/* Красный — отклонено */
+.profile-status-status.rejected {
+    color: #CC1A1D;
+}
+
+.button-send {
+    display: flex;
+    width: 233px;
+    height: 36px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #FFF;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.button-send:focus {
+    outline: none;
+}
+
+.profile-info-employee {
+    display: flex;
+    flex-direction: row;
+    gap: 165px;
+}
+
+
+
+
+.modal-overlay-exit {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-window-exit {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 520px;
+    height: 159px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+}
+
+.modal-question-icon {
+
+}
+
+.modal-label-exit {
+    width: 472px;
+    color: #4D4D4D;
+
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 24px;
+}
+
+.modal-buttons-exit {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.modal-confirm-exit {
+    display: flex;
+    width: 130px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #FFF;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-cancel-exit {
+    display: flex;
+    width: 130px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #FFF;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    color: #722ED1;
+    text-align: center;
+
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+
+

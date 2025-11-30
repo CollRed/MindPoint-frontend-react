@@ -24,6 +24,7 @@
     left: 1714px;
     width: 65px;
     height: 65px;
+    cursor: pointer;
 }
 
 .header-avatar img {
@@ -71,4 +72,8 @@
     background: linear-gradient(to right, #B280F5, #A6E8FF);
     transition: all 0.3s ease;
     pointer-events: none;
+}
+
+.hidden {
+    display: none;
 }

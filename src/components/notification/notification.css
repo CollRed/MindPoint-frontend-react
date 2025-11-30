@@ -1,0 +1,16 @@
+.notification {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    min-width: 160px;
+
+    color: rgba(0, 0, 0, 0.85);
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 22px;
+}

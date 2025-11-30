@@ -218,7 +218,7 @@ export default function TestingPage() {
                         <h2>Спасибо за прохождение тестирования!</h2>
                         <p>Отличная динамика, продолжай в том же духе!</p>
 
-                        <button onClick={() => navigate('/employee-dashboard')}>
+                        <button onClick={() => navigate('/test-completed')}>
                             На главную
                         </button>
                     </div>

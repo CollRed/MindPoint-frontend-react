@@ -7,8 +7,6 @@ import leftImageTab from '@assets/register-flower-tab.svg';
 import regUnderlineImg from '@assets/underline-h.svg';
 import Footer from "../../components/footer/footer.jsx";
 
-;
-
 export default function RegisterPage() {
     const [form, setForm] = useState({
         username: '',
@@ -17,6 +15,7 @@ export default function RegisterPage() {
         full_name: '',
     });
 
+    const [registerType, setRegisterType] = useState('employee'); // employee | company
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -26,11 +25,17 @@ export default function RegisterPage() {
     const handleRegister = async (e) => {
         e.preventDefault();
 
+        // Добавляем флаг isManager в тело запроса
+        const payload = {
+            ...form,
+            is_manager: registerType === 'company',
+        };
+
         try {
             const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
+                body: JSON.stringify(payload),
             });
 
             if (response.ok) {
@@ -53,6 +58,7 @@ export default function RegisterPage() {
                 <span className="register-logo">MINDPOINT</span>
                 <img src={regUnderlineImg} alt="" className="reg-logo-underline" />
             </header>
+
             <div className="register-content">
                 <div className="register-flower">
                     <img src={leftImageDesk} alt="Цветок" />
@@ -64,9 +70,27 @@ export default function RegisterPage() {
                     <img src={leftImageMob} alt="Цветок" />
                 </div>
 
-
                 <div className="register-card">
                     <h2 className="register-title">Регистрация</h2>
+
+                    {/* Переключатель типа регистрации */}
+                    <div className="register-switch">
+                        <button
+                            type="button"
+                            className={registerType === 'employee' ? 'active' : ''}
+                            onClick={() => setRegisterType('employee')}
+                        >
+                            Сотрудник
+                        </button>
+                        <button
+                            type="button"
+                            className={registerType === 'company' ? 'active' : ''}
+                            onClick={() => setRegisterType('company')}
+                        >
+                            Компания
+                        </button>
+                    </div>
+
                     <form className="register-form" onSubmit={handleRegister}>
                         <input
                             type="text"
@@ -79,7 +103,11 @@ export default function RegisterPage() {
                         <input
                             type="text"
                             name="username"
-                            placeholder="Имя пользователя"
+                            placeholder={
+                                registerType === 'company'
+                                    ? 'Введите название компании'
+                                    : 'Имя пользователя'
+                            }
                             value={form.username}
                             onChange={handleChange}
                             required
@@ -104,6 +132,7 @@ export default function RegisterPage() {
                             <span className="register-btn-text">Зарегистрироваться</span>
                         </button>
                     </form>
+
                     <p className="login-link">
                         У вас уже есть аккаунт? <a href="/login">Войти</a>
                     </p>

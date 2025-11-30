@@ -1,0 +1,98 @@
+.modal-overlay-exit {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-window-exit {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 520px;
+    height: 159px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+}
+
+.modal-question-icon {
+
+}
+
+.modal-label-exit {
+    width: 472px;
+    color: #4D4D4D;
+
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 24px;
+}
+
+.modal-buttons-exit {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.modal-confirm-exit {
+    display: flex;
+    width: 130px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #FFF;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-confirm-exit:focus {
+    outline: none;
+}
+
+.modal-cancel-exit {
+    display: flex;
+    width: 130px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #FFF;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    color: #722ED1;
+    text-align: center;
+
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-cancel-exit:focus {
+    outline: none;
+}

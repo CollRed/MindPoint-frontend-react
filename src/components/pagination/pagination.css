@@ -1,0 +1,79 @@
+.pagination {
+    display: flex;
+    width: 88px;
+    height: 21px;
+    align-items: center;
+    gap: 8px;
+}
+.page-display {
+    display: flex;
+    width: 30px;
+    height: 21px;
+    padding: 1px 7px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    border: 1px solid #1890FF;
+    background: #FFFFFF;
+}
+.page-display input, .divider {
+    color: #1890FF;
+    width: 7px;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+.total {
+    color: #5A5A5A;
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+.page-input:focus {
+    border: transparent;
+    outline: none;
+}
+
+.page-btn.arrow {
+    display: flex;
+    width: 21px;
+    height: 21px;
+    padding: 6px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    margin-top: -3px;
+    color: #A3A3A3;
+
+}
+
+.page-btn.arrow:focus {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+.page-input::-webkit-outer-spin-button,
+.page-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Убрать стрелки в Firefox */
+.page-input[type=number] {
+    -moz-appearance: textfield;
+}

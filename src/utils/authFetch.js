@@ -3,29 +3,29 @@
 const API_BASE_URL = '/api';
 
 export async function authFetch(input, init = {}, retry = true) {
+    const isRefreshing = input === '/auth/refresh'; // ключевое условие
+
     const accessToken = localStorage.getItem('access_token');
 
     const headers = new Headers(init.headers || {});
-    if (accessToken) {
+    if (accessToken && !isRefreshing) {
         headers.set('Authorization', `Bearer ${accessToken}`);
     }
 
     const response = await fetch(API_BASE_URL + input, {
         ...init,
         headers,
-        credentials: 'include', // важно для refresh
+        credentials: 'include',
     });
 
-    // Если access токен истёк — пробуем обновить
-    if (response.status === 401 && retry) {
+    if (response.status === 401 && retry && !isRefreshing) {
         const success = await refreshAccessToken();
 
         if (success) {
-            return authFetch(input, init, false); // повторим запрос один раз
+            return authFetch(input, init, false);
         } else {
-            // refresh не удался — значит, пользователь не авторизован
             localStorage.removeItem('access_token');
-            window.location.href = '/login'; // редирект на логин
+            window.location.href = '/login';
         }
     }
 

@@ -1,0 +1,228 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Общие стили для любого модального окна */
+.modal-window {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+/* Размеры для формы ввода */
+.modal-window.request {
+    width: 568px;
+    height: 239px;
+}
+
+/* Размеры для подтверждения */
+.modal-window.confirm {
+    width: 520px;
+    height: 172px;
+}
+
+/* Остальное без изменений */
+.modal-header-pe {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.modal-header-pe h2 {
+    display: flex;
+    width: 418px;
+    height: 28px;
+
+    color: #4D4D4D;
+
+    font-family: Raleway, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-right: 79px;
+    margin-bottom: 24px;
+}
+
+.modal-line-pe {
+    display: flex;
+    width: 540px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.20);
+    margin-bottom: 24px;
+}
+
+.modal-close-pe {
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 24px;
+}
+
+.modal-close-pe:focus {
+    outline: none;
+}
+
+.modal-body-pe {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.modal-label-pe {
+    display: flex;
+    width: 517px;
+    color: #4D4D4D;
+
+    font-family: Roboto, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.modal-input-pe {
+    display: flex;
+    width: 520px;
+    height: 32px;
+    padding: 4px 12px;
+    align-items: flex-start;
+    border-radius: 15px;
+    border: 1px solid #D9D9D9;
+    background: #FFF;
+
+    color: rgba(0, 0, 0, 0.25);
+
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-submit-pe {
+    display: flex;
+    width: 520px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    color: #FFF;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+
+}
+
+.modal-submit-pe:focus {
+    outline: none;
+}
+
+.modal-question-icon {
+    margin-top: -57px;
+    margin-bottom: -2px;
+}
+
+.modal-label-center {
+    width: 472px;
+
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 15px;
+}
+
+.modal-buttons-pe {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30px;
+}
+
+.modal-confirm-pe {
+    display: flex;
+    width: 130px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #FFF;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-confirm-pe:focus {
+    outline: none;
+}
+
+.modal-cancel-pe {
+    display: flex;
+    width: 130px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #FFF;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #722ED1;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-cancel-pe:focus {
+    outline: none;
+}

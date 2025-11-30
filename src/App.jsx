@@ -7,6 +7,9 @@ import MainLayout from './layouts/main.jsx';
 import EmployeeDashboardPage from './pages/DashboardEmployees/MainEmploye.jsx';
 import TestingPage from './pages/test/test.jsx';
 import TestCompleted from './pages/test/test-completed.jsx';
+import ProfileManager from './pages/profile/manager/profile-manager.jsx';
+import ProfileEmployee from './pages/profile/employee/profile-employee.jsx';
+
 function App() {
     return (
         <BrowserRouter>
@@ -34,7 +37,8 @@ function App() {
                         </MainLayout>
                     }
                 />
-                <Route path="/employee-dashboard" element={<EmployeeDashboardPage />} />
+                <Route path="/profile-manager" element={<ProfileManager /> } />
+                <Route path="/profile-employee" element={<ProfileEmployee /> } />
                 <Route path="/testing" element={<TestingPage />} />
                 <Route path="/test-completed" element={<TestCompleted />} />
             </Routes>

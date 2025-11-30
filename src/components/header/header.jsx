@@ -12,50 +12,47 @@ export default function Header() {
         '/employees': useRef(null),
     };
 
+    // 👇 ВОТ ЭТО: добавляем переменную!
+    const hideUnderline = location.pathname === '/profile-manager';
+
     useEffect(() => {
         const currentPath = location.pathname;
         const activeTab = tabRefs[currentPath]?.current;
 
-        if (activeTab) {
+        if (activeTab && !hideUnderline) {
             const { offsetLeft, offsetWidth } = activeTab;
             setUnderlineStyle({
                 left: offsetLeft,
                 width: offsetWidth,
             });
         }
-    }, [location.pathname]);
+    }, [location.pathname, hideUnderline]);
 
     return (
         <header className="app-header">
             <div className="header-container">
                 <div className="header-tabs">
-                    <NavLink
-                        to="/home"
-                        ref={tabRefs['/home']}
-                        className="tab"
-                    >
+                    <NavLink to="/home" ref={tabRefs['/home']} className="tab">
                         Статистика
                     </NavLink>
-                    <NavLink
-                        to="/employees"
-                        ref={tabRefs['/employees']}
-                        className="tab"
-                    >
-                        Сотрудники
+                    <NavLink to="/employees" ref={tabRefs['/employees']} className="tab">
+                        Команды
                     </NavLink>
 
-                    {/* Градиентная линия */}
-                    <img
-                        src={underlineImg}
-                        alt=""
-                        className="logo-underline-img1"
-                        style={underlineStyle}
-                    />
+                    {/* 👇 Проверка перед отрисовкой линии */}
+                    {!hideUnderline && (
+                        <img
+                            src={underlineImg}
+                            alt=""
+                            className="logo-underline-img1"
+                            style={underlineStyle}
+                        />
+                    )}
                 </div>
 
-                <div className="header-avatar">
+                <NavLink to="/profile-manager" className="header-avatar">
                     <img src={avatar} alt="Аватар" />
-                </div>
+                </NavLink>
             </div>
         </header>
     );

@@ -20,6 +20,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 8px;
+    cursor: pointer;
 
 }
 
@@ -29,7 +30,11 @@
     object-fit: cover;
     border-radius: 65px;
 }
-
+.testing-header-title-wrap {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
 .testing-header-title {
     color: #4D4D4D;
     text-align: center;
@@ -41,6 +46,7 @@
     display: flex;
     margin-top: 20px;
     margin-bottom: 4px;
+    transition: color 0.3s;
 }
 
 .logo-underline-img2 {
@@ -49,6 +55,15 @@
     height: 6px;
     border-radius: 5px;
     object-fit: contain;
+}
+
+.testing-header-title:hover {
+    color: #666;
+}
+
+.inactive-title {
+    color: #B8B8B8;
+    cursor: pointer;
 }
 
 @media (max-width: 1470px) {
