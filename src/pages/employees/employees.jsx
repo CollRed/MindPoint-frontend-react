@@ -20,6 +20,7 @@ import './employees.css';
 import Pagination from "../../components/pagination/pagination.jsx";
 import Notification from "../../components/notification/notification.jsx";
 import CreateTeamModal from "../../components/modals/create-team-modal.jsx";
+import cloudPlace from "@assets/cloud-place.svg";
 import approveIcon from "@assets/approve.svg";
 import cancelIcon from "@assets/cancel.svg";
 import questionIcon from "@assets/question.svg";
@@ -344,12 +345,15 @@ export default function EmployeesPage() {
                         </div>
 
                         <div className="team-table">
-                            <div className="team-table-head">
-                                <span className="name-team-header">Название команды</span>
-                                <span className="amount-team-header">Кол-во</span>
-                                <span className="member-team-header">Роль</span>
-                            </div>
+                            {paginatedTeams.length > 0 && (
+                                <div className="team-table-head">
+                                    <span className="name-team-header">Название команды</span>
+                                    <span className="amount-team-header">Кол-во</span>
+                                    <span className="member-team-header">Роль</span>
+                                </div>
+                            )}
                         </div>
+
 
                         <div className="team-table-body">
                             {loadingRequests ? (
@@ -357,7 +361,15 @@ export default function EmployeesPage() {
                             ) : errorRequests ? (
                                 <div className="error">{errorRequests}</div>
                             ) : paginatedTeams.length === 0 ? (
-                                <div className="empty-requests">Нет Команд</div>
+                                <div className="empty-team-placeholder">
+                                    <div className="right-team-placeholder">
+                                        <img src={cloudPlace} alt="Пусто" className="placeholder-icon" />
+                                    </div>
+                                    <div className="left-team-placeholder">
+                                        <p className="placeholder-title">Здесь пока пусто</p>
+                                        <p className="placeholder-subtitle">Создайте свою первую команду</p>
+                                    </div>
+                                </div>
                             ) : (
                                 paginatedTeams.map((row, index) =>
                                         row.type === "team" ? (
@@ -447,17 +459,30 @@ export default function EmployeesPage() {
                         </div>
 
                         <div className="requests-table">
+                            {paginatedTeams.length > 0 && (
                             <div className="table-head">
                                 <span>Дата запроса</span>
                                 <span>ФИО</span>
                             </div>
+                            )}
                             <div className="table-body">
                                 {loadingRequests ? (
                                     <div className="loading">Загрузка...</div>
                                 ) : errorRequests ? (
                                     <div className="error">{errorRequests}</div>
                                 ) : paginatedRequests.length === 0 ? (
-                                    <div className="empty-requests">Нет заявок</div>
+                                    <div className="empty-requests-placeholder">
+                                        <div className="right-requests-placeholder">
+                                            <img src={cloudPlace} alt="Пусто" className="placeholder-icon" />
+                                        </div>
+                                        <div className="left-requests-placeholder">
+                                            <p className="placeholder-title-requests">Нет новых запросов</p>
+                                            <p className="placeholder-subtitle-requests">
+                                                Все запросы на присоединение
+                                                к компании обработаны
+                                            </p>
+                                        </div>
+                                    </div>
                                 ) : (
                                     paginatedRequests.map((req) => (
                                         <div key={req.request_id} className="table-row">
@@ -510,16 +535,19 @@ export default function EmployeesPage() {
                         </div>
 
                         <div className="employee-requests-table">
-                            <div className="employee-table-head">
-                                <div className="head-left-modal">
-                                    <span>ФИО</span>
+                            {paginatedTeams.length > 0 && (
+                                <div className="employee-table-head">
+                                    <div className="head-left-modal">
+                                        <span>ФИО</span>
+                                    </div>
+
+                                    <div className="head-right-modal">
+                                        <span className="invite-team">Назначить команду</span>
+                                        <span>/</span>
+                                        <span className="delete">Удалить</span>
+                                    </div>
                                 </div>
-                                <div className="head-right-modal">
-                                    <span className="invite-team">Назначить команду</span>
-                                    <span>/</span>
-                                    <span className="delete">Удалить</span>
-                                </div>
-                            </div>
+                            )}
 
                             <div className="employee-table-body">
                                 {loadingEmployees ? (
@@ -527,7 +555,17 @@ export default function EmployeesPage() {
                                 ) : errorEmployees ? (
                                     <div className="error">{errorEmployees}</div>
                                 ) : paginatedEmployees.length === 0 ? (
-                                    <div className="empty-employees">Нет сотрудников без команды</div>
+                                    <div className="empty-list-placeholder">
+                                        <div className="right-list-placeholder">
+                                            <img src={cloudPlace} alt="Пусто" className="placeholder-icon" />
+                                        </div>
+                                        <div className="left-list-placeholder">
+                                            <p className="placeholder-title-list">Все на своих местах</p>
+                                            <p className="placeholder-subtitle-list">
+                                                Каждый сотрудник назначен в команду
+                                            </p>
+                                        </div>
+                                    </div>
                                 ) : (
                                     paginatedEmployees.map((employee) => (
                                         <div key={employee.id} className="employee-table-row">
