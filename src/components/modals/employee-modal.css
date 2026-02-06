@@ -1,0 +1,207 @@
+.modal-employee-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    width: 986px;
+    height: 450px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.25s ease-out;
+}
+
+.s123 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+.modal-employee-header {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.employee-stroka {
+    width: 938px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.20);
+    margin-bottom: 24px;
+}
+
+.modal-employee-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 457px;
+    height: 100%;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    background: #FFF;
+    padding: 14px;
+    gap: 14px;
+}
+
+.modal-employee-section h4 {
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.modal-employee-section select {
+    display: flex;
+    width: 421px;
+    height: 32px;
+    padding: 4px 12px;
+    align-items: flex-start;
+    border-radius: 15px;
+    border: 1px solid #D9D9D9;
+    background: #FFFFFF;
+
+    color: rgba(0, 0, 0, 0.25);
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+}
+
+.modal-em-teamlead-section h4 {
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+
+}
+.modal-em-teamlead-section {
+    display: flex;
+    flex-direction: column;
+    width: 457px;
+    padding: 4px 12px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    border: 1px solid #D9D9D9;
+    background: #FFFFFF;
+    gap: 40px;
+
+    color: rgba(0, 0, 0, 0.25);
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    outline: none;
+
+
+}
+
+.btn-add {
+    background: #793CAE;
+    width: 421px;
+    height: 32px;
+    color: #FFF;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+
+    border: 1px solid #722ED1;
+    padding: 4px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add:hover {
+    background-color: #6a1bb5;
+}
+
+.btn-add:focus {
+    outline: none;
+}
+
+.btn-del-employee {
+    display: flex;
+    width: 100%;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #FFF;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.btn-cancel {
+    display: flex;
+    width: 199px;
+    height: 32px;
+    padding: 4px 15px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #FFF;
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+
+    color: #722ED1;
+
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+.modal-employee-header h3 {
+    display: flex;
+    width: 910px;
+    height: 28px;
+
+    color: #4D4D4D;
+    font-family: Raleway, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    gap: 16px;
+}
+
+.close-btn {
+    display: flex;
+    width: 23px;
+    height: 23px;
+    cursor: pointer;
+}
+.modal-section h4 {
+    display: flex;
+    color: #4D4D4D;
+    justify-content: center;
+
+    font-family: Roboto, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    gap: 16px;
+}

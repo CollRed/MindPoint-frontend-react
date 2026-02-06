@@ -49,11 +49,10 @@ export default function Header() {
                         />
                     )}
                 </div>
-
+            </div>
                 <NavLink to="/profile-manager" className="header-avatar">
                     <img src={avatar} alt="Аватар" />
                 </NavLink>
-            </div>
         </header>
     );
 }

@@ -15,11 +15,17 @@ import {
     handleMoveMember,
     handleRemoveMemberFromTeam,
     handleDeleteTeam,
+    handleRevokeTeamLead,
 } from "../../hooks/management.js";
 import './employees.css';
 import Pagination from "../../components/pagination/pagination.jsx";
 import Notification from "../../components/notification/notification.jsx";
 import CreateTeamModal from "../../components/modals/create-team-modal.jsx";
+import TeamModal from "../../components/modals/team-modal.jsx";
+import EmployeeModal from "../../components/modals/employee-modal.jsx";
+import TeamLeadModal from "../../components/modals/teamlead-modal.jsx";
+import pychaImage from "@assets/smart-pycha.svg";
+import searchIcon from "@assets/search.svg";
 import cloudPlace from "@assets/cloud-place.svg";
 import approveIcon from "@assets/approve.svg";
 import cancelIcon from "@assets/cancel.svg";
@@ -29,12 +35,29 @@ import deleteIcon from "@assets/delete-employee.svg"
 import infoIcon from "@assets/info.svg";
 import plusIcon from "@assets/plus-icon.svg"
 import downIcon from "@assets/down-icon.svg"
-import closeIcon from "@assets/Close.svg"
 
 export default function EmployeesPage() {
     const { employees, setEmployees, loadingEmployees, errorEmployees } = useEmployees();
     const { managerRequests, setManagerRequests, loadingRequests, errorRequests } = useManagerRequests();
     const { teams, setTeams } = useTeams();
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filterOption, setFilterOption] = useState("Список команд");
+    const filterOptions = [
+        "Список команд",
+        "Добавление в компанию",
+        "Сотрудники без команды",
+        "Все виджеты"
+    ];
+    const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
+
+    const [activeEmployee, setActiveEmployee] = useState(null);
+    const [assignToTeamId, setAssignToTeamId] = useState("");
+    const [removeFromTeamId, setRemoveFromTeamId] = useState("");
+
+    const [isTeamLeadModalOpen, setIsTeamLeadModalOpen] = useState(false);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+
     const [activeTeamModal, setActiveTeamModal] = useState(null);
     const [selectedLeadId, setSelectedLeadId] = useState("");
     const [moveUserId, setMoveUserId] = useState("");
@@ -50,20 +73,210 @@ export default function EmployeesPage() {
         teamId: "",
         teamName: "",
     };
+    const [confirmModal, setConfirmModal] = useState(initialConfirmModalState);
 
     const [notifications, setNotifications] = useState([]);
-    function addNotification(type, message) {
+    const addNotification = (type, message) => {
         setNotifications((prev) => [
             ...prev,
-            { id: Date.now(), type, message }, // уникальный id
+            { id: Date.now(), type, message },
         ]);
-    }
-
-    const [confirmModal, setConfirmModal] = useState(initialConfirmModalState);
+    };
 
     const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false);
     const [newTeamName, setNewTeamName] = useState("");
     const [isCreateConfirmOpen, setIsCreateConfirmOpen] = useState(false);
+
+    // 🔁 Сотрудники без команды
+    const employeesWithoutTeam = useMemo(() => {
+        return employees.filter(e => {
+            const hasNoTeams = !Array.isArray(e.teams) || e.teams.length === 0;
+            return hasNoTeams;
+        });
+    }, [employees]);
+
+    // 🔁 Отфильтрованные команды
+    const [expandedTeams, setExpandedTeams] = useState({});
+    const [openTeamIds, setOpenTeamIds] = useState(() => {
+        try {
+            const saved = localStorage.getItem("openTeamIds");
+            return saved ? JSON.parse(saved) : [];
+        } catch {
+            return [];
+        }
+    });
+
+    const filteredTeams = useMemo(() => {
+        if (!searchTerm) return teams;
+
+        return teams.map(teamData => {
+            const teamId = teamData.team.id;
+            const members = expandedTeams[teamId] || [];
+
+            const matchedMembers = members.filter(member =>
+                member.fullname?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            return {
+                ...teamData,
+                members: matchedMembers,
+                membersCount: matchedMembers.length, // 👈 пересчёт
+            };
+        }).filter(teamData => teamData.members.length > 0); // ❗ исключаем команды без совпадений
+    }, [teams, expandedTeams, searchTerm]);
+
+
+    // 🔍 Фильтрация видимых данных
+    const visibleRequests = useMemo(() => {
+        if (filterOption === "Добавление в компанию" || filterOption === "Все виджеты") {
+            if (!searchTerm) return managerRequests;
+
+            return managerRequests.filter(req =>
+                req.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        return managerRequests;
+    }, [managerRequests, searchTerm, filterOption]);
+
+
+    const visibleEmployees = useMemo(() => {
+        if (filterOption === "Сотрудники без команды" || filterOption === "Все виджеты") {
+            if (!searchTerm) return employeesWithoutTeam;
+
+            return employeesWithoutTeam.filter(e =>
+                e.fullname?.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        // ❗ возвращаем весь список без фильтрации
+        return employeesWithoutTeam;
+    }, [employeesWithoutTeam, searchTerm, filterOption]);
+
+
+    const visibleTeams = useMemo(() => {
+        if (filterOption === "Список команд" || filterOption === "Все виджеты") {
+            return filteredTeams; // уже внутри фильтруется по searchTerm
+        }
+
+        return teams;
+    }, [teams, filteredTeams, filterOption]);
+
+
+    // 🔢 Пагинация для заявок
+    const itemsPerPageRequests = 5;
+    const [currentPageRequests, setCurrentPageRequests] = useState(1);
+    const totalPagesRequests = Math.ceil(visibleRequests.length / itemsPerPageRequests);
+    const paginatedRequests = visibleRequests.slice(
+        (currentPageRequests - 1) * itemsPerPageRequests,
+        currentPageRequests * itemsPerPageRequests
+    );
+    useEffect(() => {
+        if (currentPageRequests > totalPagesRequests && totalPagesRequests > 0) {
+            setCurrentPageRequests(totalPagesRequests);
+        }
+    }, [currentPageRequests, totalPagesRequests]);
+
+    // 🔢 Пагинация для сотрудников
+    const itemsPerPageEmployees = 5;
+    const [currentPageEmployees, setCurrentPageEmployees] = useState(1);
+    const totalPagesEmployees = Math.ceil(visibleEmployees.length / itemsPerPageEmployees);
+    const paginatedEmployees = visibleEmployees.slice(
+        (currentPageEmployees - 1) * itemsPerPageEmployees,
+        currentPageEmployees * itemsPerPageEmployees
+    );
+    useEffect(() => {
+        if (currentPageEmployees > totalPagesEmployees && totalPagesEmployees > 0) {
+            setCurrentPageEmployees(totalPagesEmployees);
+        }
+    }, [currentPageEmployees, totalPagesEmployees]);
+
+    // 🔢 Пагинация для команд
+    const itemsPerPageTeams = 13;
+    const [currentPageTeams, setCurrentPageTeams] = useState(1);
+    function paginateTeamsRowByRow(teams, expandedTeams, openTeamIds, itemsPerPage) {
+        const pages = [];
+        let currentPage = [];
+        let currentRowCount = 0;
+
+        for (const teamData of teams) {
+            if (!teamData?.team?.id) continue;
+
+            const teamId = teamData.team.id;
+            const members = teamData.members ?? [];
+            const sortedMembers = [...members].sort((a, b) => Number(b.is_teamlead) - Number(a.is_teamlead));
+
+            // 🟣 Добавляем строку команды
+            if (currentRowCount >= itemsPerPage) {
+                pages.push(currentPage);
+                currentPage = [];
+                currentRowCount = 0;
+            }
+
+            const teamRow = {
+                type: "team",
+                team: teamData.team,
+                membersCount: sortedMembers.length,
+                members: sortedMembers,
+            };
+
+            currentPage.push(teamRow);
+            currentRowCount += 1;
+
+            // 🔵 Добавляем участников (если команда раскрыта)
+            if (openTeamIds.includes(teamId)) {
+                for (const member of sortedMembers) {
+                    if (currentRowCount >= itemsPerPage) {
+                        // Перед переходом на новую страницу — удостоверимся, что команда уже отрендерена
+                        const alreadyHasTeam = currentPage.some(
+                            (row) => row.type === "team" && row.team.id === teamId
+                        );
+                        if (!alreadyHasTeam) {
+                            // не добавляем участника без команды
+                            continue;
+                        }
+
+                        pages.push(currentPage);
+                        currentPage = [];
+                        currentRowCount = 0;
+                    }
+
+                    currentPage.push({
+                        type: "member",
+                        member,
+                        teamId,
+                    });
+
+                    currentRowCount += 1;
+                }
+            }
+        }
+
+        if (currentPage.length > 0) {
+            pages.push(currentPage);
+        }
+
+        return pages;
+    }
+
+
+
+    const [ready, setReady] = useState(false);
+
+
+    const teamPages = useMemo(() => {
+        if (!ready || Object.keys(expandedTeams).length === 0) return [];
+        return paginateTeamsRowByRow(visibleTeams, expandedTeams, openTeamIds, itemsPerPageTeams);
+    }, [visibleTeams, expandedTeams, openTeamIds, ready]);
+
+
+    const totalPagesTeams = teamPages.length;
+    const paginatedTeams = teamPages[currentPageTeams - 1] || [];
+    useEffect(() => {
+        if (currentPageTeams > totalPagesTeams && totalPagesTeams > 0) {
+            setCurrentPageTeams(totalPagesTeams);
+        }
+    }, [currentPageTeams, totalPagesTeams]);
 
     // 🔹 Обработка действий
     const onRespond = (requestId, isApproved) => {
@@ -74,97 +287,15 @@ export default function EmployeesPage() {
         handleAssignEmployee(employeeId, teamId, employeeName);
     };
 
-    // 🔹 Запросы на добавление в компанию
-    const itemsPerPageRequests = 5;
-    const [currentPageRequests, setCurrentPageRequests] = useState(1);
-    const totalPagesRequests = Math.ceil(managerRequests.length / itemsPerPageRequests);
-    const paginatedRequests = managerRequests.slice(
-        (currentPageRequests - 1) * itemsPerPageRequests,
-        currentPageRequests * itemsPerPageRequests
-    );
-    useEffect(() => {
-        if (currentPageRequests > totalPagesRequests && totalPagesRequests > 0) {
-            setCurrentPageRequests(totalPagesRequests);
+
+
+
+useEffect(() => {
+        if (currentPageTeams > totalPagesTeams && totalPagesTeams > 0) {
+            setCurrentPageTeams(totalPagesTeams);
         }
-    }, [currentPageRequests, totalPagesRequests]);
+    }, [totalPagesTeams, currentPageTeams]);
 
-    // 🔹 Сотрудники без команд
-    const employeesWithoutTeam = employees.filter(e => !Array.isArray(e.teams) || e.teams.length === 0);
-    const itemsPerPageEmployees = 5;
-    const [currentPageEmployees, setCurrentPageEmployees] = useState(1);
-    const totalPagesEmployees = Math.ceil(employeesWithoutTeam.length / itemsPerPageEmployees);
-    const paginatedEmployees = employeesWithoutTeam.slice(
-        (currentPageEmployees - 1) * itemsPerPageEmployees,
-        currentPageEmployees * itemsPerPageEmployees
-    );
-    useEffect(() => {
-        if (currentPageEmployees > totalPagesEmployees && totalPagesEmployees > 0) {
-            setCurrentPageEmployees(totalPagesEmployees);
-        }
-    }, [currentPageEmployees, totalPagesEmployees]);
-
-    // 🔹 Списки команд
-    const itemsPerPageTeams = 13;
-    const [currentPageTeams, setCurrentPageTeams] = useState(1);
-    const [expandedTeams, setExpandedTeams] = useState({});
-    const [openTeamIds, setOpenTeamIds] = useState([]);
-
-
-    function paginateTeamsRowByRow(teams, expandedTeams, openTeamIds, itemsPerPage) {
-        const rows = [];
-
-        for (const teamData of teams) {
-            if (!teamData || !teamData.team || !teamData.team.id) continue;
-
-            const teamId = teamData.team.id;
-            const members =
-                expandedTeams[teamId] ?? (Array.isArray(teamData.members) ? teamData.members : []);
-
-            // Добавляем команду
-            rows.push({
-                type: "team",
-                team: teamData.team,
-                membersCount: members.length,
-                members: members,
-            });
-
-            // Если команда раскрыта — добавляем участников
-            if (openTeamIds.includes(teamId)) {
-                const sortedMembers = [...members].sort((a, b) => Number(b.is_teamlead) - Number(a.is_teamlead));
-                for (const member of sortedMembers) {
-                    rows.push({
-                        type: "member",
-                        member,
-                        teamId,
-                    });
-                }
-            }
-        }
-
-        const pages = [];
-        for (let i = 0; i < rows.length; i += itemsPerPage) {
-            pages.push(rows.slice(i, i + itemsPerPage));
-        }
-
-        return pages;
-    }
-
-
-
-
-
-
-    const teamPages = useMemo(() => paginateTeamsRowByRow(teams, expandedTeams, openTeamIds, itemsPerPageTeams), [teams, expandedTeams, openTeamIds]);
-    const totalPagesTeams = teamPages.length;
-    const paginatedTeams = teamPages[currentPageTeams - 1] || [];
-
-
-    useEffect(() => {
-        const total = teamPages.length;
-        if (currentPageTeams > total && total > 0) {
-            setCurrentPageTeams(total);
-        }
-    }, [teamPages]);
 
     useEffect(() => {
         async function preloadAllTeamMembers() {
@@ -176,7 +307,12 @@ export default function EmployeesPage() {
 
                 try {
                     const response = await getTeamMembers(teamId);
-                    expanded[teamId] = response?.members || [];
+
+                    const members = response?.members || [];
+                    const teamLeads = response?.team_leads || [];
+
+                    expanded[teamId] = [...members, ...teamLeads]; // 👈 объединение здесь
+
                 } catch (err) {
                     console.error(`Ошибка загрузки участников команды ${teamId}:`, err);
                 }
@@ -190,6 +326,7 @@ export default function EmployeesPage() {
         }
     }, [teams]);
 
+
 // 🔹 toggleTeam нужно оставить отдельно
     const toggleTeam = (teamId) => {
         const isOpen = openTeamIds.includes(teamId);
@@ -202,6 +339,24 @@ export default function EmployeesPage() {
             setOpenTeamIds(prev => [...prev, teamId]);
         }
     };
+
+    useEffect(() => {
+        localStorage.setItem("openTeamIds", JSON.stringify(openTeamIds));
+    }, [openTeamIds]);
+
+
+    useEffect(() => {
+        const teamsLoaded = teams.length > 0 || !loadingRequests;
+
+        const expandedReady =
+            teamsLoaded &&
+            Object.keys(expandedTeams).length === teams.length;
+
+        if (teamsLoaded && expandedReady) {
+            setReady(true);
+        }
+    }, [teams, expandedTeams, loadingRequests]);
+
 
 
 
@@ -294,16 +449,19 @@ export default function EmployeesPage() {
             // 3️⃣ Обновляем раскрытые команды, но НЕ закрываем их
             const updatedExpandedTeams = {};
 
-            for (const teamId of openTeamIds) {
+            for (const team of newTeams) {
+                const teamId = team.team.id;
                 try {
                     const response = await getTeamMembers(teamId);
                     const members = response?.members || [];
-                    updatedExpandedTeams[teamId] = members;
+                    const teamLeads = response?.team_leads || [];
 
+                    updatedExpandedTeams[teamId] = [...members, ...teamLeads];
                 } catch (err) {
                     console.error(`Ошибка загрузки участников команды ${teamId}:`, err);
                 }
             }
+
 
             // 4️⃣ Обновляем expandedTeams, но не схлопываем
             setExpandedTeams(updatedExpandedTeams);
@@ -318,11 +476,46 @@ export default function EmployeesPage() {
     return (
         <div className="employees-bg">
             <div className="search-bar">
-                <input type="text" placeholder="Поиск..." className="search-input" />
-                <select className="filter-select">
-                    <option>Фильтр</option>
-                </select>
+                <div className="search-input-wrapper">
+                    <img
+                        src={searchIcon}
+                        alt="Лупа"
+                        className="search-icon"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Поиск"
+                        className="search-input"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+                <div
+                    className="filter-select"
+                    onClick={() => setFilterDropdownOpen(!isFilterDropdownOpen)}
+                >
+                    {filterOption}
+                </div>
+
+                {isFilterDropdownOpen && (
+                    <div className="filter-dropdown">
+                        {filterOptions.map(option => (
+                            <div
+                                key={option}
+                                className="filter-option"
+                                onClick={() => {
+                                    setFilterOption(option);
+                                    setFilterDropdownOpen(false);
+                                }}
+                            >
+                                {option}
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
+
 
             <div className="team-page-content">
                 <div className="left-team-content">
@@ -354,12 +547,9 @@ export default function EmployeesPage() {
                             )}
                         </div>
 
-
                         <div className="team-table-body">
-                            {loadingRequests ? (
+                            {!ready ? (
                                 <div className="loading">Загрузка...</div>
-                            ) : errorRequests ? (
-                                <div className="error">{errorRequests}</div>
                             ) : paginatedTeams.length === 0 ? (
                                 <div className="empty-team-placeholder">
                                     <div className="right-team-placeholder">
@@ -376,7 +566,10 @@ export default function EmployeesPage() {
                                             <div key={`team-${row.team.id}`}>
                                                 <div
                                                     className={`team-table-row ${
-                                                        index === paginatedTeams.length - 1 ? "last-row" : ""
+                                                        index === paginatedTeams.length - 1 &&
+                                                        currentPageTeams === totalPagesTeams
+                                                            ? "last-row"
+                                                            : ""
                                                     }`}
                                                 >
                                                     <div className="team-name">
@@ -386,17 +579,14 @@ export default function EmployeesPage() {
                                                             className={`down-icon ${
                                                                 openTeamIds.includes(row.team.id) ? "rotated" : ""
                                                             } ${
-                                                                (expandedTeams[row.team.id] || []).length === 0
-                                                                    ? "disabled"
-                                                                    : ""
+                                                                (row.members || []).length === 0 ? "disabled" : ""
                                                             }`}
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                const members = expandedTeams[row.team.id] || [];
-                                                                members.length > 0 && toggleTeam(row.team.id);
+                                                                (row.members || []).length > 0 &&
+                                                                toggleTeam(row.team.id);
                                                             }}
                                                         />
-
                                                         <span
                                                             className="team-name-text"
                                                             onClick={(e) => {
@@ -404,47 +594,78 @@ export default function EmployeesPage() {
                                                                 setActiveTeamModal({
                                                                     teamId: row.team.id,
                                                                     teamName: row.team.name,
-                                                                    members: expandedTeams[row.team.id] || [],
+                                                                    members: row.members || [],
                                                                 });
                                                             }}
                                                         >
                                     {row.team.name}
                                 </span>
                                                     </div>
-
                                                     <div className="team-count">{row.membersCount}</div>
+                                                    <div className="team-edit">Ред.</div>
                                                 </div>
 
-                                                {/* блок анимации */}
-                                                <div
-                                                    className={`team-members-wrapper ${
-                                                        openTeamIds.includes(row.team.id) ? "open" : ""
-                                                    }`}
-                                                >
-                                                    {(expandedTeams[row.team.id] || [])
-                                                        .sort((a, b) => Number(b.is_teamlead) - Number(a.is_teamlead))
-                                                        .map((member, idx, arr) => (
-                                                            <div
-                                                                key={`member-${member.id}`}
-                                                                className={`team-member-row ${
-                                                                    idx === arr.length - 1 ? "last-row" : ""
-                                                                }`}
-                                                            >
-                                        <span className="team-employee-name">
-                                            {member.fullname}
-                                        </span>
-                                                                <span className="member-role">
-                                            {member.is_teamlead ? "Тимлид" : "Сотрудник"}
-                                        </span>
-                                                            </div>
-                                                        ))}
-                                                </div>
+                                                {openTeamIds.includes(row.team.id) && (
+                                                    <div className="team-members-wrapper open"></div>
+                                                )}
+                                            </div>
+                                        ) : row.type === "member" && openTeamIds.includes(row.teamId) ? (
+                                            <div
+                                                key={`member-${row.teamId}-${row.member.id}`}
+                                                className={`team-member-row ${
+                                                    index === paginatedTeams.length - 1 &&
+                                                    currentPageTeams === totalPagesTeams
+                                                        ? "last-row"
+                                                        : ""
+                                                }`}
+                                                onClick={() => {
+                                                    const employeeTeams = teams
+                                                        .filter((t) =>
+                                                            (expandedTeams[t.team.id] || []).some(
+                                                                (m) => m.id === row.member.id
+                                                            )
+                                                        )
+                                                        .map((t) => ({
+                                                            id: t.team.id,
+                                                            name: t.team.name,
+                                                        }));
+
+                                                    if (row.member.is_teamlead) {
+                                                        setSelectedEmployee({
+                                                            ...row.member,
+                                                            teams: employeeTeams,
+                                                            currentTeamId: row.teamId,
+                                                            currentTeamName:
+                                                                teams.find((t) => t.team.id === row.teamId)
+                                                                    ?.team?.name || "",
+                                                        });
+                                                        setIsTeamLeadModalOpen(true);
+                                                    } else {
+                                                        setActiveEmployee({
+                                                            ...row.member,
+                                                            teams: employeeTeams,
+                                                            currentTeamId: row.teamId,
+                                                            currentTeamName:
+                                                                teams.find((t) => t.team.id === row.teamId)
+                                                                    ?.team?.name || "",
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                        <span className="team-employee-name">
+                            {row.member.fullname}
+                        </span>
+                                                <span className="member-role">
+                            {row.member.is_teamlead ? "Тимлид" : "Сотрудник"}
+                        </span>
                                             </div>
                                         ) : null
                                 )
                             )}
                         </div>
                     </div>
+
+
                 </div>
                 <div className="right-team-content">
                     {/* 🔹 Запросы */}
@@ -459,7 +680,7 @@ export default function EmployeesPage() {
                         </div>
 
                         <div className="requests-table">
-                            {paginatedTeams.length > 0 && (
+                            {paginatedRequests.length > 0 && (
                             <div className="table-head">
                                 <span>Дата запроса</span>
                                 <span>ФИО</span>
@@ -535,7 +756,7 @@ export default function EmployeesPage() {
                         </div>
 
                         <div className="employee-requests-table">
-                            {paginatedTeams.length > 0 && (
+                            {paginatedEmployees.length > 0 && (
                                 <div className="employee-table-head">
                                     <div className="head-left-modal">
                                         <span>ФИО</span>
@@ -600,6 +821,12 @@ export default function EmployeesPage() {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="smart-pycha">
+                    <img
+                        src={pychaImage}
+                        alt="Добавить команду"
+                    />
                 </div>
             </div>
 
@@ -694,153 +921,66 @@ export default function EmployeesPage() {
             )}
 
             {activeTeamModal && (
-                <div className="modal-overlay">
-                    <div className="modal-team-content">
-                        <div className="modal-header">
-                            <h3>Команда {activeTeamModal.teamName}</h3>
-                            <img src={closeIcon} alt="123" className="close-btn" onClick={() => setActiveTeamModal(null)}></img>
-                        </div>
-                        <div className="stroka"></div>
-
-                        <div className="modal-team-section">
-                            <h4>Добавить тимлида?</h4>
-                            <select
-                                value={selectedLeadId}
-                                onChange={(e) => setSelectedLeadId(e.target.value)}
-                            >
-                                <option value="">Ф.И.О</option>
-                                {activeTeamModal.members
-                                    .filter(m => !m.is_teamlead)
-                                    .map(m => (
-                                        <option key={m.id} value={m.id}>
-                                            {m.fullname}
-                                        </option>
-                                    ))}
-                            </select>
-                            <button
-                                className="btn-add"
-                                onClick={() => {
-                                    if (!selectedLeadId) {
-                                        addNotification("error", "Ошибка");
-                                        return;
-                                    }
-
-                                    handleAssignTeamLead(
-                                        activeTeamModal.teamId,
-                                        selectedLeadId,
-                                        async () => {
-                                            console.log("Назначен тимлид:", selectedLeadId);
-                                            addNotification("success", "Успешно");
-
-                                            await refreshAllData();
-
-                                            setSelectedLeadId("");
-                                            setActiveTeamModal(null);
-                                        },
-                                        (err) => {
-                                            addNotification("error", "Ошибка");
-                                            console.error(err);
-                                        }
-                                    );
-                                }}
-                            >
-                                Добавить
-                            </button>
-
-                        </div>
-
-                        <div className="modal-team-section">
-                            <h4>Переместить сотрудника в другую команду?</h4>
-                            <select
-                                value={moveUserId}
-                                onChange={(e) => setMoveUserId(e.target.value)}
-                            >
-                                <option value="">Выберите сотрудника</option>
-                                {activeTeamModal.members.map(m => (
-                                    <option key={m.id} value={m.id}>{m.fullname}</option>
-                                ))}
-                            </select>
-
-                            <select
-                                value={moveToTeamId}
-                                onChange={(e) => setMoveToTeamId(e.target.value)}
-                            >
-                                <option value="">Выберите команду</option>
-                                {teams
-                                    .filter(t => t.team.id !== activeTeamModal.teamId)
-                                    .map(t => (
-                                        <option key={t.team.id} value={t.team.id}>
-                                            {t.team.name}
-                                        </option>
-                                    ))}
-                            </select>
-
-                            <button
-                                className="btn-add"
-                                onClick={() => {
-                                    if (!moveUserId || !moveToTeamId) return addNotification("error", "Ошибка");
-
-                                    handleMoveMember(moveUserId, activeTeamModal.teamId, moveToTeamId, async () => {
-                                        addNotification("success", "Успешно");
-                                        await refreshAllData();
-                                        setMoveUserId("");
-                                        setMoveToTeamId("");
-                                        setActiveTeamModal(null);
-                                    });
-                                }}
-                            >
-                                Переместить
-                            </button>
-                        </div>
-
-                        <div className="modal-team-section">
-                            <h4>Удалить сотрудника из команды?</h4>
-                            <select
-                                value={removeUserId}
-                                onChange={(e) => setRemoveUserId(e.target.value)}
-                            >
-                                <option value="">Выберите сотрудника</option>
-                                {activeTeamModal.members.map(m => (
-                                    <option key={m.id} value={m.id}>{m.fullname}</option>
-                                ))}
-                            </select>
-
-                            <button
-                                className="btn-add"
-                                onClick={() => {
-                                    if (!removeUserId) return addNotification("error", "Ошибка");
-
-                                    handleRemoveMemberFromTeam(activeTeamModal.teamId, removeUserId, async () => {
-                                        addNotification("success", "Успешно");
-                                        await refreshAllData();
-                                        setRemoveUserId("");
-                                        setActiveTeamModal(null);
-                                    });
-
-                                }}
-                            >
-                                Удалить
-                            </button>
-                        </div>
-
-                        <div className="modal-team-section">
-                            <h4>Удалить команду?</h4>
-                            <div className="modal-buttons">
-                                <button className="btn-del" onClick={() => {
-                                    handleDeleteTeam(activeTeamModal.teamId, async () => {
-                                        addNotification("success", "Успешно");
-                                        await refreshAllData();
-                                        setActiveTeamModal(null);
-                                    });
-                                }}>
-                                    Удалить
-                                </button>
-                                <button className="btn-cancel" onClick={() => setActiveTeamModal(null)}>Отмена</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <TeamModal
+                    activeTeamModal={activeTeamModal}
+                    setActiveTeamModal={setActiveTeamModal}
+                    selectedLeadId={selectedLeadId}
+                    setSelectedLeadId={setSelectedLeadId}
+                    moveUserId={moveUserId}
+                    setMoveUserId={setMoveUserId}
+                    moveToTeamId={moveToTeamId}
+                    setMoveToTeamId={setMoveToTeamId}
+                    removeUserId={removeUserId}
+                    setRemoveUserId={setRemoveUserId}
+                    teams={teams}
+                    handleAssignTeamLead={handleAssignTeamLead}
+                    handleMoveMember={handleMoveMember}
+                    handleRemoveMemberFromTeam={handleRemoveMemberFromTeam}
+                    handleDeleteTeam={handleDeleteTeam}
+                    refreshAllData={refreshAllData}
+                    addNotification={addNotification}
+                />
             )}
+            {activeEmployee && (
+                <EmployeeModal
+                    activeEmployee={activeEmployee}
+                    setActiveEmployee={setActiveEmployee}
+
+                    teams={teams}
+                    addNotification={addNotification}
+                    refreshAllData={refreshAllData}
+
+                    assignToTeamId={assignToTeamId}
+                    setAssignToTeamId={setAssignToTeamId}
+
+                    moveToTeamId={moveToTeamId}
+                    setMoveToTeamId={setMoveToTeamId}
+
+                    removeFromTeamId={removeFromTeamId}
+                    setRemoveFromTeamId={setRemoveFromTeamId}
+
+                    handleAssignEmployee={handleAssignEmployee}
+                    handleMoveMember={handleMoveMember}
+                    handleRemoveMemberFromTeam={handleRemoveMemberFromTeam}
+
+                    handleAssignTeamLead={handleAssignTeamLead}   // 🔥 вот это новое
+                />
+            )}
+            <TeamLeadModal
+                isOpen={isTeamLeadModalOpen}
+                onClose={() => setIsTeamLeadModalOpen(false)}
+                employee={selectedEmployee}
+                teams={teams}
+                handleAssignTeamLead={handleAssignTeamLead}
+                handleRevokeTeamLead={handleRevokeTeamLead}
+                handleAssignEmployee={handleAssignEmployee}
+                handleMoveMember={handleMoveMember}
+                handleRemoveMemberFromTeam={handleRemoveMemberFromTeam}
+                addNotification={addNotification}
+                refreshAllData={refreshAllData}
+            />
+
+
             <div className="notification-container">
                 {notifications.map((note) => (
                     <Notification

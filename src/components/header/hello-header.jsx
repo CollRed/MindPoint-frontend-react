@@ -21,11 +21,12 @@ export default function HelloHeader({ title = "Тестирование" }) {
                 {!isProfilePage && (
                     <img src={underlineImg} alt="" className="logo-underline-img2" />
                 )}
-            </div>
-            <div className="testing-header-avatar">
-                <NavLink to="/profile-employee" className="header-avatar">
-                    <img src={avatar} alt="Аватар" />
-                </NavLink>
+
+                <div className="testing-header-avatar">
+                    <NavLink to="/profile-employee" className="header-avatar">
+                        <img src={avatar} alt="Аватар" />
+                    </NavLink>
+                </div>
             </div>
         </header>
     );

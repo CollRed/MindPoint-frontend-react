@@ -1,0 +1,110 @@
+.custom-select {
+    position: relative;
+    width: 100%;
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+}
+
+.custom-select-header {
+    display: flex;
+    width: clamp(125px, 50vw, 278px);
+    height: 38px;
+    padding: 0 12px;
+    align-items: center;
+
+    border-radius: 10px;
+    border: 1px solid #D9D9D9;
+    background: #FFF;
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+
+    color: rgba(0, 0, 0, 0.25);
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.custom-select-header:hover {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.arrow {
+    margin-left: 8px;
+}
+
+.custom-select-list {
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 219px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    margin-top: 4px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    /* scrollbar для Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #989898 #D9D9D9;
+}
+
+
+.custom-select-option {
+    cursor: pointer;
+    height: 34px;
+    padding: 9px 8px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: #FFF;
+    transition: background-color 0.2s;
+
+    color: #000;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.custom-select-option:hover {
+    background-color: #f5f5f5;
+}
+
+.custom-select-option.selected {
+    font-weight: 600;
+    background-color: #e0e0e0;
+}
+
+/* scrollbar для Chrome, Safari, Edge */
+.custom-select-list::-webkit-scrollbar {
+    width: 4.8px;
+}
+
+.custom-select-list::-webkit-scrollbar-track {
+    background: #D9D9D9;
+    border-radius: 5px;
+}
+
+.custom-select-list::-webkit-scrollbar-thumb {
+    background-color: #989898;
+    border-radius: 5px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.custom-select-list::-webkit-scrollbar-thumb:hover {
+    background-color: #7a7a7a;
+}
+
+.custom-select-list::-webkit-scrollbar-button:single-button:vertical:decrement,
+.custom-select-list::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: none;
+    height: 0;
+    width: 0;
+    background: transparent;
+    border: none;
+}

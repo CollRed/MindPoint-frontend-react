@@ -257,16 +257,6 @@ export function getTeamMembers(teamId) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 export function handleAssignTeamLead(teamId, userId, onSuccess, onError) {
     authFetch('/management/assign_team_lead_to_team', {
         method: 'POST',
@@ -294,6 +284,32 @@ export function handleAssignTeamLead(teamId, userId, onSuccess, onError) {
         });
 }
 
+export function handleRevokeTeamLead(teamId, userId, onSuccess, onError) {
+    authFetch('/management/revoke_team_lead_from_team', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+            team_id: teamId,
+            user_id: userId
+        }),
+    })
+        .then(async (res) => {
+            if (!res.ok) {
+                const text = await res.text();
+                console.error('Ошибка при снятии тимлида:', text);
+                if (onError) onError(text);
+                return;
+            }
+
+            const result = await res.json();
+            if (onSuccess) onSuccess(result);
+        })
+        .catch((err) => {
+            console.error('Ошибка сети при снятии тимлида:', err);
+            if (onError) onError(err);
+        });
+}
 
 
 export function handleMoveMember(userId, fromTeamId, toTeamId, onSuccess, onError) {
