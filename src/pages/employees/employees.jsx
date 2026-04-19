@@ -163,7 +163,7 @@ export default function EmployeesPage() {
     }, [teams, filteredTeams, filterOption]);
 
 
-    // 🔢 Пагинация для заявок
+    // Пагинация для заявок
     const itemsPerPageRequests = 5;
     const [currentPageRequests, setCurrentPageRequests] = useState(1);
     const totalPagesRequests = Math.ceil(visibleRequests.length / itemsPerPageRequests);
@@ -177,7 +177,7 @@ export default function EmployeesPage() {
         }
     }, [currentPageRequests, totalPagesRequests]);
 
-    // 🔢 Пагинация для сотрудников
+    // Пагинация для сотрудников
     const itemsPerPageEmployees = 5;
     const [currentPageEmployees, setCurrentPageEmployees] = useState(1);
     const totalPagesEmployees = Math.ceil(visibleEmployees.length / itemsPerPageEmployees);

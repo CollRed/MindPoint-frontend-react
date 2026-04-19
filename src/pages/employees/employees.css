@@ -148,7 +148,7 @@
     width: 528px;
     max-height: 584px;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
 }
 

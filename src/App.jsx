@@ -4,7 +4,6 @@ import LoginPage from './pages/login/LoginPage.jsx';
 import HomePage from './pages/home/HomePage.jsx';
 import EmployeesPage from './pages/employees/employees.jsx';
 import MainLayout from './layouts/main.jsx';
-import EmployeeDashboardPage from './pages/DashboardEmployees/MainEmploye.jsx';
 import TestingPage from './pages/test/test.jsx';
 import TestCompleted from './pages/test/test-completed.jsx';
 import ProfileManager from './pages/profile/manager/profile-manager.jsx';
@@ -15,20 +14,20 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Navigate to="/login" />} />
+                {/* Логин */}
                 <Route path="/login" element={<LoginPage />} />
+                {/* Регистрация */}
                 <Route path="/register" element={<RegisterPage />} />
 
-                {/* Статистика */}
+                {/* Аккаунт менеджера */}
                 <Route
                     path="/home"
                     element={
                         <MainLayout>
                             <HomePage />
-                        </MainLayout>
-                    }
-                />
+                        </MainLayout>}/>
 
-                {/* Сотрудники */}
+                {/* Аккаунт сотрудника */}
                 <Route
                     path="/employees"
                     element={
@@ -37,9 +36,13 @@ function App() {
                         </MainLayout>
                     }
                 />
+                {/* Профиль менеджера */}
                 <Route path="/profile-manager" element={<ProfileManager /> } />
+                {/* Профиль сотрудника */}
                 <Route path="/profile-employee" element={<ProfileEmployee /> } />
+                {/* Тестирование */}
                 <Route path="/testing" element={<TestingPage />} />
+                {/* Тестирование пройденно */}
                 <Route path="/test-completed" element={<TestCompleted />} />
             </Routes>
         </BrowserRouter>

@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import "./custom-select.css";
+import { useState, useRef, useEffect } from "react";
+import "./team-custom-select.css";
 import arrowSelect from "@assets/arrow-select.svg";
 
-function CustomSelect({ options, placeholder = "Выбери команду", onChange }) {
+function TeamCustomSelect({ options, placeholder = "Выбери команду", onChange }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const ref = useRef(null);
@@ -26,9 +26,11 @@ function CustomSelect({ options, placeholder = "Выбери команду", on
     };
 
     return (
-        <div className="custom-select" ref={ref}>
-            <div className="custom-select-header" onClick={() => setIsOpen(!isOpen)}>
-                {selected ? selected.name : placeholder}
+        <div className="team-custom-select" ref={ref}>
+            <div className="team-custom-select-header" onClick={() => setIsOpen(!isOpen)}>
+    <span className="team-custom-select-header-text">
+        {selected ? selected.name : placeholder}
+    </span>
                 <img
                     src={arrowSelect}
                     alt="arrow"
@@ -36,12 +38,12 @@ function CustomSelect({ options, placeholder = "Выбери команду", on
                 />
             </div>
             {isOpen && (
-                <ul className="custom-select-list">
+                <ul className="team-custom-select-list">
                     {options.map((option) => (
                         <li
                             key={option.team.id}
                             onClick={() => handleSelect(option.team)}
-                            className={`custom-select-option ${
+                            className={`team-custom-select-option ${
                                 selected?.id === option.team.id ? "selected" : ""
                             }`}
                         >
@@ -54,4 +56,4 @@ function CustomSelect({ options, placeholder = "Выбери команду", on
     );
 }
 
-export default CustomSelect;
+export default TeamCustomSelect;

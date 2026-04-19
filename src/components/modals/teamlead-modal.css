@@ -40,6 +40,11 @@
     gap: 14px;
 }
 
+.modal-header h3 {
+    display: flex;
+    width: 918px;
+}
+
 .modal-teamlead-section h4 {
     color: #4D4D4D;
     font-family: Roboto, sans-serif;

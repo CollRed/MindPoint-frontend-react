@@ -4,27 +4,25 @@ import "./pagination.css";
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
     const [inputValue, setInputValue] = useState(currentPage);
 
-    // Следим за внешним изменением currentPage
+
     useEffect(() => {
         setInputValue(currentPage);
     }, [currentPage]);
 
-    // Обработка ввода пользователем
     const handleInputChange = (e) => {
         const value = e.target.value;
         setInputValue(value);
     };
 
-    // При потере фокуса или на Enter
     const handleInputBlur = () => {
         let page = parseInt(inputValue, 10);
 
         if (isNaN(page)) {
-            page = currentPage; // вернуть старое значение, если не число
+            page = currentPage;
         }
 
         page = Math.max(1, Math.min(totalPages, page));
-        setInputValue(page); // обновим input на случай, если обрезали
+        setInputValue(page);
         if (page !== currentPage) {
             onPageChange(page);
         }
@@ -32,7 +30,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            e.target.blur(); // Триггерим blur для применения
+            e.target.blur();
         }
     };
 
@@ -45,7 +43,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                 onClick={() => onPageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
             >
-                &lt;
+                <span>&lt;</span>
             </button>
 
             <div className="page-display">
@@ -68,7 +66,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
                 onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
             >
-                &gt;
+                <span>&gt;</span>
             </button>
         </div>
 

@@ -1,0 +1,317 @@
+.stress-chart-body {
+    display: flex;
+    width: 810px;
+    height: 364px;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0 0 15px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    background: #FFF;
+    padding: 8px 40px;
+}
+
+.stress-chart-text {
+    display: flex;
+    align-self: flex-start;
+    width: 240px;
+    height: 16px;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+.stress-chart-main {
+    display: flex;
+    gap: 40px;
+    flex-direction: row;
+    justify-content: center;
+    align-self: flex-start;
+}
+
+.stress-chart-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 79px;
+    height: 298px;
+}
+
+.stress-chart-left-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.7s ease;
+}
+
+.stress-chart-left-item.dimmed {
+    opacity: 0.35;
+}
+
+.stress-chart-left-item:not(.dimmed) {
+    opacity: 1;
+}
+
+.stress-chart-normal-color {
+    display: flex;
+    width: 40px;
+    height: 20px;
+    border-radius: 15px;
+    background: #6204EF;
+    margin-bottom: 2px;
+}
+
+.stress-chart-low-color {
+    display: flex;
+    width: 40px;
+    height: 20px;
+    border-radius: 15px;
+    background: #9169EC;
+    margin-bottom: 2px;
+}
+
+.stress-chart-medium-color {
+    display: flex;
+    width: 40px;
+    height: 20px;
+    border-radius: 15px;
+    background: #A78BFA;
+    margin-bottom: 2px;
+}
+
+.stress-chart-high-color {
+    display: flex;
+    width: 40px;
+    height: 20px;
+    border-radius: 15px;
+    background: #D7A5EF;
+    margin-bottom: 2px;
+}
+
+.stress-chart-very-high-color {
+    display: flex;
+    width: 40px;
+    height: 20px;
+    border-radius: 15px;
+    border: 1px solid #C7AAD5;
+    background: #C7AAD5;
+    margin-bottom: 2px;
+}
+
+.stress-chart-normal, .stress-chart-low, .stress-chart-medium, .stress-chart-high {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    margin-bottom: 14px;
+}
+
+.stress-chart-very-high {
+    width: 100%;
+    text-align: center;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.stress-chart-right {
+    display: flex;
+    flex-direction: row;
+    width: 610px;
+    margin-top: 24px;
+}
+
+.stress-chart-number {
+    display: flex;
+    width: 25px;
+    gap: 28px;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 12px;
+}
+
+.chart-number-100, .chart-number-75, .chart-number-50, .chart-number-25, .chart-number-0 {
+    display: flex;
+    color: #4D4D4D;
+    text-align: right;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.stress-chart-stroka {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.chart-stroka-number-100,
+.chart-stroka-number-75,
+.chart-stroka-number-50,
+.chart-stroka-number-25,
+.chart-stroka-number-0 {
+    display: flex;
+    width: 100%;
+    height: 1px;
+    background: rgba(77, 77, 77, 0.40);
+}
+
+.stress-chart-grid-block {
+    display: flex;
+    flex-direction: column;
+    width: 573px;
+    margin-top: 11px;
+}
+
+.stress-chart-graph-area {
+    position: relative;
+    width: 573px;
+    height: 223px;
+}
+
+.stress-chart-x-axis {
+    position: relative;
+    width: 573px;
+    height: 24px;
+    margin-top: 10px;
+}
+
+.stress-chart-x-label {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+.stress-chart-x-label::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 10px;
+    background: rgba(77, 77, 77, 0.40);
+}
+
+.stress-chart-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    z-index: 2;
+}
+
+.stress-line {
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 2s ease forwards;
+}
+
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.stress-point-group {
+    cursor: pointer;
+}
+
+.stress-point-hover-area {
+    fill: transparent;
+}
+
+.stress-point {
+    opacity: 0;
+    transition: opacity 0.2s ease, fill 0.2s ease, transform 0.2s ease;
+    transform-origin: center;
+    pointer-events: none;
+}
+
+.stress-point-group:hover .stress-point {
+    opacity: 1;
+}
+
+.stress-point-group:hover .stress-point-normal {
+    fill: #6204EF;
+}
+
+.stress-point-group:hover .stress-point-low {
+    fill: #9169EC;
+}
+
+.stress-point-group:hover .stress-point-medium {
+    fill: #A78BFA;
+}
+
+.stress-point-group:hover .stress-point-high {
+    fill: #D7A5EF;
+}
+
+.stress-point-group:hover .stress-point-very-high {
+    fill: #C7AAD5;
+
+}
+
+.stress-tooltip-text {
+    fill: #FFF;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+
+.stress-line-normal {
+    stroke: #6204EF;
+}
+
+.stress-line-low {
+    stroke: #9169EC;
+}
+
+.stress-line-medium {
+    stroke: #A78BFA;
+}
+
+.stress-line-high {
+    stroke: #D7A5EF;
+}
+
+.stress-line-very-high {
+    stroke: #C7AAD5;
+}
+

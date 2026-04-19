@@ -1,0 +1,55 @@
+.main-trigger {
+    position: absolute;
+    top: -18px;
+    left: 230px;
+    z-index: 1001;
+
+    width: 667px;
+    height: 322px;
+    padding: 10px 16px 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    background: var(--Conditional-pop-over, #FFF);
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.40);
+
+    font-family: Raleway, sans-serif;
+    color: #2B2B2B;
+}
+
+.big-alert {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    margin-top: -75px;
+}
+
+.diagram-header-trigger, .diagram-body-trigger, .diagram-footer-trigger {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    justify-content: center;
+    align-self: flex-start;
+}
+
+.diagram-header-text1, .diagram-body-text1, .diagram-footer-text1 {
+    color: var(--character-primary-85, rgba(0, 0, 0, 0.85));
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+}
+
+.diagram-header-text2, .diagram-body-text2, .diagram-footer-text2, .diagram-footer-text3, .diagram-footer-text4 {
+    color: var(--character-primary-85, rgba(0, 0, 0, 0.85));
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}

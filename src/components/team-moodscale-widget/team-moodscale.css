@@ -1,0 +1,382 @@
+.team-moodscale-widget {
+    display: flex;
+    width: 949px;
+    height: 462px;
+    border-radius: 15px;
+    background: #FFF;
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    padding: 40px 0 40px 40px;
+    box-sizing: border-box;
+}
+
+.team-moodscale-left {
+    display: flex;
+    width: 361px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.moodscale-left-text {
+    display: flex;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 24px;
+}
+
+.moodscale-chart-wrapper {
+    position: relative;
+    width: 245px;
+    height: 245px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 24px;
+    margin-bottom: 19px;
+}
+
+.moodscale-chart {
+    display: block;
+    width: 245px;
+    height: 245px;
+    overflow: visible;
+}
+
+.moodscale-segment {
+    transition: fill 0.3s ease, opacity 0.3s ease;
+}
+
+.moodscale-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    margin-top: 8px;
+}
+
+.moodscale-center-value {
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.moodscale-center-label {
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+
+.moodscale-segment {
+    transform-box: fill-box;
+}
+
+.moodscale-segment-animated {
+    opacity: 0;
+    transform: scale(0.75);
+    transition:
+            transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.45s ease;
+}
+
+.moodscale-segment-animated.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.moodscale-emojie {
+    display: flex;
+    justify-content: space-between;
+    width: 207px;
+    margin-left: 41px;
+}
+
+.moodscale-emojie-item {
+    width: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.moodscale-emojie-icon-wrap {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.moodscale-emojie-icon {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.emojie-percent {
+    width: 100%;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */;
+}
+
+.team-moodscale-right {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.moodscale-right-text {
+    color: #4D4D4D;
+    font-family: Raleway, sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 91px;
+    margin-left: 11px;
+}
+
+.moodscale-right-chart {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+
+.moodscale-right-number {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 16px;
+    height: 222px;
+    margin-top: 10px;
+    padding-top: 0;
+}
+
+.moodscale-number-5,
+.moodscale-number-4,
+.moodscale-number-3,
+.moodscale-number-2,
+.moodscale-number-1 {
+    color: #4D4D4D;
+    height: 22px;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.moodscale-right-plot {
+    position: relative;
+    width: 499px;
+    height: 245px;
+}
+
+.moodscale-dynamic-line {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 499px;
+    height: 200px;
+    z-index: 3; /* 🔥 ВАЖНО */
+    pointer-events: none;
+}
+
+.moodscale-right-stroki {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 499px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 15px;
+    margin-left: 0;
+    z-index: 1;
+}
+
+.moodscale-stroka,
+.moodscale-stroka-5,
+.moodscale-stroka-4,
+.moodscale-stroka-3,
+.moodscale-stroka-2,
+.moodscale-stroka-1 {
+    display: block;
+    width: 499px;
+    height: 1px;
+    background: rgba(77, 77, 77, 0.40);
+    margin-bottom: 0;
+}
+
+.moodscale-dynamic-columns {
+    position: absolute;
+    top: 13px;
+    left: 0;
+    width: 499px;
+    height: 232px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+    box-sizing: border-box;
+}
+
+.moodscale-dynamic-columns-week {
+    padding: 0 10px;
+}
+
+.moodscale-dynamic-columns-month {
+    padding: 0 20px;
+}
+
+.moodscale-dynamic-columns-year {
+    padding: 0;
+}
+
+.moodscale-dynamic-column-wrap {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
+.moodscale-dynamic-column {
+    height: 200px;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+}
+
+/* week */
+.moodscale-dynamic-column-wrap-week {
+    width: 43px;
+}
+
+.moodscale-dynamic-column-week {
+    width: 43px;
+}
+
+/* month */
+.moodscale-dynamic-column-wrap-month {
+    width: 43px;
+}
+
+.moodscale-dynamic-column-month {
+    width: 43px;
+}
+
+/* year */
+.moodscale-dynamic-column-wrap-year {
+    width: 35px;
+}
+
+.moodscale-dynamic-column-year {
+    width: 35px;
+}
+
+.moodscale-dynamic-segment {
+    width: 100%;
+    border-radius: 15px;
+    transition: height 0.8s ease, opacity 0.4s ease;
+    flex-shrink: 0;
+}
+
+.moodscale-dynamic-segment.is-empty {
+    height: 0 !important;
+    min-height: 0 !important;
+    opacity: 0;
+}
+
+.moodscale-dynamic-segment.has-value {
+    opacity: 1;
+}
+
+.moodscale-dynamic-segment-1 {
+    background: #DDD6FE;
+}
+
+.moodscale-dynamic-segment-2 {
+    background: #CFC4FA;
+}
+
+.moodscale-dynamic-segment-3 {
+    background: #B9A7F6;
+}
+
+.moodscale-dynamic-segment-4 {
+    background: #9A77F0;
+}
+
+.moodscale-dynamic-segment-5 {
+    background: #8B5CF6;
+}
+
+.moodscale-dynamic-label-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: -4px;
+    height: 34px;
+}
+
+.moodscale-dynamic-tick {
+    width: 1px;
+    height: 9px;
+    background: rgba(77, 77, 77, 0.35);
+    margin-bottom: 7px;
+    transform: translateY(3px);
+    flex-shrink: 0;
+}
+
+.moodscale-dynamic-label {
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    white-space: nowrap;
+}
+
+.moodscale-dynamic-label-top,
+.moodscale-dynamic-label-bottom {
+    display: block;
+    line-height: 12px;
+}

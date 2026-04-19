@@ -1,0 +1,234 @@
+.count-test-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 532px;
+    height: 462px;
+    border-radius: 15px;
+    background: #FFF;
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    padding: 40px 36px;
+}
+
+.test-widget-text {
+    display: flex;
+    width: 459px;
+    height: 38px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.test-widget-count {
+    display: flex;
+    height: 56px;
+    color: #9169EC;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 48px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 29px;
+}
+
+.test-widget-main {
+    display: flex;
+    width: 461px;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.test-widget-grid-block {
+    display: flex;
+    flex-direction: column;
+    width: 426px;
+}
+
+.test-widget-graph-area {
+    position: relative;
+    width: 426px;
+    height: 202px;
+}
+
+.test-widget-stroka {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 426px;
+    height: 202px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.test-widget-grid-line {
+    width: 426px;
+    height: 1px;
+    background: rgba(77, 77, 77, 0.40);
+}
+
+.test-widget-number {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 26px;
+    height: 202px;
+    margin-right: 9px;
+    flex-shrink: 0;
+}
+
+.test-widget-number-item {
+    height: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    color: #4D4D4D;
+    text-align: right;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.test-widget-bars {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 426px;
+    height: 202px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+}
+
+.test-widget-bar.active {
+    background: #9169EC;
+    transition: background 0.2s ease;
+}
+
+.test-widget-bar-wrap {
+    width: 70px;
+    height: 202px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.test-widget-tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+
+    background: #9169EC;
+    color: #FFF;
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+
+    opacity: 0;
+    visibility: hidden;
+    transition:
+            opacity 0.25s ease,
+            transform 0.25s ease,
+            visibility 0.25s ease;
+}
+
+.test-widget-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.test-widget-tooltip::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #9169EC;
+    left: 50%;
+    top: 85%;
+    transform: translateX(-50%) rotate(45deg);
+    border-radius: 0 0 2px 0;
+    z-index: 1;
+}
+
+.test-widget-bar {
+    width: 43px;
+    border-radius: 15px;
+    background: #C4B5FD;
+    position: relative;
+    min-height: 1px;
+    transform-origin: bottom;
+    transition:
+            height 1.5s ease,
+            background 0.25s ease,
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+.test-widget-bar.animate {
+    will-change: height, transform;
+}
+
+.test-widget-bar.active {
+    background: #9169EC;
+}
+
+.test-widget-x-axis {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-top: 8px;
+}
+
+.test-widget-x-label {
+    width: 80px; /* фикс ширина как на макете */
+    position: relative;
+    text-align: center;
+    color: #4D4D4D;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.test-widget-x-label div {
+    white-space: nowrap;
+}
+
+.test-widget-x-label::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.test-widget-x-axis-week .test-widget-x-label::before {
+    transform: translateX(-10%);
+}

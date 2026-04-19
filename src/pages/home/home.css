@@ -17,35 +17,55 @@
 }
 
 .tab-navigate {
+    position: relative;
     display: flex;
-    justify-content: flex-start;
     align-items: flex-start;
-    flex-direction: row;
     gap: 24px;
+    padding-bottom: 18px;
 }
 
-.general-tab {
+.main-tab {
+    z-index: 2;
     display: flex;
-    color: #4D4D4D;
-    text-align: center;
+    cursor: pointer;
+}
+
+.main-tab span {
+    display: inline-block;
+    color: rgba(77, 77, 77, 0.5);
     font-family: Raleway, sans-serif;
     font-size: 32px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.team-tab {
-    display: flex;
+.main-tab.active span {
     color: #4D4D4D;
-    text-align: center;
-    font-family: Raleway, sans-serif;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    cursor: pointer;
+}
+
+.main-tab-track {
+    position: absolute;
+    left: 0;
+    bottom: 4px;
+
+    width: 271px;
+    height: 1px;
+    background: #D9D9D9;
+}
+
+.main-tab-slider {
+    position: absolute;
+    left: 0;
+    bottom: 2px;
+    height: 6px;
+    z-index: 1;
+    pointer-events: none;
+    transition:
+            transform 0.35s ease,
+            width 0.35s ease,
+            opacity 0.2s ease;
 }
 
 .main-header-content {
@@ -142,12 +162,60 @@
 
 .level-item1, .level-item2, .level-item3, .level-item4, .level-item5 {
     display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
     width: 100%;
     height: 41px;
     border-radius: 30px;
+    gap: 13px;
     background: #FFF;
     box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    padding: 2px;
 }
+
+.very-funny-smile, .light-smile, .moderate-smile, .sad-smile, .very-sad-smile {
+    display: flex;
+    width: 25px;
+    height: 25px;
+}
+
+.shkala {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* центр текста */
+    position: relative;
+
+    width: 128px;
+    height: 37px;
+    border-radius: 30px;
+    background: #D2D2D2;
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.shkala-fill {
+    position: absolute; /* 👈 ключевой момент */
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: #9169EC;
+    transition: width 0.3s ease;
+}
+
+.shkala-text {
+    width: 46px;
+    height: 21px;
+    z-index: 1;
+    color: #4D4D4D;
+    text-align: right;
+    font-family: Roboto, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 91.667% */
+}
+
 
 .metric-state {
     display: flex;
@@ -155,53 +223,101 @@
     gap: clamp(1px, 0.8vw, 15px);
 }
 
-.metric-stress, .metric-anxiety, .metric-depression {
-    display: flex;
-    text-align: center;
-    justify-content: flex-start;
-    flex-direction: column;
+.metric-card {
+    position: relative;
     width: clamp(125px, 12vw, 224px);
     height: 224px;
     border-radius: 15px;
     background: #FFF;
     box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    overflow: hidden;
 }
 
-.metric-stress h1, .metric-anxiety h1, .metric-depression h1 {
-    display: flex;
+.metric-card h1 {
+    margin: 22px 0 0 0;
     color: #4D4D4D;
-    justify-content: center;
     text-align: center;
     font-family: Raleway, sans-serif;
     font-size: 32px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    margin-top: 24px;
 }
 
-.metric-stress p, .metric-anxiety p, .metric-depression p {
-    display: flex;
+.metric-card p {
+    margin: 0;
+    margin-top: -2px;
     color: #4D4D4D;
-    justify-content: center;
     text-align: center;
     font-family: Roboto, sans-serif;
     font-size: 16px;
     font-style: normal;
     font-weight: 300;
     line-height: normal;
-    margin-bottom: 50px;
 }
 
-.stress-sphere, .anxiety-sphere, .depression-sphere {
+.metric-shape {
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    transform: translateX(-50%);
+    width: 212px;
+    height: 112px;
+    border-radius: 118px 118px 10px 10px;
+    background: #C4B5FD;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) inset;
     display: flex;
-    color: #4D4D4D;
+    align-items: center;
     justify-content: center;
+    overflow: hidden;
+}
+
+.metric-shape-inner {
+    position: absolute;
+    inset: 1px;
+    border-radius: 118px 118px 10px 10px;
+    overflow: hidden;
+}
+
+.metric-liquid {
+    position: absolute;
+    left: 0;
+    bottom: -25px;
+    width: 100%;
+    background: #8F6AEF;
+    transition: height 0.6s ease;
+
+}
+
+.metric-wave {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 250%;
+    height: 38px;
+    fill: #8F6AEF;
+    animation: waveMove 4s linear infinite;
+}
+
+@keyframes waveMove {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.metric-shape span {
+    position: relative;
+    z-index: 2;
+    margin-top: 39px;
+    color: #EDE9FE;
     text-align: center;
     font-family: Roboto, sans-serif;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 300;
+    font-size: 64px;
+    font-style: italic;
+    font-weight: 800;
     line-height: normal;
 }
 
@@ -249,58 +365,49 @@
 }
 
 .percent-employee-right {
+    position: relative;
     display: flex;
-    text-align: center;
-    justify-content: center;
-    width: 275px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 14px;
+    width: fit-content;
     height: 25px;
 }
 
-.button-employee-stress {
+.employee-tab {
     display: flex;
-
-
-    color: #FFF;
-    background-color: transparent;
-    text-align: center;
-    font-family: Roboto, sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    margin-right: 10.5px;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
 }
 
-.button-employee-anxiety {
-    display: flex;
-
-
-    color: #FFF;
-    background-color: transparent;
+.employee-button {
+    color: #4D4D4D;
+    display: inline-block;
     text-align: center;
     font-family: Roboto, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-right: 13px;
-    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.3s ease;
 }
 
-.button-employee-depression {
-    display: flex;
-
-
+.employee-tab.active .employee-button {
     color: #FFF;
-    background-color: transparent;
-    text-align: center;
-    font-family: Roboto, sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    cursor: pointer;
+}
+
+.employee-slider {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 3px;
+    pointer-events: none;
+    transition:
+            transform 0.35s ease,
+            width 0.35s ease,
+            opacity 0.2s ease;
 }
 
 .percent-testing {
@@ -552,4 +659,263 @@
     border-bottom-right-radius: 20px;
     border-bottom: none;
     overflow: hidden;
+}
+
+
+/* Команды */
+
+.team-header-content {
+    display: flex;
+    padding: 50px 0px 0px 0px;
+    gap: clamp(5px, 2vw, 24px);
+    margin-bottom: 31px;
+}
+
+.team-headleft-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.team-select-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.team-stress, .team-anxiety, .team-depression {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 115px;
+    height: 111px;
+    border-radius: 15px;
+    background: #FFF;
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+}
+
+.team-stress h1, .team-anxiety h1, .team-depression h1 {
+    display: flex;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 10px;
+}
+
+.team-stress p, .team-anxiety p, .team-depression p {
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 18px;
+}
+
+.team-stress-sphere, .team-anxiety-sphere, .team-depression-sphere {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sphera {
+    display: block;
+    width: 100%;
+}
+
+.sphere-text {
+    position: absolute;
+    top: 8px;        /* регулируй положение */
+    left: 50%;
+    transform: translateX(-50%);
+
+    color: #EDE9FE;
+    text-align: center;
+    font-family: Roboto,sans-serif;
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 800;
+    line-height: normal;
+    pointer-events: none; /* чтобы клики проходили сквозь текст */
+}
+
+
+.team-headright-content {
+    display: flex;
+    gap: 25px;
+}
+
+.team-counter-test {
+    display: flex;
+    width: 532px;
+    height: 462px;
+}
+
+.team-moodscale-content {
+
+}
+.team-body-content {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+
+}
+
+
+.team-left-indicator, .team-right-indicator {
+    display: flex;
+    flex-direction: column;
+    width: 810px;
+    height: 66px;
+    border-radius: 15px 15px 0 0;
+    background: #FFF;
+    border: 1px solid rgba(0, 0, 0, 0.20);
+    box-shadow: none;
+    transition: box-shadow 0.01s ease;
+
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0, 0, 0, 0.2);
+
+    z-index: 1000;
+}
+
+.header-left-indicator, .header-right-indicator {
+    display: flex;
+    flex-direction: row;
+    padding: 14px 40px 0px 40px;
+    gap: 236px;
+    height: 66px;
+}
+
+.team-left-indicator.error {
+    display: flex;
+    flex-direction: column;
+    width: 810px;
+    height: 66px;
+    border-radius: 15px 15px 0 0;
+    background: #FFF;
+    border: 0;
+    box-shadow:
+            inset 0 3px 0 #DE2020,
+            inset 3px 0 0 #DE2020,
+            inset -3px 0 0 #DE2020;
+}
+
+.indicator {
+    display: flex;
+    width: 220px;
+    flex-direction: row;
+    height: 38px;
+    gap: 14px;
+}
+
+.indicator-icon {
+    width: 26px;
+    height: 26px;
+    align-self: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.indicator-icon:hover {
+    transform: scale(1.1);
+}
+
+.indicator-text, .right-indicator {
+    display: flex;
+    width: 182px;
+    height: 38px;
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    transition: color 0.2s ease;
+}
+
+.indicator-text.error {
+    color: #DE2020;
+    display: flex;
+    width: 182px;
+    height: 38px;
+    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    transition: color 0.2s ease;
+}
+
+.indicator-stroka, .right-indicator-stroka  {
+    display: flex;
+    width: 100%;
+    height: 1px;
+    background: rgba(77, 77, 77, 0.40);
+}
+
+.indicator-metric, .right-indicator-metric {
+    display: flex;
+    position: relative;
+    margin-top: 20px;
+    gap: 14px;
+    flex-direction: row;
+    width: fit-content;
+    align-items: flex-start;
+}
+
+.indicator-tab {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.indicator-button {
+    color: rgba(77, 77, 77, 0.20);
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-family: Roboto,sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    margin-top: 6px;
+}
+
+.indicator-tab.active .indicator-button {
+    color: #4D4D4D;
+}
+
+.indicator-slider {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: -3px;
+    height: 3px;
+    pointer-events: none;
+    transition:
+            transform 0.35s ease,
+            width 0.35s ease,
+            opacity 0.2s ease;
 }

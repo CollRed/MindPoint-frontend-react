@@ -41,6 +41,7 @@
     right: 0;
     max-height: 219px;
     overflow-y: auto;
+    overflow-x: hidden;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 12px;

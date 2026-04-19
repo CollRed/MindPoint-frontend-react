@@ -3,7 +3,8 @@
     width: 88px;
     height: 21px;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 1px;
 }
 .page-display {
     display: flex;
@@ -49,16 +50,24 @@
     display: flex;
     width: 21px;
     height: 21px;
-    padding: 6px;
     justify-content: center;
     align-items: center;
+    padding: 0;
     border-radius: 2px;
     outline: none;
     border: none;
     background-color: transparent;
-    margin-top: -3px;
     color: #A3A3A3;
+    line-height: 1;
+    cursor: pointer;
+}
 
+.page-btn.arrow span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transform: translateY(-1px);
 }
 
 .page-btn.arrow:focus {

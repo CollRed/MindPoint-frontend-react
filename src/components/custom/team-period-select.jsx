@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './period-select.css';
+import './team-period-select.css';
 import arrowSelect from "@assets/arrow-select.svg";
 
 const options = [
@@ -8,7 +8,7 @@ const options = [
     { id: 'year', name: 'Год' },
 ];
 
-const PeriodSelect = ({ value, onChange, placeholder = 'Период' }) => {
+const TeamPeriodSelect = ({ value, onChange, placeholder = 'Период' }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const selectedOption = options.find((option) => option.id === value);
@@ -19,8 +19,8 @@ const PeriodSelect = ({ value, onChange, placeholder = 'Период' }) => {
     };
 
     return (
-        <div className="custom-select">
-            <div className="custom-select-header" onClick={() => setIsOpen(!isOpen)}>
+        <div className="team-custom-select">
+            <div className="team-custom-select-header" onClick={() => setIsOpen(!isOpen)}>
                 {selectedOption ? selectedOption.name : placeholder}
                 <img
                     src={arrowSelect}
@@ -30,11 +30,11 @@ const PeriodSelect = ({ value, onChange, placeholder = 'Период' }) => {
             </div>
 
             {isOpen && (
-                <div className="custom-select-options">
+                <div className="team-custom-select-options">
                     {options.map((option) => (
                         <div
                             key={option.id}
-                            className="custom-select-option"
+                            className="team-custom-select-option"
                             onClick={() => handleSelect(option)}
                         >
                             {option.name}
@@ -46,4 +46,4 @@ const PeriodSelect = ({ value, onChange, placeholder = 'Период' }) => {
     );
 };
 
-export default PeriodSelect;
+export default TeamPeriodSelect;

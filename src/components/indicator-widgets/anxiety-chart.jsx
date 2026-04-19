@@ -1,0 +1,339 @@
+import React, { useEffect, useState } from "react";
+import "./anxiety-chart.css";
+
+
+export default function AnxietyChart({ data = [], teamId, period }) {
+    const [hoveredPoint, setHoveredPoint] = useState(null);
+    const [activeCategory, setActiveCategory] = useState(null);
+    const teamKey = teamId || "all";
+
+    const formatLabel = (point, period) => {
+        const start = new Date(point.start);
+        const end = new Date(point.end);
+
+        if (period === "week") {
+            return {
+                line1: start.toLocaleDateString("ru-RU", {
+                    day: "2-digit",
+                    month: "2-digit",
+                }),
+                line2: "",
+            };
+        }
+
+        if (period === "month") {
+            const startDay = start.getDate();
+            const endDay = end.getDate();
+            const month = String(start.getMonth() + 1).padStart(2, "0");
+
+            return {
+                line1: `${startDay}.${month} - ${endDay}.${month}`,
+                line2: "",
+            };
+        }
+
+        if (period === "year") {
+            const months = [
+                "ЯНВ","ФЕВ","МАР","АПР","МАЙ","ИЮН",
+                "ИЮЛ","АВГ","СЕН","ОКТ","НОЯ","ДЕК"
+            ];
+
+            const month = months[start.getMonth()];
+            const year = start.getFullYear();
+
+            return {
+                line1: month,
+                line2: String(year),
+            };
+        }
+
+        return { line1: "", line2: "" };
+    };
+
+    const labels = data.map((point) => formatLabel(point, period));
+
+    const chartWidth = 573;
+    const chartHeight = 223;
+
+    const getPaddingX = () => {
+        if (period === "week") return 52;
+        if (period === "month") return 90;
+        if (period === "year") return 28;
+
+        return 20;
+    };
+
+
+    const getX = (index, total) => {
+        const padding = getPaddingX();
+
+        if (total <= 1) return padding;
+
+        const usableWidth = chartWidth - padding * 2;
+
+        return padding + (index / (total - 1)) * usableWidth;
+    };
+
+    const getY = (value) => {
+        return chartHeight - (value / 100) * chartHeight;
+    };
+
+    const handleCategoryClick = (category) => {
+        setHoveredPoint(null);
+        setActiveCategory((prev) => (prev === category ? null : category));
+    };
+
+    const renderPoints = (values, pointClass, color) =>
+        values.map((value, index) => {
+            const x = getX(index, values.length);
+            const y = getY(value);
+
+            return (
+                <g
+                    key={`${pointClass}-${index}`}
+                    className="stress-point-group"
+                    onMouseEnter={() => setHoveredPoint({ x, y, value, color })}
+                    onMouseLeave={() => setHoveredPoint(null)}
+                >
+                    <circle
+                        cx={x}
+                        cy={y}
+                        r="12"
+                        className="stress-point-hover-area"
+                    />
+                    <circle
+                        cx={x}
+                        cy={y}
+                        r="5"
+                        className={pointClass}
+                    />
+                </g>
+            );
+        });
+
+    const buildSmoothPath = (values) => {
+        if (!values.length) return "";
+
+        const points = values.map((value, index) => ({
+            x: getX(index, values.length),
+            y: getY(value),
+        }));
+
+        if (points.length === 1) {
+            return `M 0 ${points[0].y} L ${chartWidth} ${points[0].y}`;
+        }
+
+        const extendedPoints = [
+            { x: 0, y: points[0].y },
+            ...points,
+            { x: chartWidth, y: points[points.length - 1].y },
+        ];
+
+        let path = `M ${extendedPoints[0].x} ${extendedPoints[0].y}`;
+
+        for (let i = 0; i < extendedPoints.length - 1; i++) {
+            const current = extendedPoints[i];
+            const next = extendedPoints[i + 1];
+
+            const controlX1 = current.x + (next.x - current.x) / 2;
+            const controlY1 = current.y;
+
+            const controlX2 = current.x + (next.x - current.x) / 2;
+            const controlY2 = next.y;
+
+            path += ` C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${next.x} ${next.y}`;
+        }
+
+        return path;
+    };
+
+    const normalValues = data.map((point) => point.Normal || 0);
+    const lowValues = data.map((point) => point.Mild || 0);
+    const mediumValues = data.map((point) => point.Moderate || 0);
+    const highValues = data.map((point) => point.High || 0);
+    const veryHighValues = data.map((point) => point.Very_High || 0);
+
+    const showAll = activeCategory === null;
+    const showNormal = showAll || activeCategory === "normal";
+    const showLow = showAll || activeCategory === "low";
+    const showMedium = showAll || activeCategory === "medium";
+    const showHigh = showAll || activeCategory === "high";
+    const showVeryHigh = showAll || activeCategory === "very-high";
+
+    const isDimmed = (category) => activeCategory !== null && activeCategory !== category;
+    return (
+        <>
+            <div className="stress-chart-body">
+                <div className="stress-chart-text">% сотрудников в каждой категории</div>
+                <div className="stress-chart-main">
+                    <div className="stress-chart-left">
+                        <div
+                            className={`stress-chart-left-item ${isDimmed("normal") ? "dimmed" : ""}`}
+                            onClick={() => handleCategoryClick("normal")}
+                        >
+                            <div className="stress-chart-normal-color"></div>
+                            <div className="stress-chart-normal">Норма</div>
+                        </div>
+
+                        <div
+                            className={`stress-chart-left-item ${isDimmed("low") ? "dimmed" : ""}`}
+                            onClick={() => handleCategoryClick("low")}
+                        >
+                            <div className="stress-chart-low-color"></div>
+                            <div className="stress-chart-low">Низкий</div>
+                        </div>
+
+                        <div
+                            className={`stress-chart-left-item ${isDimmed("medium") ? "dimmed" : ""}`}
+                            onClick={() => handleCategoryClick("medium")}
+                        >
+                            <div className="stress-chart-medium-color"></div>
+                            <div className="stress-chart-medium">Умеренный</div>
+                        </div>
+
+                        <div
+                            className={`stress-chart-left-item ${isDimmed("high") ? "dimmed" : ""}`}
+                            onClick={() => handleCategoryClick("high")}
+                        >
+                            <div className="stress-chart-high-color"></div>
+                            <div className="stress-chart-high">Высокий</div>
+                        </div>
+
+                        <div
+                            className={`stress-chart-left-item ${isDimmed("very-high") ? "dimmed" : ""}`}
+                            onClick={() => handleCategoryClick("very-high")}
+                        >
+                            <div className="stress-chart-very-high-color"></div>
+                            <div className="stress-chart-very-high">Очень Высокий</div>
+                        </div>
+                    </div>
+                    <div className="stress-chart-right">
+                        <div className="stress-chart-number">
+                            <div className="chart-number-100">100</div>
+                            <div className="chart-number-75">75</div>
+                            <div className="chart-number-50">50</div>
+                            <div className="chart-number-25">25</div>
+                            <div className="chart-number-0">0</div>
+                        </div>
+                        <div className="stress-chart-grid-block">
+                            <div className="stress-chart-graph-area">
+                                <div className="stress-chart-stroka">
+                                    <div className="chart-stroka-number-100"></div>
+                                    <div className="chart-stroka-number-75"></div>
+                                    <div className="chart-stroka-number-50"></div>
+                                    <div className="chart-stroka-number-25"></div>
+                                    <div className="chart-stroka-number-0"></div>
+                                </div>
+
+                                <svg
+                                    className="stress-chart-svg"
+                                    viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+                                    preserveAspectRatio="none"
+                                >
+                                    {showNormal && (
+                                        <>
+                                            <path
+                                                key={`normal-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                d={buildSmoothPath(normalValues)}
+                                                className="stress-line stress-line-normal"
+                                            />
+                                            {renderPoints(normalValues, "stress-point stress-point-normal", "#6204EF")}
+                                        </>
+                                    )}
+
+                                    {showLow && (
+                                        <>
+                                            <path
+                                                key={`low-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                d={buildSmoothPath(lowValues)}
+                                                className="stress-line stress-line-low"
+                                            />
+                                            {renderPoints(lowValues, "stress-point stress-point-low", "#9169EC")}
+                                        </>
+                                    )}
+
+                                    {showMedium && (
+                                        <>
+                                            <path
+                                                key={`medium-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                d={buildSmoothPath(mediumValues)}
+                                                className="stress-line stress-line-medium"
+                                            />
+                                            {renderPoints(mediumValues, "stress-point stress-point-medium", "#A78BFA")}
+                                        </>
+                                    )}
+
+                                    {showHigh && (
+                                        <>
+                                            <path
+                                                key={`high-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                d={buildSmoothPath(highValues)}
+                                                className="stress-line stress-line-high"
+                                            />
+                                            {renderPoints(highValues, "stress-point stress-point-high", "#D7A5EF")}
+                                        </>
+                                    )}
+
+                                    {showVeryHigh && (
+                                        <>
+                                            <path
+                                                key={`very-high-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                d={buildSmoothPath(veryHighValues)}
+                                                className="stress-line stress-line-very-high"
+                                            />
+                                            {renderPoints(veryHighValues, "stress-point stress-point-very-high", "#C7AAD5")}
+                                        </>
+                                    )}
+
+                                    {hoveredPoint && (
+                                        <g className="stress-tooltip-group">
+                                            <rect
+                                                x={hoveredPoint.x - 16}
+                                                y={hoveredPoint.y - 47}
+                                                width="32"
+                                                height="34"
+                                                rx="2"
+                                                fill={hoveredPoint.color}
+                                            />
+                                            <rect
+                                                x={hoveredPoint.x - 4}
+                                                y={hoveredPoint.y - 18}
+                                                width="8"
+                                                height="8"
+                                                rx="2"
+                                                fill={hoveredPoint.color}
+                                                transform={`rotate(45 ${hoveredPoint.x} ${hoveredPoint.y - 14})`}
+                                            />
+                                            <text
+                                                x={hoveredPoint.x}
+                                                y={hoveredPoint.y - 26}
+                                                textAnchor="middle"
+                                                className="stress-tooltip-text"
+                                            >
+                                                {hoveredPoint.value}
+                                            </text>
+                                        </g>
+                                    )}
+                                </svg>
+                            </div>
+
+                            <div className="stress-chart-x-axis">
+                                {labels.map((label, index) => (
+                                    <div
+                                        className="stress-chart-x-label"
+                                        key={`${label.line1}-${label.line2}-${index}`}
+                                        style={{ left: `${getX(index, labels.length)}px` }}
+                                    >
+                                        <div>{label.line1}</div>
+                                        {label.line2 && <div>{label.line2}</div>}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </>
+    )
+}
