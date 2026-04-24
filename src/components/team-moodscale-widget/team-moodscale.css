@@ -49,6 +49,20 @@
 
 .moodscale-segment {
     transition: fill 0.3s ease, opacity 0.3s ease;
+    transform-box: fill-box;
+}
+
+.moodscale-segment-animated {
+    opacity: 0;
+    transform: scale(0.75);
+    transition:
+            transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 0.45s ease;
+}
+
+.moodscale-segment-animated.show {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .moodscale-center {
@@ -79,24 +93,6 @@
     font-size: 14px;
     font-weight: 400;
     line-height: 22px;
-}
-
-
-.moodscale-segment {
-    transform-box: fill-box;
-}
-
-.moodscale-segment-animated {
-    opacity: 0;
-    transform: scale(0.75);
-    transition:
-            transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-            opacity 0.45s ease;
-}
-
-.moodscale-segment-animated.show {
-    opacity: 1;
-    transform: scale(1);
 }
 
 .moodscale-emojie {
@@ -137,7 +133,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 22px; /* 157.143% */;
+    line-height: 22px;
 }
 
 .team-moodscale-right {
@@ -168,14 +164,11 @@
 }
 
 .moodscale-right-number {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+    position: relative;
     width: 16px;
-    height: 222px;
-    margin-top: 10px;
-    padding-top: 0;
+    height: 200px;
+    margin-top: 0;
+    flex-shrink: 0;
 }
 
 .moodscale-number-5,
@@ -183,30 +176,28 @@
 .moodscale-number-3,
 .moodscale-number-2,
 .moodscale-number-1 {
+    position: absolute;
+    left: 0;
+    width: 100%;
     color: #4D4D4D;
-    height: 22px;
     font-family: Roboto, sans-serif;
     font-size: 14px;
     font-weight: 400;
-    line-height: 1;
+    line-height: 14px;
     text-align: center;
-    margin-bottom: 0;
+    transform: translateY(-50%);
 }
+
+.moodscale-number-5 { top: 0; }
+.moodscale-number-4 { top: 25%; }
+.moodscale-number-3 { top: 50%; }
+.moodscale-number-2 { top: 75%; }
+.moodscale-number-1 { top: 100%; }
 
 .moodscale-right-plot {
     position: relative;
     width: 499px;
-    height: 245px;
-}
-
-.moodscale-dynamic-line {
-    position: absolute;
-    top: 15px;
-    left: 0;
-    width: 499px;
-    height: 200px;
-    z-index: 3; /* 🔥 ВАЖНО */
-    pointer-events: none;
+    overflow: visible;
 }
 
 .moodscale-right-stroki {
@@ -215,12 +206,7 @@
     left: 0;
     width: 499px;
     height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 15px;
-    margin-left: 0;
-    z-index: 1;
+    z-index: 0;
 }
 
 .moodscale-stroka,
@@ -229,79 +215,46 @@
 .moodscale-stroka-3,
 .moodscale-stroka-2,
 .moodscale-stroka-1 {
-    display: block;
-    width: 499px;
+    position: absolute;
+    left: 0;
+    width: 100%;
     height: 1px;
     background: rgba(77, 77, 77, 0.40);
-    margin-bottom: 0;
+    margin: 0;
 }
+
+.moodscale-stroka-5 { top: 0; }
+.moodscale-stroka-4 { top: 25%; }
+.moodscale-stroka-3 { top: 50%; }
+.moodscale-stroka-2 { top: 75%; }
+.moodscale-stroka-1 { top: 100%; }
 
 .moodscale-dynamic-columns {
     position: absolute;
-    top: 13px;
+    top: 0;
     left: 0;
     width: 499px;
-    height: 232px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    z-index: 2;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
     box-sizing: border-box;
 }
 
-.moodscale-dynamic-columns-week {
-    padding: 0 10px;
-}
-
-.moodscale-dynamic-columns-month {
-    padding: 0 20px;
-}
-
-.moodscale-dynamic-columns-year {
-    padding: 0;
-}
-
 .moodscale-dynamic-column-wrap {
-    height: 300px;
+    position: absolute;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: flex-end;
-    flex-shrink: 0;
+    pointer-events: none;
 }
 
 .moodscale-dynamic-column {
-    height: 200px;
     display: flex;
     flex-direction: column-reverse;
     justify-content: flex-start;
-}
-
-/* week */
-.moodscale-dynamic-column-wrap-week {
-    width: 43px;
-}
-
-.moodscale-dynamic-column-week {
-    width: 43px;
-}
-
-/* month */
-.moodscale-dynamic-column-wrap-month {
-    width: 43px;
-}
-
-.moodscale-dynamic-column-month {
-    width: 43px;
-}
-
-/* year */
-.moodscale-dynamic-column-wrap-year {
-    width: 35px;
-}
-
-.moodscale-dynamic-column-year {
-    width: 35px;
+    align-items: stretch;
+    gap: 0px;
+    box-sizing: border-box;
 }
 
 .moodscale-dynamic-segment {
@@ -346,21 +299,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: -4px;
-    height: 34px;
 }
 
 .moodscale-dynamic-tick {
     width: 1px;
     height: 9px;
     background: rgba(77, 77, 77, 0.35);
-    margin-bottom: 7px;
-    transform: translateY(3px);
+    margin-bottom: 2px;
     flex-shrink: 0;
 }
 
 .moodscale-dynamic-label {
-    height: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -373,10 +322,23 @@
     font-weight: 400;
     line-height: 22px;
     white-space: nowrap;
+
+    gap: 2px
 }
 
 .moodscale-dynamic-label-top,
 .moodscale-dynamic-label-bottom {
     display: block;
     line-height: 12px;
+}
+
+.moodscale-dynamic-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 499px;
+    height: 200px;
+    z-index: 2;
+    pointer-events: none;
+    overflow: visible;
 }

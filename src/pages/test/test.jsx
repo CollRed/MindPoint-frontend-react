@@ -17,6 +17,11 @@ import finishPycha from '@assets/finish-pycha.svg';
 import finishText from '@assets/finish-text.svg';
 import finishGalka from '@assets/finish-galka.svg';
 import finishCloud from '@assets/finish-cloud.png';
+import mood5 from "@assets/very-funny-smile.svg";
+import mood4 from "@assets/light-smile.svg";
+import mood3 from "@assets/moderate-smile.svg";
+import mood2 from "@assets/sad-smile.svg";
+import mood1 from "@assets/very-sad-smile.svg";
 
 export default function TestingPage() {
     const [step, setStep] = useState('intro');
@@ -24,7 +29,11 @@ export default function TestingPage() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState({});
     const [selected, setSelected] = useState(null);
+    const [moodPassed, setMoodPassed] = useState(null);
+    const [moodValue, setMoodValue] = useState(null);
+    const [moodSaving, setMoodSaving] = useState(false);
     const navigate = useNavigate();
+
 
     useEffect(() => {
         authFetch('/dass9/random', {
@@ -98,7 +107,62 @@ export default function TestingPage() {
         setSelected(null);
     }, [currentIndex]);
 
+    const moodIcons = {
+        1: mood1,
+        2: mood2,
+        3: mood3,
+        4: mood4,
+        5: mood5,
+    };
+
+    useEffect(() => {
+        const checkMood = async () => {
+            try {
+                const res = await authFetch('/mood/check', {
+                    method: 'GET'
+                }, navigate);
+
+                const data = await res.json();
+
+                setMoodPassed(data?.passed_today === true);
+
+            } catch (e) {
+                console.error('Ошибка mood check:', e);
+                setMoodPassed(false);
+            }
+        };
+
+        checkMood();
+    }, [navigate]);
+
+    const saveMood = async () => {
+        if (moodValue === null || moodSaving) return;
+
+        try {
+            setMoodSaving(true);
+
+            const res = await authFetch('/mood/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    score: moodValue
+                })
+            }, navigate);
+
+            if (!res.ok) throw new Error('Ошибка сохранения настроения');
+
+            console.log('Настроение сохранено');
+            setMoodPassed(true);
+
+        } catch (e) {
+            console.error('Ошибка сохранения настроения:', e);
+        } finally {
+            setMoodSaving(false);
+        }
+    };
+
+
     return (
+
         <div className={`testing-wrapper ${
             step === 'intro' ? 'intro-bg' :
                 step === 'question' ? 'question-bg' :
@@ -106,7 +170,33 @@ export default function TestingPage() {
         }`}>
 
             <StepHeader step={step} />
+            {moodPassed === false && (
+                <div className="mood-overlay">
+                    <div className="mood-modal">
+                        <h3>Как вы себя чувствуете сегодня?</h3>
 
+                        <div className="mood-icons">
+                            {[5,4,3,2,1].map((val) => (
+                                <div
+                                    key={val}
+                                    className={`mood-icon ${moodValue === val ? 'active' : ''}`}
+                                    onClick={() => setMoodValue(val)}
+                                >
+                                    <img src={moodIcons[val]} alt={`mood-${val}`} />
+                                </div>
+                            ))}
+                        </div>
+
+                        <button
+                            className="mood-btn"
+                            disabled={moodValue === null || moodSaving}
+                            onClick={saveMood}
+                        >
+                            {moodSaving ? 'Сохранение...' : 'Выбрать'}
+                        </button>
+                    </div>
+                </div>
+            )}
             {step === 'intro' && (
                 <div className="intro-container">
                     <div className="hello-flower">

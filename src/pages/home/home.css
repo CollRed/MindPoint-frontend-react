@@ -331,7 +331,7 @@
 .percent-employee {
     display: flex;
     flex-direction: column;
-    max-width: 1004px;
+    max-width: 1104px;
     width: 100%;
     height: 100%;
     max-height: 700px;
@@ -410,6 +410,17 @@
             opacity 0.2s ease;
 }
 
+.risk-pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
+
+.testing-pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
 .percent-testing {
     display: flex;
     width: 616px;
@@ -816,6 +827,18 @@
             inset -3px 0 0 #DE2020;
 }
 
+.right-indicator.error {
+    color: #DE2020;
+}
+
+.team-right-indicator.error {
+    border: 0;
+    box-shadow:
+            inset 0 3px 0 #DE2020,
+            inset 3px 0 0 #DE2020,
+            inset -3px 0 0 #DE2020;
+}
+
 .indicator {
     display: flex;
     width: 220px;
@@ -903,8 +926,22 @@
     margin-top: 6px;
 }
 
+.indicator-tab .indicator-button {
+    color: rgba(77, 77, 77, 0.20);
+}
+
 .indicator-tab.active .indicator-button {
     color: #4D4D4D;
+}
+
+/* есть триггер, но вкладка не активна */
+.indicator-tab.trigger-inactive .indicator-button {
+    color: rgba(227, 65, 65, 0.40);
+}
+
+/* есть триггер и вкладка активна */
+.indicator-tab.trigger-active .indicator-button {
+    color: #E34141;
 }
 
 .indicator-slider {

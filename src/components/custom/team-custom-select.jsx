@@ -2,9 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import "./team-custom-select.css";
 import arrowSelect from "@assets/arrow-select.svg";
 
-function TeamCustomSelect({ options, placeholder = "Выбери команду", onChange }) {
+function TeamCustomSelect({ options, placeholder = "Выбери команду", value, onChange }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState(null);
     const ref = useRef(null);
 
     useEffect(() => {
@@ -13,38 +12,45 @@ function TeamCustomSelect({ options, placeholder = "Выбери команду"
                 setIsOpen(false);
             }
         };
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
+    const selectedOption = options.find((option) => option.team.id === value);
+
     const handleSelect = (option) => {
-        setSelected(option);
         setIsOpen(false);
-        onChange(option);
+        onChange(option.team);
     };
 
     return (
         <div className="team-custom-select" ref={ref}>
-            <div className="team-custom-select-header" onClick={() => setIsOpen(!isOpen)}>
-    <span className="team-custom-select-header-text">
-        {selected ? selected.name : placeholder}
-    </span>
+            <div
+                className="team-custom-select-header"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <span className="team-custom-select-header-text">
+                    {selectedOption ? selectedOption.team.name : placeholder}
+                </span>
+
                 <img
                     src={arrowSelect}
                     alt="arrow"
                     className={`team-arrow-svg ${isOpen ? "rotated" : ""}`}
                 />
             </div>
+
             {isOpen && (
                 <ul className="team-custom-select-list">
                     {options.map((option) => (
                         <li
                             key={option.team.id}
-                            onClick={() => handleSelect(option.team)}
+                            onClick={() => handleSelect(option)}
                             className={`team-custom-select-option ${
-                                selected?.id === option.team.id ? "selected" : ""
+                                selectedOption?.team?.id === option.team.id ? "selected" : ""
                             }`}
                         >
                             {option.team.name}

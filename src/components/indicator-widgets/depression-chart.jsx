@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./depression-chart.css";
 
-
 export default function DepressionChart({ data = [], teamId, period }) {
-
     const [hoveredPoint, setHoveredPoint] = useState(null);
-    const [activeCategory, setActiveCategory] = useState(null);
+    const [activeCategories, setActiveCategories] = useState([]);
     const teamKey = teamId || "all";
 
     const formatLabel = (point, period) => {
@@ -35,8 +33,8 @@ export default function DepressionChart({ data = [], teamId, period }) {
 
         if (period === "year") {
             const months = [
-                "ЯНВ","ФЕВ","МАР","АПР","МАЙ","ИЮН",
-                "ИЮЛ","АВГ","СЕН","ОКТ","НОЯ","ДЕК"
+                "ЯНВ", "ФЕВ", "МАР", "АПР", "МАЙ", "ИЮН",
+                "ИЮЛ", "АВГ", "СЕН", "ОКТ", "НОЯ", "ДЕК"
             ];
 
             const month = months[start.getMonth()];
@@ -57,13 +55,11 @@ export default function DepressionChart({ data = [], teamId, period }) {
     const chartHeight = 223;
 
     const getPaddingX = () => {
-        if (period === "week") return 52;
-        if (period === "month") return 90;
-        if (period === "year") return 28;
-
+        if (period === "week") return 20;
+        if (period === "month") return 30;
+        if (period === "year") return 15;
         return 20;
     };
-
 
     const getX = (index, total) => {
         const padding = getPaddingX();
@@ -71,7 +67,6 @@ export default function DepressionChart({ data = [], teamId, period }) {
         if (total <= 1) return padding;
 
         const usableWidth = chartWidth - padding * 2;
-
         return padding + (index / (total - 1)) * usableWidth;
     };
 
@@ -81,7 +76,14 @@ export default function DepressionChart({ data = [], teamId, period }) {
 
     const handleCategoryClick = (category) => {
         setHoveredPoint(null);
-        setActiveCategory((prev) => (prev === category ? null : category));
+
+        setActiveCategories((prev) => {
+            if (prev.includes(category)) {
+                return prev.filter((item) => item !== category);
+            }
+
+            return [...prev, category];
+        });
     };
 
     const renderPoints = (values, pointClass, color) =>
@@ -148,20 +150,28 @@ export default function DepressionChart({ data = [], teamId, period }) {
         return path;
     };
 
-    const normalValues = data.map((point) => point.Normal || 0);
-    const lowValues = data.map((point) => point.Mild || 0);
-    const mediumValues = data.map((point) => point.Moderate || 0);
-    const highValues = data.map((point) => point.High || 0);
-    const veryHighValues = data.map((point) => point.Very_High || 0);
+    const round = (val) => Math.round(val ?? 0);
 
-    const showAll = activeCategory === null;
-    const showNormal = showAll || activeCategory === "normal";
-    const showLow = showAll || activeCategory === "low";
-    const showMedium = showAll || activeCategory === "medium";
-    const showHigh = showAll || activeCategory === "high";
-    const showVeryHigh = showAll || activeCategory === "very-high";
+    const normalValues = data.map((point) => round(point.Normal));
+    const lowValues = data.map((point) => round(point.Mild));
+    const mediumValues = data.map((point) => round(point.Moderate));
+    const highValues = data.map((point) => round(point.High));
+    const veryHighValues = data.map((point) => round(point.Very_High));
 
-    const isDimmed = (category) => activeCategory !== null && activeCategory !== category;
+    const showAll = activeCategories.length === 0;
+
+    const showNormal = showAll || activeCategories.includes("normal");
+    const showLow = showAll || activeCategories.includes("low");
+    const showMedium = showAll || activeCategories.includes("medium");
+    const showHigh = showAll || activeCategories.includes("high");
+    const showVeryHigh = showAll || activeCategories.includes("very-high");
+
+    const isDimmed = (category) =>
+        activeCategories.length > 0 && !activeCategories.includes(category);
+
+    const labelsKey = labels.map((label) => `${label.line1}-${label.line2}`).join("_");
+    const activeKey = activeCategories.join("_") || "all";
+
     return (
         <>
             <div className="stress-chart-body">
@@ -208,6 +218,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                             <div className="stress-chart-very-high">Очень Высокий</div>
                         </div>
                     </div>
+
                     <div className="stress-chart-right">
                         <div className="stress-chart-number">
                             <div className="chart-number-100">100</div>
@@ -216,6 +227,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                             <div className="chart-number-25">25</div>
                             <div className="chart-number-0">0</div>
                         </div>
+
                         <div className="stress-chart-grid-block">
                             <div className="stress-chart-graph-area">
                                 <div className="stress-chart-stroka">
@@ -234,7 +246,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                                     {showNormal && (
                                         <>
                                             <path
-                                                key={`normal-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                key={`normal-${teamKey}-${labelsKey}-${activeKey}`}
                                                 d={buildSmoothPath(normalValues)}
                                                 className="stress-line stress-line-normal"
                                             />
@@ -245,7 +257,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                                     {showLow && (
                                         <>
                                             <path
-                                                key={`low-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                key={`low-${teamKey}-${labelsKey}-${activeKey}`}
                                                 d={buildSmoothPath(lowValues)}
                                                 className="stress-line stress-line-low"
                                             />
@@ -256,7 +268,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                                     {showMedium && (
                                         <>
                                             <path
-                                                key={`medium-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                key={`medium-${teamKey}-${labelsKey}-${activeKey}`}
                                                 d={buildSmoothPath(mediumValues)}
                                                 className="stress-line stress-line-medium"
                                             />
@@ -267,7 +279,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                                     {showHigh && (
                                         <>
                                             <path
-                                                key={`high-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                key={`high-${teamKey}-${labelsKey}-${activeKey}`}
                                                 d={buildSmoothPath(highValues)}
                                                 className="stress-line stress-line-high"
                                             />
@@ -278,7 +290,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                                     {showVeryHigh && (
                                         <>
                                             <path
-                                                key={`very-high-${teamKey}-${labels.join("-")}-${activeCategory || "all"}`}
+                                                key={`very-high-${teamKey}-${labelsKey}-${activeKey}`}
                                                 d={buildSmoothPath(veryHighValues)}
                                                 className="stress-line stress-line-very-high"
                                             />
@@ -311,7 +323,7 @@ export default function DepressionChart({ data = [], teamId, period }) {
                                                 textAnchor="middle"
                                                 className="stress-tooltip-text"
                                             >
-                                                {hoveredPoint.value}
+                                                {round(hoveredPoint.value)}
                                             </text>
                                         </g>
                                     )}
@@ -334,7 +346,6 @@ export default function DepressionChart({ data = [], teamId, period }) {
                     </div>
                 </div>
             </div>
-
         </>
-    )
+    );
 }

@@ -57,9 +57,14 @@
     outline: none;
     border: none;
     background-color: transparent;
-    color: #A3A3A3;
+    color: #FFFFFF; /* ← ВОТ ТУТ меняем */
     line-height: 1;
     cursor: pointer;
+}
+
+.page-btn.arrow:disabled {
+    color: #A3A3A3; /* серый */
+    cursor: default;
 }
 
 .page-btn.arrow span {

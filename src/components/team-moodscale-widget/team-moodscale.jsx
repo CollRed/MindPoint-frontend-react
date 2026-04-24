@@ -69,8 +69,59 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
 
     const chartWidth = 499;
     const chartHeight = 200;
-    const chartBottomLabelsHeight = 30;
+    const chartBottomLabelsHeight = period === "year" ? 42 : 30;
     const chartLevels = [5, 4, 3, 2, 1];
+
+    const barsTopOffset = -15;
+    const barsHeight = chartHeight - barsTopOffset;
+
+    const getChartConfig = (periodType, pointsCount) => {
+        if (periodType === "week") {
+            return {
+                sidePadding: 30,
+                barWidth: 42,
+                labelWidth: 64,
+            };
+        }
+
+        if (periodType === "month") {
+            return {
+                sidePadding: 30,
+                barWidth: 42,
+                labelWidth: 88,
+            };
+        }
+
+        if (periodType === "year") {
+            return {
+                sidePadding: 22,
+                barWidth: 28,
+                labelWidth: 44,
+            };
+        }
+
+        if (pointsCount <= 4) {
+            return {
+                sidePadding: 30,
+                barWidth: 42,
+                labelWidth: 88,
+            };
+        }
+
+        if (pointsCount <= 7) {
+            return {
+                sidePadding: 28,
+                barWidth: 34,
+                labelWidth: 64,
+            };
+        }
+
+        return {
+            sidePadding: 22,
+            barWidth: 28,
+            labelWidth: 44,
+        };
+    };
 
     const dynamicColumns = useMemo(() => {
         return dynamicPoints.map((point) => ({
@@ -88,6 +139,10 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
             },
         }));
     }, [dynamicPoints]);
+
+    const chartConfig = useMemo(() => {
+        return getChartConfig(period, dynamicColumns.length);
+    }, [period, dynamicColumns.length]);
 
     const getAverageFromScores = (scores) => {
         if (!scores) return null;
@@ -113,8 +168,9 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
     const getLineX = (index, totalCount) => {
         if (totalCount <= 1) return chartWidth / 2;
 
-        const sidePadding = 30;
+        const sidePadding = chartConfig.sidePadding;
         const usableWidth = chartWidth - sidePadding * 2;
+
         return sidePadding + (index / (totalCount - 1)) * usableWidth;
     };
 
@@ -128,6 +184,13 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
 
         return chartHeight - normalized * chartHeight;
     };
+
+    const positionedColumns = useMemo(() => {
+        return dynamicColumns.map((point, index) => ({
+            ...point,
+            x: getLineX(index, dynamicColumns.length),
+        }));
+    }, [dynamicColumns, chartConfig]);
 
     const buildSmoothPath = (points) => {
         if (!points.length) return "";
@@ -155,18 +218,18 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
     };
 
     const linePoints = useMemo(() => {
-        return dynamicColumns
-            .map((point, index) => {
+        return positionedColumns
+            .map((point) => {
                 const average = getAverageFromScores(point.scores);
                 if (average == null) return null;
 
                 return {
-                    x: getLineX(index, dynamicColumns.length),
+                    x: point.x,
                     y: getLineY(average),
                 };
             })
             .filter(Boolean);
-    }, [dynamicColumns]);
+    }, [positionedColumns]);
 
     const linePath = useMemo(() => buildSmoothPath(linePoints), [linePoints]);
 
@@ -602,7 +665,10 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                         ))}
                     </div>
 
-                    <div className="moodscale-right-plot">
+                    <div
+                        className="moodscale-right-plot"
+                        style={{ height: `${chartHeight + chartBottomLabelsHeight}px` }}
+                    >
                         <div className="moodscale-right-stroki">
                             <div className="moodscale-stroka moodscale-stroka-5"></div>
                             <div className="moodscale-stroka moodscale-stroka-4"></div>
@@ -611,13 +677,27 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                             <div className="moodscale-stroka moodscale-stroka-1"></div>
                         </div>
 
-                        <div className={`moodscale-dynamic-columns moodscale-dynamic-columns-${period}`}>
-                            {dynamicColumns.map((point, index) => (
+                        <div className="moodscale-dynamic-columns">
+                            {positionedColumns.map((point, index) => (
                                 <div
                                     key={index}
-                                    className={`moodscale-dynamic-column-wrap moodscale-dynamic-column-wrap-${period}`}
+                                    className="moodscale-dynamic-column-wrap"
+                                    style={{
+                                        left: `${point.x}px`,
+                                        transform: "translateX(-50%)",
+                                        top: "0",
+                                        width: `${chartConfig.barWidth}px`,
+                                        height: `${chartHeight}px`,
+                                    }}
                                 >
-                                    <div className={`moodscale-dynamic-column moodscale-dynamic-column-${period}`}>
+                                    <div
+                                        className="moodscale-dynamic-column"
+                                        style={{
+                                            width: `${chartConfig.barWidth}px`,
+                                            height: `${barsHeight}px`,
+                                            marginTop: `${barsTopOffset}px`,
+                                        }}
+                                    >
                                         {[1, 2, 3, 4, 5].map((score) => {
                                             const percent = point.scores?.[score]?.percent || 0;
                                             const hasValue = percent > 0;
@@ -635,7 +715,17 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                                         })}
                                     </div>
 
-                                    <div className="moodscale-dynamic-label-wrap">
+                                    <div
+                                        className="moodscale-dynamic-label-wrap"
+                                        style={{
+                                            position: "absolute",
+                                            top: `${chartHeight + 1}px`,
+                                            left: "50%",
+                                            transform: "translateX(-50%)",
+                                            width: `${chartConfig.labelWidth}px`,
+                                            textAlign: "center",
+                                        }}
+                                    >
                                         <div className="moodscale-dynamic-tick"></div>
 
                                         <div className="moodscale-dynamic-label">

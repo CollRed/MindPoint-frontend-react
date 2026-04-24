@@ -306,9 +306,12 @@ export function useSeverityTrends(period, team_ids = []) {
                     }));
 
                 setSeverityTrends({
-                    depression: formatPoints(data.depression),
-                    anxiety: formatPoints(data.anxiety),
-                    stress: formatPoints(data.stress),
+                    depression: formatPoints(data.depression || []),
+                    anxiety: formatPoints(data.anxiety || []),
+                    stress: formatPoints(data.stress || []),
+                    depression_trigger: data.depression_trigger ?? false,
+                    anxiety_trigger: data.anxiety_trigger ?? false,
+                    stress_trigger: data.stress_trigger ?? false,
                 });
 
                 setErrorSeverityTrends(null);

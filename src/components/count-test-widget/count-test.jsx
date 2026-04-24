@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./count-test.css";
+import bigError from "@assets/big-error.svg";
 
-export default function CountTest({ data }) {
+export default function CountTest({data, hasRecommendationTrigger = false, onTriggerClick,}) {
     const [hoveredBar, setHoveredBar] = useState(null);
     const [animateBars, setAnimateBars] = useState(false);
 
 
     const periods = data?.periods || [];
+    const recommendationTrigger = hasRecommendationTrigger;
 
     useEffect(() => {
         const id = requestAnimationFrame(() => {
@@ -124,9 +126,24 @@ export default function CountTest({ data }) {
     };
 
     return (
-        <div className="count-test-widget">
-            <div className="test-widget-text">Количество прохождений</div>
-            <div className="test-widget-count">{animatedTotal}</div>
+        <div className={`count-test-widget ${recommendationTrigger ? "error" : ""}`}>
+            <div className="test-widget-header">
+                <div className="test-widget-text">Количество прохождений</div>
+
+                {recommendationTrigger && (
+                    <img
+                        src={bigError}
+                        alt="Рекомендация"
+                        className="test-widget-error-icon"
+                        onClick={onTriggerClick}
+                        style={{ cursor: "pointer" }}
+                    />
+                )}
+            </div>
+
+            <div className={`test-widget-count ${recommendationTrigger ? "error" : ""}`}>
+                {animatedTotal}
+            </div>
 
             <div className="test-widget-main">
                 <div className="test-widget-number">

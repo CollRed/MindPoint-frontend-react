@@ -20,6 +20,10 @@ import DiagramStressTrigger from "../../components/recommendation-trigger/diagra
 import DiagramDepressionTrigger from "../../components/recommendation-trigger/diagram-depression-trigger.jsx";
 import DiagramAnxietyTrigger from "../../components/recommendation-trigger/diagram-anxiety-trigger.jsx";
 import TeamMoodscaleContent from "../../components/team-moodscale-widget/team-moodscale.jsx";
+import ChartStressTrigger from "../../components/recommendation-trigger/chart-stress-trigger.jsx";
+import ChartDepressionTrigger from "../../components/recommendation-trigger/chart-depression-trigger.jsx";
+import ChartAnxietyTrigger from "../../components/recommendation-trigger/chart-anxiety-trigger.jsx";
+import CountTestTrigger from "../../components/recommendation-trigger/count-test-trigger.jsx";
 import {
     fetchTeams,
 } from "../../hooks/management.js";
@@ -35,13 +39,14 @@ import {
 } from "../../hooks/analytics-dass.js";
 import pychaHome from "@assets/home-pucha.svg";
 import indicatorLine from "@assets/team-slider.svg";
-import sphera from "@assets/sphera.svg";
+import Sphera from "@assets/Sphera.jsx";
 import veryFunnySmile from "@assets/very-funny-smile.svg";
 import lightSmile from "@assets/light-smile.svg";
 import mediumSmile from "@assets/moderate-smile.svg";
 import sadSmile from "@assets/sad-smile.svg";
 import verySadSmile from "@assets/very-sad-smile.svg";
 import bigError from "@assets/big-error.svg";
+
 
 function HomePage() {
     const [activeTab, setActiveTab] = useState(() => {
@@ -52,10 +57,11 @@ function HomePage() {
     const [employeeActiveType, setEmployeeActiveType] = useState('stress');
     const [rightActiveType, setRightActiveType] = useState('stress');
     const [teams, setTeams] = useState([]);
-    const [selectedGeneralTeamId, setSelectedGeneralTeamId] = useState(null);
+    const [selectedGeneralTeamIds, setSelectedGeneralTeamIds] = useState([]);
     const [selectedTeamTabId, setSelectedTeamTabId] = useState(null);
 
-    const [selectedPeriod, setSelectedPeriod] = useState('week');
+    const [generalPeriod, setGeneralPeriod] = useState('week');
+    const [teamPeriod, setTeamPeriod] = useState('week');
 
     const [activeTrigger, setActiveTrigger] = useState(null);
 
@@ -64,37 +70,55 @@ function HomePage() {
         localStorage.setItem('activeTab', tab);
     };
 
-    const handlePeriodChange = (period) => {
-        setSelectedPeriod(period);
+    const handleGeneralPeriodChange = (period) => {
+        setGeneralPeriod(period);
     };
 
-    const period = selectedPeriod || 'week';
+    const handleTeamPeriodChange = (period) => {
+        setTeamPeriod(period);
+    }
 
-    const { moodData, loadingMoodData } =
-        useTeamsMoodDistribution(period, selectedTeamTabId ? [selectedTeamTabId] : []);
+    const currentGeneralPeriod = generalPeriod || 'week';
+    const currentTeamPeriod = teamPeriod || 'week';
 
-    const currentPoint =
-        moodData?.points?.length
-            ? moodData.points[moodData.points.length - 1]
+    const { moodData: generalMoodData, loadingMoodData: loadingGeneralMoodData } =
+        useTeamsMoodDistribution(currentGeneralPeriod, selectedGeneralTeamIds);
+
+    const { moodData: teamMoodData, loadingMoodData: loadingTeamMoodData } =
+        useTeamsMoodDistribution(
+            currentTeamPeriod,
+            selectedTeamTabId ? [selectedTeamTabId] : []
+        );
+
+    const generalCurrentPoint =
+        generalMoodData?.points?.length
+            ? generalMoodData.points[generalMoodData.points.length - 1]
             : null;
 
-    const scores = currentPoint?.scores || {};
+    const generalScores = generalCurrentPoint?.scores || {};
 
-    const p1 = scores[1]?.percent || 0;
-    const p2 = scores[2]?.percent || 0;
-    const p3 = scores[3]?.percent || 0;
-    const p4 = scores[4]?.percent || 0;
-    const p5 = scores[5]?.percent || 0;
+    const generalP1 = generalScores[1]?.percent || 0;
+    const generalP2 = generalScores[2]?.percent || 0;
+    const generalP3 = generalScores[3]?.percent || 0;
+    const generalP4 = generalScores[4]?.percent || 0;
+    const generalP5 = generalScores[5]?.percent || 0;
 
     const moodColors = ["#DDD6FE", "#CFC4FA", "#B9A7F6", "#9A77F0", "#8B5CF6"];
 
+    const teamCurrentPoint =
+        teamMoodData?.points?.length
+            ? teamMoodData.points[teamMoodData.points.length - 1]
+            : null;
+
+    const teamScores = teamCurrentPoint?.scores || {};
+
     const moodChartData = [1, 2, 3, 4, 5].map((score, index) => ({
-        value: scores[score]?.percent || 0,
-        count: scores[score]?.count || 0,
+        value: teamScores[score]?.percent || 0,
+        count: teamScores[score]?.count || 0,
         color: moodColors[index],
     }));
 
-    const moodTotal = currentPoint?.total_completions || 0;
+    const moodTotal = teamCurrentPoint?.total_completions || 0;
 
     const indicatorTabsRef = useRef({});
     const [indicatorSliderStyle, setIndicatorSliderStyle] = useState({
@@ -125,32 +149,32 @@ function HomePage() {
     });
 
 
-    const generalSeverityTeamIds = selectedGeneralTeamId ? [selectedGeneralTeamId] : [];
-
     const {
         severityData: generalSeverityData,
         loadingSeverityData: loadingGeneralSeverityData,
         errorSeverityData: errorGeneralSeverityData
-    } = useSeverityDistribution(period, generalSeverityTeamIds);
+    } = useSeverityDistribution(currentGeneralPeriod, selectedGeneralTeamIds);
 
     const {
         severityData: teamSeverityData,
         loadingSeverityData: loadingTeamSeverityData,
         errorSeverityData: errorTeamSeverityData
     } = useSeverityDistribution(
-        period,
+        currentTeamPeriod,
         selectedTeamTabId ? [selectedTeamTabId] : []
     );
 
-    const {
-        severityTrends
-    } = useSeverityTrends(period, selectedTeamTabId ? [selectedTeamTabId] : []);
+    const { severityTrends } =
+        useSeverityTrends(
+            currentTeamPeriod,
+            selectedTeamTabId ? [selectedTeamTabId] : []
+        );
 
     const {
         testCountData,
         loadingTestCountData,
         errorTestCountData,
-    } = useDassTestCount(period, selectedTeamTabId);
+    } = useDassTestCount(currentTeamPeriod, selectedTeamTabId);
 
 
 
@@ -161,7 +185,7 @@ function HomePage() {
         coverageData,
         loadingCoverage,
         errorCoverage
-    } = useTestingCoverage(period, selectedGeneralTeamId ? [selectedGeneralTeamId] : []);
+    } = useTestingCoverage(currentGeneralPeriod, selectedGeneralTeamIds);
 
     const totalPages = Math.ceil((coverageData?.teams?.length || 0) / rowsPerPage);
 
@@ -197,7 +221,7 @@ function HomePage() {
         moodDynamicsData,
         loadingMoodDynamicsData,
         errorMoodDynamicsData,
-    } = useTeamsMoodDynamics(period, selectedTeamTabId);
+    } = useTeamsMoodDynamics(currentTeamPeriod, selectedTeamTabId);
 
 
 
@@ -205,20 +229,77 @@ function HomePage() {
         testCount,
         loadingTestCount,
         errorTestCount
-    } = useDassTestCountCommon(period, selectedGeneralTeamId ? [selectedGeneralTeamId] : []);
+    } = useDassTestCountCommon(currentGeneralPeriod, selectedGeneralTeamIds);
 
     const {
-        riskData,
-        loadingRiskData,
-        errorRiskData,
-    } = useRiskCategories(period, selectedGeneralTeamId ? [selectedGeneralTeamId] : []);
+        riskData: generalRiskData,
+        loadingRiskData: loadingGeneralRiskData,
+        errorRiskData: errorGeneralRiskData,
+    } = useRiskCategories(currentGeneralPeriod, selectedGeneralTeamIds);
+
+    const {
+        riskData: teamRiskData,
+        loadingRiskData: loadingTeamRiskData,
+        errorRiskData: errorTeamRiskData,
+    } = useRiskCategories(
+        currentTeamPeriod,
+        selectedTeamTabId ? [selectedTeamTabId] : []
+    );
 
 
-    const totalRisk = {
+    const generalTotalRisk = {
         stress: 0,
         anxiety: 0,
         depression: 0,
     };
+
+    if (generalRiskData?.teams?.length > 0) {
+        const teams = generalRiskData.teams;
+        const count = teams.length;
+
+        generalTotalRisk.stress = Math.round(
+            teams.reduce((sum, team) => sum + (team.stress?.risk_percent || 0), 0) / count
+        );
+
+        generalTotalRisk.anxiety = Math.round(
+            teams.reduce((sum, team) => sum + (team.anxiety?.risk_percent || 0), 0) / count
+        );
+
+        generalTotalRisk.depression = Math.round(
+            teams.reduce((sum, team) => sum + (team.depression?.risk_percent || 0), 0) / count
+        );
+    }
+
+    const teamTotalRisk = {
+        stress: 0,
+        anxiety: 0,
+        depression: 0,
+    };
+
+    if (teamRiskData?.teams?.length > 0) {
+        const teams = teamRiskData.teams;
+        const count = teams.length;
+
+        teamTotalRisk.stress = Math.round(
+            teams.reduce((sum, team) => sum + (team.stress?.risk_percent || 0), 0) / count
+        );
+
+        teamTotalRisk.anxiety = Math.round(
+            teams.reduce((sum, team) => sum + (team.anxiety?.risk_percent || 0), 0) / count
+        );
+
+        teamTotalRisk.depression = Math.round(
+            teams.reduce((sum, team) => sum + (team.depression?.risk_percent || 0), 0) / count
+        );
+    }
+
+    const triggerByTrendType = {
+        stress: severityTrends?.stress_trigger === true,
+        anxiety: severityTrends?.anxiety_trigger === true,
+        depression: severityTrends?.depression_trigger === true,
+    };
+
+    const hasRightRecommendationTrigger = triggerByTrendType[rightActiveType];
 
     const components = {
         stress: <StressContent teams={paginatedStress} />,
@@ -233,9 +314,9 @@ function HomePage() {
     };
 
     const chartComponents = {
-        stress: <StressChart data={severityTrends?.stress || []} teamId={selectedTeamTabId} period={period}/>,
-        anxiety: <AnxietyChart data={severityTrends?.anxiety || []} teamId={selectedTeamTabId} period={period} />,
-        depression: <DepressionChart data={severityTrends?.depression || []} teamId={selectedTeamTabId} period={period} />,
+        stress: <StressChart data={severityTrends?.stress || []} teamId={selectedTeamTabId} period={currentTeamPeriod} hasRightRecommendationTrigger={triggerByTrendType.stress} />,
+        anxiety: <AnxietyChart data={severityTrends?.anxiety || []} teamId={selectedTeamTabId} period={currentTeamPeriod} hasRightRecommendationTrigger={triggerByTrendType.anxiety} />,
+        depression: <DepressionChart data={severityTrends?.depression || []} teamId={selectedTeamTabId} period={currentTeamPeriod} hasRightRecommendationTrigger={triggerByTrendType.depression} />,
     };
 
     const triggerComponents = {
@@ -244,23 +325,20 @@ function HomePage() {
         depression: <DiagramDepressionTrigger />,
     };
 
-    if (riskData?.teams?.length > 0) {
-        const teams = riskData.teams;
+    const chartTriggerComponents = {
+        stress: <ChartStressTrigger />,
+        anxiety: <ChartAnxietyTrigger />,
+        depression: <ChartDepressionTrigger />,
+    };
 
-        const count = teams.length;
+    const selectedRiskTeam = teamRiskData?.teams?.[0];
 
-        totalRisk.stress = Math.round(
-            teams.reduce((sum, team) => sum + (team.stress?.risk_percent || 0), 0) / count
-        );
+    const teamRiskTriggers = {
+        stress: selectedRiskTeam?.stress?.recommendation_trigger === true,
+        anxiety: selectedRiskTeam?.anxiety?.recommendation_trigger === true,
+        depression: selectedRiskTeam?.depression?.recommendation_trigger === true,
+    };
 
-        totalRisk.anxiety = Math.round(
-            teams.reduce((sum, team) => sum + (team.anxiety?.risk_percent || 0), 0) / count
-        );
-
-        totalRisk.depression = Math.round(
-            teams.reduce((sum, team) => sum + (team.depression?.risk_percent || 0), 0) / count
-        );
-    }
 
     useEffect(() => {
         const loadTeams = async () => {
@@ -269,29 +347,27 @@ function HomePage() {
                 setTeams(data);
 
                 if (data?.length > 0) {
-                    // для обычного селекта во вкладке "Общее"
-                    setSelectedGeneralTeamId(data[0].id);
+                    setSelectedGeneralTeamIds([]);
 
-                    // для TeamCustomSelect — команда с максимальным числом участников
-                    const biggestTeam = data.reduce((max, team) => {
+                    const biggestTeam = data.reduce((max, item) => {
                         const maxCount =
-                            max.total_members ??
-                            max.members_count ??
-                            max.member_count ??
-                            max.members?.length ??
+                            max.team?.total_members ??
+                            max.team?.members_count ??
+                            max.team?.member_count ??
+                            max.team?.members?.length ??
                             0;
 
                         const teamCount =
-                            team.total_members ??
-                            team.members_count ??
-                            team.member_count ??
-                            team.members?.length ??
+                            item.team?.total_members ??
+                            item.team?.members_count ??
+                            item.team?.member_count ??
+                            item.team?.members?.length ??
                             0;
 
-                        return teamCount > maxCount ? team : max;
+                        return teamCount > maxCount ? item : max;
                     }, data[0]);
 
-                    setSelectedTeamTabId(biggestTeam.id);
+                    setSelectedTeamTabId(biggestTeam.team.id);
                 }
             } catch (error) {
                 console.error("Ошибка при загрузке команд:", error);
@@ -300,6 +376,30 @@ function HomePage() {
 
         loadTeams();
     }, []);
+
+    useEffect(() => {
+        if (teams.length > 0 && !selectedTeamTabId) {
+            const biggestTeam = teams.reduce((max, team) => {
+                const maxCount =
+                    max.total_members ??
+                    max.members_count ??
+                    max.member_count ??
+                    max.members?.length ??
+                    0;
+
+                const teamCount =
+                    team.total_members ??
+                    team.members_count ??
+                    team.member_count ??
+                    team.members?.length ??
+                    0;
+
+                return teamCount > maxCount ? team : max;
+            }, teams[0]);
+
+            setSelectedTeamTabId(biggestTeam.id);
+        }
+    }, [teams, selectedTeamTabId]);
 
     useEffect(() => {
         const updateIndicatorSliders = () => {
@@ -349,9 +449,21 @@ function HomePage() {
 
     const currentDiagramData = teamSeverityData?.[activeType] || [];
 
-    const hasRecommendationTrigger = currentDiagramData.some(
-        (item) => item.recommendation_trigger === true
-    );
+    const triggerByType = {
+        stress: (teamSeverityData?.stress || []).some(
+            (item) => item.recommendation_trigger === true
+        ),
+        anxiety: (teamSeverityData?.anxiety || []).some(
+            (item) => item.recommendation_trigger === true
+        ),
+        depression: (teamSeverityData?.depression || []).some(
+            (item) => item.recommendation_trigger === true
+        ),
+    };
+    const hasRecommendationTrigger = triggerByType[activeType];
+
+    const hasCountTestTrigger = testCountData?.recommendation_trigger === true;
+
 
 
     return (
@@ -397,14 +509,14 @@ function HomePage() {
                                 <div className="select-count">
                                     <div className="select-content">
                                         <PeriodSelect
-                                            value={selectedPeriod}
-                                            onChange={handlePeriodChange}
+                                            value={generalPeriod}
+                                            onChange={handleGeneralPeriodChange}
                                         />
                                         <CustomSelect
                                             options={teams}
                                             placeholder="Команды"
-                                            value={selectedGeneralTeamId}
-                                            onChange={(team) => setSelectedGeneralTeamId(team.id)}
+                                            selectedValues={selectedGeneralTeamIds}
+                                            onChange={setSelectedGeneralTeamIds}
                                         />
 
                                     </div>
@@ -413,9 +525,7 @@ function HomePage() {
                                             <div className="main-text">
                                                 Количество прохождений по всем командам:
                                                 <span className="main-text-count">
-                                                  {selectedGeneralTeamId
-                                                      ? testCount?.teams?.[0]?.current_count ?? 0
-                                                      : testCount?.teams?.reduce((sum, t) => sum + (t.current_count || 0), 0)}
+                                                    {testCount?.teams?.reduce((sum, t) => sum + (t.current_count || 0), 0) ?? 0}
                                                 </span>
                                             </div>
                                         </div>
@@ -426,40 +536,40 @@ function HomePage() {
 
                                     <div className="level-item1">
                                         <div className="shkala">
-                                            <div className="shkala-fill" style={{ width: `${p5}%` }} />
-                                            <span className="shkala-text">{Math.round(p5)}%</span>
+                                            <div className="shkala-fill" style={{ width: `${generalP5}%` }} />
+                                            <span className="shkala-text">{Math.round(generalP5)}%</span>
                                         </div>
                                         <img src={veryFunnySmile} alt="Смайл" className="very-funny-smile"/>
                                     </div>
 
                                     <div className="level-item2">
                                         <div className="shkala">
-                                            <div className="shkala-fill" style={{ width: `${p4}%` }} />
-                                            <span className="shkala-text">{Math.round(p4)}%</span>
+                                            <div className="shkala-fill" style={{ width: `${generalP4}%` }} />
+                                            <span className="shkala-text">{Math.round(generalP4)}%</span>
                                         </div>
                                         <img src={lightSmile} alt="Смайл" className="light-smile"/>
                                     </div>
 
                                     <div className="level-item3">
                                         <div className="shkala">
-                                            <div className="shkala-fill" style={{ width: `${p3}%` }} />
-                                            <span className="shkala-text">{Math.round(p3)}%</span>
+                                            <div className="shkala-fill" style={{ width: `${generalP3}%` }} />
+                                            <span className="shkala-text">{Math.round(generalP3)}%</span>
                                         </div>
                                         <img src={mediumSmile} alt="Смайл" className="moderate-smile"/>
                                     </div>
 
                                     <div className="level-item4">
                                         <div className="shkala">
-                                            <div className="shkala-fill" style={{ width: `${p2}%` }} />
-                                            <span className="shkala-text">{Math.round(p2)}%</span>
+                                            <div className="shkala-fill" style={{ width: `${generalP2}%` }} />
+                                            <span className="shkala-text">{Math.round(generalP2)}%</span>
                                         </div>
                                         <img src={sadSmile} alt="Смайл" className="sad-smile"/>
                                     </div>
 
                                     <div className="level-item5">
                                         <div className="shkala">
-                                            <div className="shkala-fill" style={{ width: `${p1}%` }} />
-                                            <span className="shkala-text">{Math.round(p1)}%</span>
+                                            <div className="shkala-fill" style={{ width: `${generalP1}%` }} />
+                                            <span className="shkala-text">{Math.round(generalP1)}%</span>
                                         </div>
                                         <img src={verySadSmile} alt="Смайл" className="very-sad-smile"/>
                                     </div>
@@ -476,7 +586,7 @@ function HomePage() {
                                             <div className="metric-shape-inner">
                                                 <div
                                                     className="metric-liquid"
-                                                    style={{ height: `${totalRisk.stress}%` }}
+                                                    style={{ height: `${generalTotalRisk.stress}%` }}
                                                 >
                                                     <svg
                                                         className="metric-wave"
@@ -498,7 +608,7 @@ function HomePage() {
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <span>{totalRisk.stress}%</span>
+                                            <span>{generalTotalRisk.stress}%</span>
                                         </div>
                                     </div>
 
@@ -510,7 +620,7 @@ function HomePage() {
                                             <div className="metric-shape-inner">
                                                 <div
                                                     className="metric-liquid"
-                                                    style={{ height: `${totalRisk.anxiety}%` }}
+                                                    style={{ height: `${generalTotalRisk.anxiety}%` }}
                                                 >
                                                     <svg
                                                         className="metric-wave"
@@ -532,7 +642,7 @@ function HomePage() {
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <span>{totalRisk.anxiety}%</span>
+                                            <span>{generalTotalRisk.anxiety}%</span>
                                         </div>
                                     </div>
 
@@ -544,7 +654,7 @@ function HomePage() {
                                             <div className="metric-shape-inner">
                                                 <div
                                                     className="metric-liquid"
-                                                    style={{ height: `${totalRisk.depression}%` }}
+                                                    style={{ height: `${generalTotalRisk.depression}%` }}
                                                 >
                                                     <svg
                                                         className="metric-wave"
@@ -566,7 +676,7 @@ function HomePage() {
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <span>{totalRisk.depression}%</span>
+                                            <span>{generalTotalRisk.depression}%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -612,11 +722,13 @@ function HomePage() {
                                 <div className="percent-employee-content">
                                     {components[employeeActiveType]}
                                 </div>
-                                <Pagination
-                                    currentPage={currentRiskPage}
-                                    totalPages={totalRiskPages}
-                                    onPageChange={setCurrentRiskPage}
-                                />
+                                <div className="risk-pagination-wrapper">
+                                    <Pagination
+                                        currentPage={currentRiskPage}
+                                        totalPages={totalRiskPages}
+                                        onPageChange={setCurrentRiskPage}
+                                    />
+                                </div>
                             </div>
                             <div className="percent-testing">
                                 <div className="percent-testing-head">Процент прохождения тестирования командами</div>
@@ -665,11 +777,13 @@ function HomePage() {
                                         </div>
                                     ))}
                                 </div>
-                                <Pagination
-                                    currentPage={currentPage}
-                                    totalPages={Math.ceil((coverageData?.teams?.length || 0) / rowsPerPage)}
-                                    onPageChange={setCurrentPage}
-                                />
+                                <div className="testing-pagination-wrapper">
+                                    <Pagination
+                                        currentPage={currentPage}
+                                        totalPages={Math.ceil((coverageData?.teams?.length || 0) / rowsPerPage)}
+                                        onPageChange={setCurrentPage}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -682,8 +796,8 @@ function HomePage() {
                             <div className="team-headleft-content">
                                 <div className="team-select-content">
                                     <TeamPeriodSelect
-                                        value={selectedPeriod}
-                                        onChange={handlePeriodChange}
+                                        value={teamPeriod}
+                                        onChange={handleTeamPeriodChange}
                                     />
                                     <TeamCustomSelect
                                         options={teams}
@@ -697,37 +811,54 @@ function HomePage() {
                                     <h1>Стресс</h1>
                                     <p>Зона риска</p>
                                     <div className="team-stress-sphere">
-                                        <img src={sphera} alt="sphere" className="sphera"/>
-                                        <span className="sphere-text">{totalRisk.stress}%</span>
+                                        <Sphera color={teamRiskTriggers.stress ? "#E34141" : "#9169EC"} />
+                                        <span className="sphere-text">{teamTotalRisk.stress}%</span>
                                     </div>
                                 </div>
                                 <div className="team-anxiety">
                                     <h1>Тревога</h1>
                                     <p>Зона риска</p>
                                     <div className="team-anxiety-sphere">
-                                        <img src={sphera} alt="sphere" className="sphera"/>
-                                        <span className="sphere-text">{totalRisk.anxiety}%</span>
+                                        <Sphera color={teamRiskTriggers.anxiety ? "#E34141" : "#9169EC"} />
+                                        <span className="sphere-text">{teamTotalRisk.anxiety}%</span>
                                     </div>
                                 </div>
                                 <div className="team-depression">
                                     <h1>Депрессия</h1>
                                     <p>Зона риска</p>
                                     <div className="team-depression-sphere">
-                                        <img src={sphera} alt="sphere" className="sphera"/>
-                                        <span className="sphere-text">{totalRisk.depression}%</span>
+                                        <Sphera color={teamRiskTriggers.depression ? "#E34141" : "#9169EC"} />
+                                        <span className="sphere-text">{teamTotalRisk.depression}%</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="team-headright-content">
                                 <div className="team-counter-test">
-                                    <CountTest data={testCountData} />
+                                    <CountTest
+                                        data={testCountData}
+                                        hasRecommendationTrigger={hasCountTestTrigger}
+                                        onTriggerClick={() =>
+                                            setActiveTrigger(prev => (prev === "count-test" ? null : "count-test"))
+                                        }
+                                    />
+
+                                    {activeTrigger === "count-test" && (
+                                        <>
+                                            <div
+                                                className="overlay"
+                                                onClick={() => setActiveTrigger(null)}
+                                            />
+
+                                            <CountTestTrigger />
+                                        </>
+                                    )}
                                 </div>
                                 <div className="team-moodscale-content">
                                     <TeamMoodscaleContent
                                         data={moodChartData}
                                         total={moodTotal}
                                         dynamicPoints={moodDynamicsData?.points || []}
-                                        period={period}
+                                        period={currentTeamPeriod}
                                     />
                                 </div>
                             </div>
@@ -753,7 +884,7 @@ function HomePage() {
                                                         style={{ cursor: "pointer" }}
                                                     />
 
-                                                    {activeTrigger && (
+                                                    {activeTrigger === activeType && (
                                                         <>
                                                             <div
                                                                 className="overlay"
@@ -770,26 +901,30 @@ function HomePage() {
                                             {Object.keys(diagramComponents).map((type) => (
                                                 <div
                                                     key={type}
-                                                    className={`indicator-tab ${activeType === type ? "active" : ""}`}
-                                                    onClick={() => setActiveType(type)}
+                                                    className={`
+                                                    indicator-tab
+                                                    ${activeType === type ? "active" : ""}
+                                                    ${triggerByType[type] && activeType !== type ? "trigger-inactive" : ""}
+                                                    ${triggerByType[type] && activeType === type ? "trigger-active" : ""}
+                                                `}
+                                                    onClick={() => setActiveType(type)}>
+                                                <span
+                                                    ref={(el) => (indicatorTabsRef.current[type] = el)}
+                                                    className="indicator-button"
                                                 >
-                            <span
-                                ref={(el) => (indicatorTabsRef.current[type] = el)}
-                                className="indicator-button"
-                            >
-                                {type === "stress"
-                                    ? "Стресс"
-                                    : type === "anxiety"
-                                        ? "Тревога"
-                                        : "Депрессия"}
-                            </span>
+                                                    {type === "stress"
+                                                        ? "Стресс"
+                                                        : type === "anxiety"
+                                                            ? "Тревога"
+                                                            : "Депрессия"}
+                                                </span>
                                                 </div>
                                             ))}
 
                                             <img
                                                 src={indicatorLine}
                                                 alt=""
-                                                className="indicator-slider"
+                                                className={`indicator-slider ${hasRecommendationTrigger ? "error" : ""}`}
                                                 style={{
                                                     width: `${indicatorSliderStyle.width}px`,
                                                     transform: `translateX(${indicatorSliderStyle.left}px)`,
@@ -798,7 +933,6 @@ function HomePage() {
                                             />
                                         </div>
                                     </div>
-
                                     <div className="indicator-stroka"></div>
                                 </div>
 
@@ -808,33 +942,68 @@ function HomePage() {
                             </div>
 
                             <div className="team-right-block">
-                                <div className="team-right-indicator">
+                                <div className={`team-right-indicator ${hasRightRecommendationTrigger ? "error" : ""}`}>
                                     <div className="header-right-indicator">
-                                        <div className="right-indicator">Показатели</div>
+                                        <div className="indicator" style={{ position: "relative" }}>
+                                            <div className={`indicator-text ${hasRightRecommendationTrigger ? "error" : ""}`}>
+                                                Показатели
+                                            </div>
+
+                                            {hasRightRecommendationTrigger && (
+                                                <>
+                                                    <img
+                                                        src={bigError}
+                                                        alt="error-indicator"
+                                                        className="indicator-icon"
+                                                        onClick={() =>
+                                                            setActiveTrigger(prev => (prev === rightActiveType ? null : rightActiveType))
+                                                        }
+                                                        style={{ cursor: "pointer" }}
+                                                    />
+
+                                                    {activeTrigger === rightActiveType && (
+                                                        <>
+                                                            <div
+                                                                className="overlay"
+                                                                onClick={() => setActiveTrigger(null)}
+                                                            />
+
+                                                            {chartTriggerComponents[activeTrigger]}
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+
                                         <div className="right-indicator-metric">
                                             {Object.keys(chartComponents).map((type) => (
                                                 <div
                                                     key={type}
-                                                    className={`indicator-tab ${rightActiveType === type ? "active" : ""}`}
+                                                    className={`
+                    indicator-tab
+                    ${rightActiveType === type ? "active" : ""}
+                    ${triggerByTrendType[type] && rightActiveType !== type ? "trigger-inactive" : ""}
+                    ${triggerByTrendType[type] && rightActiveType === type ? "trigger-active" : ""}
+                `}
                                                     onClick={() => setRightActiveType(type)}
                                                 >
-                            <span
-                                ref={(el) => (rightIndicatorTabsRef.current[type] = el)}
-                                className="indicator-button"
-                            >
-                                {type === "stress"
-                                    ? "Стресс"
-                                    : type === "anxiety"
-                                        ? "Тревога"
-                                        : "Депрессия"}
-                            </span>
+                <span
+                    ref={(el) => (rightIndicatorTabsRef.current[type] = el)}
+                    className="indicator-button"
+                >
+                    {type === "stress"
+                        ? "Стресс"
+                        : type === "anxiety"
+                            ? "Тревога"
+                            : "Депрессия"}
+                </span>
                                                 </div>
                                             ))}
 
                                             <img
                                                 src={indicatorLine}
                                                 alt=""
-                                                className="indicator-slider"
+                                                className={`indicator-slider ${hasRightRecommendationTrigger ? "error" : ""}`}
                                                 style={{
                                                     width: `${rightIndicatorSliderStyle.width}px`,
                                                     transform: `translateX(${rightIndicatorSliderStyle.left}px)`,

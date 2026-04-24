@@ -1,0 +1,66 @@
+.count-test-trigger {
+    position: absolute;
+    top: 205px;
+    left: 815px;
+    z-index: 1001;
+
+    width: 667px;
+    height: 322px;
+    padding: 10px 16px 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+
+    border-radius: 15px;
+    background: var(--Conditional-pop-over, #FFF);
+    box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.40);
+
+    font-family: Raleway, sans-serif;
+    color: #2B2B2B;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(45, 53, 197, 0.2); /* твой цвет из Figma */
+    z-index: 1000;
+}
+
+.big-alert {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    margin-top: -75px;
+}
+
+.count-header-trigger, .count-body-trigger, .count-footer-trigger {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    justify-content: center;
+    align-self: flex-start;
+}
+
+.count-header-text1, .count-body-text1, .count-footer-text1 {
+    color: var(--character-primary-85, rgba(0, 0, 0, 0.85));
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+}
+
+.count-header-text2, .count-body-text2, .count-footer-text2, .count-footer-text3, .count-footer-text4 {
+    color: var(--character-primary-85, rgba(0, 0, 0, 0.85));
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
