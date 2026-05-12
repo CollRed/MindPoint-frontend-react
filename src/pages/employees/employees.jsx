@@ -52,8 +52,6 @@ export default function EmployeesPage() {
     const [isFilterDropdownOpen, setFilterDropdownOpen] = useState(false);
 
     const [activeEmployee, setActiveEmployee] = useState(null);
-    const [assignToTeamId, setAssignToTeamId] = useState("");
-    const [removeFromTeamId, setRemoveFromTeamId] = useState("");
 
     const [isTeamLeadModalOpen, setIsTeamLeadModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -602,7 +600,19 @@ useEffect(() => {
                                 </span>
                                                     </div>
                                                     <div className="team-count">{row.membersCount}</div>
-                                                    <div className="team-edit">Ред.</div>
+                                                    <div
+                                                        className="team-edit"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setActiveTeamModal({
+                                                                teamId: row.team.id,
+                                                                teamName: row.team.name,
+                                                                members: row.members || [],
+                                                            });
+                                                        }}
+                                                    >
+                                                        ⋮
+                                                    </div>
                                                 </div>
 
                                                 {openTeamIds.includes(row.team.id) && (
@@ -653,11 +663,14 @@ useEffect(() => {
                                                 }}
                                             >
                         <span className="team-employee-name">
-                            {row.member.fullname}
-                        </span>
+    {row.member.fullname}
+</span>
+
                                                 <span className="member-role">
-                            {row.member.is_teamlead ? "Тимлид" : "Сотрудник"}
-                        </span>
+    {row.member.is_teamlead ? "Тимлид" : "Сотрудник"}
+</span>
+
+                                                <span className="member-edit">⋮</span>
                                             </div>
                                         ) : null
                                 )
@@ -945,25 +958,13 @@ useEffect(() => {
                 <EmployeeModal
                     activeEmployee={activeEmployee}
                     setActiveEmployee={setActiveEmployee}
-
                     teams={teams}
                     addNotification={addNotification}
                     refreshAllData={refreshAllData}
-
-                    assignToTeamId={assignToTeamId}
-                    setAssignToTeamId={setAssignToTeamId}
-
-                    moveToTeamId={moveToTeamId}
-                    setMoveToTeamId={setMoveToTeamId}
-
-                    removeFromTeamId={removeFromTeamId}
-                    setRemoveFromTeamId={setRemoveFromTeamId}
-
                     handleAssignEmployee={handleAssignEmployee}
                     handleMoveMember={handleMoveMember}
                     handleRemoveMemberFromTeam={handleRemoveMemberFromTeam}
-
-                    handleAssignTeamLead={handleAssignTeamLead}   // 🔥 вот это новое
+                    handleAssignTeamLead={handleAssignTeamLead}
                 />
             )}
             <TeamLeadModal

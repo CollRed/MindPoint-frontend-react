@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { authFetch } from '../utils/authFetch';
 
-/* ---------- test count common ---------- */
+//* ---------- periodic test counts ---------- */
 
-export async function fetchDassTestCountCommon({ period, team_ids }) {
-    const res = await authFetch('/dass_analytics/test_count_common', {
+export async function fetchDassPeriodicTestCounts({ team_ids }) {
+    const res = await authFetch('/dass_analytics/periodic_test_counts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ period, team_ids }),
+        body: JSON.stringify({ team_ids }),
     });
 
     if (!res.ok) throw new Error(await res.text());
@@ -21,8 +21,18 @@ export function useDassTestCountCommon(period, team_ids = []) {
     const [errorTestCount, setErrorTestCount] = useState(null);
 
     useEffect(() => {
-        fetchDassTestCountCommon({ period, team_ids })
-            .then(setTestCount)
+        setLoadingTestCount(true);
+        setErrorTestCount(null);
+
+        fetchDassPeriodicTestCounts({ team_ids })
+            .then((data) => {
+                setTestCount({
+                    count: data?.counts?.[period] ?? 0,
+                    trigger: data?.triggers?.[period] ?? false,
+                    counts: data?.counts ?? {},
+                    triggers: data?.triggers ?? {},
+                });
+            })
             .catch(() => setErrorTestCount(true))
             .finally(() => setLoadingTestCount(false));
     }, [period, JSON.stringify(team_ids)]);
@@ -50,10 +60,28 @@ export function useRiskCategories(period, team_ids = []) {
     const [errorRiskData, setErrorRiskData] = useState(null);
 
     useEffect(() => {
+        let isMounted = true;
+
+        setLoadingRiskData(true);
+        setErrorRiskData(null);
+
         fetchRiskCategories({ period, team_ids })
-            .then(setRiskData)
-            .catch(() => setErrorRiskData(true))
-            .finally(() => setLoadingRiskData(false));
+            .then((data) => {
+                if (!isMounted) return;
+                setRiskData(data);
+            })
+            .catch(() => {
+                if (!isMounted) return;
+                setErrorRiskData(true);
+                setRiskData(null);
+            })
+            .finally(() => {
+                if (isMounted) setLoadingRiskData(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
     }, [period, JSON.stringify(team_ids)]);
 
     return { riskData, loadingRiskData, errorRiskData };

@@ -156,7 +156,7 @@ export function handleRespond(requestId, isApproved, onSuccess, onError) {
 }
 
 
-export function handleAssignEmployee(employeeId, teamId, employeeName, onSuccess, onError) {
+export function handleAssignEmployee(employeeId, teamId, onSuccess, onError) {
     authFetch('/management/add_members_in_team', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -171,7 +171,7 @@ export function handleAssignEmployee(employeeId, teamId, employeeName, onSuccess
                 return;
             }
 
-            if (onSuccess) onSuccess(); // 👈 теперь сработает
+            if (onSuccess) onSuccess();
         })
         .catch(err => {
             console.error('Ошибка сети при назначении:', err);

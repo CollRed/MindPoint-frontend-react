@@ -61,6 +61,7 @@ export default function ProfileEmployee() {
     }, []);
 
     const handleLogoutConfirm = () => {
+        sessionStorage.clear();
         localStorage.clear();
         navigate('/login');
     };

@@ -18,7 +18,10 @@ export default function AnxietyContent({ teams = [] }) {
             </div>
             <div className="percent-employee-main">
                 {teams.map((team, idx) => (
-                    <div className="percent-employee-row" key={idx}>
+                    <div
+                        className={`percent-employee-row ${team.recommendation_trigger ? "error" : ""}`}
+                        key={idx}
+                    >
                         <div className="percent-employee-rowteams">
                             <h1>{team.label  || 'Без названия'}</h1>
                         </div>

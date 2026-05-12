@@ -7,12 +7,23 @@ import underlineImg from '@assets/logo-underline.png';
 export default function Header() {
     const location = useLocation();
     const [underlineStyle, setUnderlineStyle] = useState({});
+
+    const homeTabRef = useRef(null);
+    const testingTabRef = useRef(null);
+    const employeesTabRef = useRef(null);
+    const isManager = localStorage.getItem('is_manager') === 'true';
+    const isTeamlead = localStorage.getItem('is_teamlead') === 'true';
+
     const tabRefs = {
-        '/home': useRef(null),
-        '/employees': useRef(null),
+        ...(isTeamlead && { '/testing': testingTabRef }),
+        '/home': homeTabRef,
+        ...(isManager && { '/employees': employeesTabRef }),
     };
 
-    // 👇 ВОТ ЭТО: добавляем переменную!
+    const profilePath = isManager
+        ? "/profile-manager"
+        : "/profile-employee";
+
     const hideUnderline = location.pathname === '/profile-manager';
 
     useEffect(() => {
@@ -22,8 +33,8 @@ export default function Header() {
         if (activeTab && !hideUnderline) {
             const { offsetLeft, offsetWidth } = activeTab;
             setUnderlineStyle({
-                left: offsetLeft,
-                width: offsetWidth,
+                left: `${offsetLeft}px`,
+                width: `${offsetWidth}px`,
             });
         }
     }, [location.pathname, hideUnderline]);
@@ -32,14 +43,22 @@ export default function Header() {
         <header className="app-header">
             <div className="header-container">
                 <div className="header-tabs">
-                    <NavLink to="/home" ref={tabRefs['/home']} className="tab">
+                    {isTeamlead && (
+                        <NavLink to="/testing" ref={testingTabRef} className="tab">
+                            Тестирование
+                        </NavLink>
+                    )}
+
+                    <NavLink to="/home" ref={homeTabRef} className="tab">
                         Статистика
                     </NavLink>
-                    <NavLink to="/employees" ref={tabRefs['/employees']} className="tab">
-                        Команды
-                    </NavLink>
 
-                    {/* 👇 Проверка перед отрисовкой линии */}
+                    {isManager && (
+                        <NavLink to="/employees" ref={employeesTabRef} className="tab">
+                            Команды
+                        </NavLink>
+                    )}
+
                     {!hideUnderline && (
                         <img
                             src={underlineImg}
@@ -49,10 +68,11 @@ export default function Header() {
                         />
                     )}
                 </div>
-            </div>
-                <NavLink to="/profile-manager" className="header-avatar">
-                    <img src={avatar} alt="Аватар" />
+
+                <NavLink to={profilePath} className="header-avatar">
+                    <img src={avatar} alt="" />
                 </NavLink>
+            </div>
         </header>
     );
 }

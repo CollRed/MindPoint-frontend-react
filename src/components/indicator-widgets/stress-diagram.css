@@ -261,6 +261,7 @@
 
     pointer-events: none;
 }
+
 .bar-value::after {
     content: "";
     position: absolute;
@@ -327,4 +328,69 @@
 
 .bar-danger {
     background: #FF9494;
+}
+
+
+@media (max-width: 1600px) {
+    .stress-diagram-body,
+    .stress-diagram-body.error {
+        width: 100% !important;
+        max-width: none !important;
+        box-sizing: border-box;
+    }
+
+    .stress-diagram-main {
+        width: 100% !important;
+    }
+
+    .stress-diagram-stroka {
+        width: 100% !important;
+        flex: 1;
+        position: relative;
+    }
+
+    .stress-diagram-bar {
+        width: calc(100% - 40px);
+        margin-left: 20px;
+    }
+
+    .mini-stroka {
+        position: absolute;
+        left: 50px;
+        bottom: 35px;
+
+        width: auto;
+        margin-left: 0;
+        padding: 0;
+
+        display: flex;
+        justify-content: center;
+        gap: 99px;
+    }
+
+    .diagram-status {
+        position: absolute;
+        left: 20px;
+        bottom: 1px;
+
+        width: 800px;
+        margin-left: 0;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .diagram-status-normal,
+    .diagram-status-low,
+    .diagram-status-moderate,
+    .diagram-status-high,
+    .diagram-status-very-high {
+        width: 72px;
+        margin-left: 0;
+
+        display: flex;
+        justify-content: center;
+        text-align: center;
+    }
 }

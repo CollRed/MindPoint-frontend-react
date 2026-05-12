@@ -304,3 +304,24 @@
     border-bottom: none;
     overflow: hidden;
 }
+
+.percent-employee-row.error .percent-employee-rowteams {
+    background: #FBBEBE; /* мягкий красный */
+}
+
+.percent-employee-row.error .percent-employee-rownormal,
+.percent-employee-row.error .percent-employee-rowlight,
+.percent-employee-row.error .percent-employee-rowmedium,
+.percent-employee-row.error .percent-employee-rowhigh,
+.percent-employee-row.error .percent-employee-rowcritical {
+    background: #F9D9D9;
+}
+
+.percent-employee-row.error .percent-employee-rowteams h1 {
+    color: #E34141;
+}
+
+.percent-employee-row.error .progress-bar-high,
+.percent-employee-row.error .progress-bar-critical {
+    background: #E34141;
+}

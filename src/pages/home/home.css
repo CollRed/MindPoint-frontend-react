@@ -1,6 +1,6 @@
 .home-wrapper {
     display: flex;
-    height: 1130px;
+    height: 1068px;
     background-image: url('/home-back.svg');
     background-size: cover;
     overflow-x: hidden;
@@ -13,7 +13,7 @@
     max-width: 1646px;
     flex-direction: column;
     margin: 0 auto;
-    padding: 24px 0px 87px;
+    padding: 24px 0px 0px;
 }
 
 .tab-navigate {
@@ -21,7 +21,7 @@
     display: flex;
     align-items: flex-start;
     gap: 24px;
-    padding-bottom: 18px;
+    padding-bottom: 15px;
 }
 
 .main-tab {
@@ -79,7 +79,7 @@
     display: flex;
     flex-direction: column;
     width: clamp(700px, 50vw, 919px);
-    gap: 61px;
+    gap: 50px;
 }
 .select-count {
     display: flex;
@@ -122,6 +122,8 @@
     border-radius: 15px;
     background: #FFF;
     box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+    z-index: 1;
+    overflow: visible;
 }
 
 .text-count {
@@ -152,6 +154,31 @@
 
 .pucha-home {
     display: flex;
+    transform: translate(3px, 3px); /* вправо и вниз */
+    z-index: 2;
+}
+
+.count-test.error {
+    border: 3px solid #E34141;
+}
+
+.main-text-count.error {
+    color: #E34141;
+    display: inline;
+    font-family: Roboto, sans-serif;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 500;
+    line-height: normal;
+    margin-left: 8px;
+}
+
+.count-test-error-icon {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-top: 2px;
 }
 
 .level-content {
@@ -341,27 +368,42 @@
 .percent-employee-head {
     display: flex;
     width: 100%;
-    height: 43px;
+    min-height: 43px;
+
     padding: 8px 16px;
-    gap: 4px;
+    box-sizing: border-box;
+
     justify-content: space-between;
     align-items: center;
-    flex-direction: row;
+    gap: 16px;
 
     border-radius: 20px 20px 0 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     background: #9169EC;
+
+    overflow: hidden;
 }
 
 .percent-employee-left {
     display: flex;
-    color: #FFF;
+    align-items: center;
+    gap: 10px;
 
+    min-width: 0;
+    flex-shrink: 1;
+
+    color: #FFF;
     font-family: Roboto, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
     line-height: 22px;
+}
+
+.percent-employee-error-icon {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
 }
 
 .percent-employee-right {
@@ -396,6 +438,11 @@
 
 .employee-tab.active .employee-button {
     color: #FFF;
+}
+
+
+.employee-tab.trigger:not(.active) .employee-button {
+    color: #FF9193;
 }
 
 .employee-slider {
@@ -433,20 +480,49 @@
     display: flex;
     width: 100%;
     height: 43px;
+    flex-direction: row;
     justify-content: flex-start;
     padding: 8px 16px;
     align-items: center;
-    gap: 4px;
+    gap: 10px;
     border-radius: 20px 20px 0 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     background: #9169EC;
 
+}
+
+.percent-testing-head span {
     color: #FFF;
     font-family: Roboto, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
     line-height: 22px;
+}
+
+.percent-testing-error-icon {
+    display: flex;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+}
+
+.percent-testing-row.problem .percent-testing-number-rowteam,
+.percent-testing-row.problem .percent-testing-number-rowtest,
+.percent-testing-row.problem .percent-testing-percent-rowtest {
+    background: #F9D9D9;
+}
+.percent-testing-row.problem .percent-testing-rowteam {
+    background: #FBBEBE;
+}
+
+.percent-testing-row.problem .percent-testing-rowteam h1 {
+    color: #E34141;
+    font-weight: 700;
+}
+
+.percent-testing-row.problem .progress-bar-fill {
+    background: #E34141;
 }
 
 .percent-testing-uphead {
@@ -677,9 +753,9 @@
 
 .team-header-content {
     display: flex;
-    padding: 50px 0px 0px 0px;
+    padding: 38px 0px 0px 0px;
     gap: clamp(5px, 2vw, 24px);
-    margin-bottom: 31px;
+    margin-bottom: 23px;
 }
 
 .team-headleft-content {
@@ -696,6 +772,7 @@
 
 .team-stress, .team-anxiety, .team-depression {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
@@ -704,6 +781,23 @@
     border-radius: 15px;
     background: #FFF;
     box-shadow: 4px 4px 15px 0 rgba(0, 0, 0, 0.25);
+}
+
+.team-error-icon {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%); /* чуть выше центра */
+
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+
+}
+
+.team-stress.error, .team-anxiety.error, .team-depression.error {
+    border: 3px solid #E34141;
 }
 
 .team-stress h1, .team-anxiety h1, .team-depression h1 {
@@ -743,7 +837,9 @@
 
 .sphere-text {
     position: absolute;
-    top: 8px;        /* регулируй положение */
+    top: 7px;
+    width: 58px;
+    height: 42px;
     left: 50%;
     transform: translateX(-50%);
 
@@ -754,7 +850,6 @@
     font-style: italic;
     font-weight: 800;
     line-height: normal;
-    pointer-events: none; /* чтобы клики проходили сквозь текст */
 }
 
 
@@ -765,7 +860,7 @@
 
 .team-counter-test {
     display: flex;
-    width: 532px;
+    width: 100%;
     height: 462px;
 }
 
@@ -955,4 +1050,423 @@
             transform 0.35s ease,
             width 0.35s ease,
             opacity 0.2s ease;
+}
+
+.home-container {
+    width: min(1646px, calc(100vw - 48px));
+}
+
+/* Верхняя часть "Общее" */
+.main-header-content {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.main-headleft-content {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.main-hright-content {
+    flex: 0 0 auto;
+}
+
+.select-count {
+    width: 100%;
+    align-items: flex-start;
+}
+
+.count-test {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 617px;
+}
+
+.main-text {
+    font-size: clamp(30px, 1.7vw, 32px);
+}
+
+.main-text-count {
+    font-size: clamp(25px, 1.7vw, 32px);
+}
+
+
+
+/* Шкалы настроения */
+.level-content {
+    width: 100%;
+}
+
+.level-item1,
+.level-item2,
+.level-item3,
+.level-item4,
+.level-item5 {
+    min-width: 0;
+
+}
+
+.shkala {
+    width: 100%;
+    min-width: 70px;
+}
+
+/* Карточки справа */
+.metric-state {
+    flex-wrap: nowrap;
+}
+
+.metric-card {
+    width: clamp(150px, 11.8vw, 224px);
+}
+
+.metric-shape {
+    width: 94%;
+}
+
+/* Нижняя часть "Общее" */
+.main-body-content {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+.percent-employee {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.percent-testing {
+    flex: 0 0 616px;
+}
+
+
+@media (max-width: 1600px) {
+
+    .home-wrapper {
+        height: auto;
+    }
+
+    .home-container {
+        width: calc(100vw - 40px);
+        max-width: 950px;
+        margin: 0 auto;
+        padding-top: 24px;
+        padding-bottom: 40px;
+    }
+
+
+    .main-header-content {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        padding-top: 40px;
+        margin-bottom: 36px;
+    }
+
+    .main-headleft-content {
+        width: 100%;
+        max-width: none;
+        gap: 50px;
+    }
+
+    .select-count {
+        width: 100%;
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .select-content {
+        flex: 0 0 278px;
+        width: 278px;
+    }
+
+    .count-test {
+        flex: 1 1 auto;
+        width: auto;
+        max-width: none;
+    }
+
+    .main-text {
+        font-size: 30px;
+    }
+
+    .main-text-count {
+        font-size: 30px;
+    }
+
+    .pucha-home {
+        width: 130px;
+        object-fit: contain;
+    }
+
+
+    .level-content {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .level-item1,
+    .level-item2,
+    .level-item3,
+    .level-item4,
+    .level-item5 {
+        min-width: 0;
+    }
+
+    .very-funny-smile,
+    .light-smile,
+    .moderate-smile,
+    .sad-smile,
+    .very-sad-smile {
+        width: 24px;
+        height: 24px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        object-fit: contain;
+        flex-shrink: 0;
+
+        transform: translateY(1px);
+    }
+
+    .main-hright-content {
+        width: 100%;
+    }
+
+
+    .metric-state {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .metric-card {
+        flex: 1 1 0;
+        width: auto;
+        height: 235px;
+    }
+
+    .metric-card h1 {
+        margin-top: 10px;
+        font-size: 32px;
+    }
+
+    .metric-card p {
+        font-size: 16px;
+    }
+
+    .metric-shape {
+        width: calc(100% - 15px);
+        max-width: none;
+
+        height: 145px;
+
+        bottom: 0;
+
+        border-radius: 140px 140px 12px 12px;
+    }
+
+    .metric-shape-inner {
+        border-radius: 140px 140px 12px 12px;
+    }
+
+    .metric-shape span {
+        font-size: 58px;
+        margin-top: 48px;
+    }
+
+    .main-body-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        align-items: stretch;
+    }
+
+    .percent-employee {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        max-height: none;
+    }
+
+    .percent-employee-head {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+
+    .percent-testing {
+        width: 100%;
+        max-width: none;
+        overflow: visible;
+    }
+
+    .percent-testing-uphead,
+    .percent-testing-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 2fr 1.1fr 1.1fr 1.5fr;
+    }
+
+    .percent-testing-teams,
+    .percent-testing-rowteam,
+    .percent-testing-number-team,
+    .percent-testing-number-rowteam,
+    .percent-testing-number-test,
+    .percent-testing-number-rowtest,
+    .percent-testing-percent-test,
+    .percent-testing-percent-rowtest {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .percent-testing-uphead .polosa,
+    .percent-testing-row .polosa {
+        display: none;
+    }
+
+    .percent-testing-rowteam h1 {
+        width: 100%;
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .progress-wrapper {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .progress-bar-base {
+        width: 80px;
+    }
+
+    .risk-pagination-wrapper,
+    .testing-pagination-wrapper {
+        margin-top: 12px;
+        justify-content: flex-end;
+    }
+
+
+    .team-header-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        padding-top: 40px;
+        margin-bottom: 36px;
+    }
+
+    .team-headleft-content {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-end;
+        gap: 16px;
+        flex-wrap: nowrap;
+    }
+
+    .team-select-content {
+        flex: 0 0 508px;
+        width: 578px;
+        min-width: 278px;
+        gap: 24px;
+    }
+
+    .team-stress,
+    .team-anxiety,
+    .team-depression {
+        flex: 0 0 115px;
+        width: 115px;
+        height: 111px;
+    }
+
+    .team-headright-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+    .team-counter-test {
+        width: 100%;
+        height: auto;
+        display: flex;
+    }
+
+    .team-counter-test > * {
+        width: 100%;
+    }
+
+    .team-moodscale-content {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        overflow: visible;
+    }
+
+    .team-moodscale-content .team-moodscale-widget {
+        width: 100%;
+        max-width: 949px;
+    }
+
+    .team-body-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+
+
+    .team-left-indicator,
+    .team-right-indicator,
+    .team-left-indicator.error,
+    .team-right-indicator.error {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        flex: 1 1 auto;
+    }
+
+    .team-left-block,
+    .team-right-block,
+    .team-left-indicator,
+    .team-right-indicator,
+    .indicator-body,
+    .stress-diagram-body {
+        max-width: none !important;
+    }
+
+    .header-left-indicator,
+    .header-right-indicator {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 40px 0 40px;
+        gap: 0;
+        justify-content: space-between;
+    }
+
+    .team-left-block,
+    .team-right-block {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .indicator-body {
+        width: 100%;
+        min-width: 0;
+        display: flex;
+    }
+
+    .indicator-body > * {
+        width: 100%;
+        max-width: none;
+    }
 }

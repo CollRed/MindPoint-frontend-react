@@ -8,6 +8,7 @@ import TestingPage from './pages/test/test.jsx';
 import TestCompleted from './pages/test/test-completed.jsx';
 import ProfileManager from './pages/profile/manager/profile-manager.jsx';
 import ProfileEmployee from './pages/profile/employee/profile-employee.jsx';
+import PersonalMetrics from "./pages/personal-metrics/personal-metrics.jsx";
 
 function App() {
     return (
@@ -34,6 +35,14 @@ function App() {
                         <MainLayout>
                             <EmployeesPage />
                         </MainLayout>
+                    }
+                />
+                {/* Личные метрики */}
+                <Route path="/personal-metrics"
+                       element={
+                           <MainLayout>
+                                <PersonalMetrics />
+                           </MainLayout>
                     }
                 />
                 {/* Профиль менеджера */}

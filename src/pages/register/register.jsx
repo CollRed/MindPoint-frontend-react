@@ -1,5 +1,5 @@
 import './register.css';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import leftImageDesk from '@assets/reg-flower.svg';
 import leftImageMob from '@assets/reg-flower-mob.svg';
@@ -15,8 +15,46 @@ export default function RegisterPage() {
         full_name: '',
     });
 
-    const [registerType, setRegisterType] = useState('employee'); // employee | company
+    const [registerType, setRegisterType] = useState('company');
     const navigate = useNavigate();
+    const companyTabRef = useRef(null);
+    const employeeTabRef = useRef(null);
+    const switchRef = useRef(null);
+
+
+    const [sliderStyle, setSliderStyle] = useState({
+        width: 0,
+        left: 0,
+    });
+
+    useEffect(() => {
+        const activeTab =
+            registerType === 'company'
+                ? companyTabRef.current
+                : employeeTabRef.current;
+
+        const switchBlock = switchRef.current;
+
+        if (!activeTab || !switchBlock) return;
+
+        const tabRect = activeTab.getBoundingClientRect();
+        const switchRect = switchBlock.getBoundingClientRect();
+
+        setSliderStyle({
+            width: tabRect.width,
+            left: tabRect.left - switchRect.left,
+        });
+    }, [registerType]);
+
+    const payload = {
+        username: form.username,
+        email: form.email,
+        password: form.password,
+        full_name: registerType === 'company' ? form.username : form.full_name,
+        is_manager: registerType === 'company',
+    };
+
+
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -73,40 +111,49 @@ export default function RegisterPage() {
                 <div className="register-card">
                     <h2 className="register-title">Регистрация</h2>
 
-                    {/* Переключатель типа регистрации */}
-                    <div className="register-switch">
+                    <div className="register-switch" ref={switchRef}>
                         <button
-                            type="button"
-                            className={registerType === 'employee' ? 'active' : ''}
-                            onClick={() => setRegisterType('employee')}
-                        >
-                            Сотрудник
-                        </button>
-                        <button
+                            ref={companyTabRef}
                             type="button"
                             className={registerType === 'company' ? 'active' : ''}
                             onClick={() => setRegisterType('company')}
                         >
                             Компания
                         </button>
+
+                        <button
+                            ref={employeeTabRef}
+                            type="button"
+                            className={registerType === 'employee' ? 'active' : ''}
+                            onClick={() => setRegisterType('employee')}
+                        >
+                            Сотрудник
+                        </button>
+
+                        <div
+                            className="register-switch-slider"
+                            style={sliderStyle}
+                        />
                     </div>
 
                     <form className="register-form" onSubmit={handleRegister}>
-                        <input
-                            type="text"
-                            name="full_name"
-                            placeholder="Ф.И.О."
-                            value={form.full_name}
-                            onChange={handleChange}
-                            required
-                        />
+                        <div className={`employee-field ${registerType === 'employee' ? 'show' : 'hide'}`}>
+                            <input
+                                type="text"
+                                name="full_name"
+                                placeholder="Ф.И.О."
+                                value={form.full_name}
+                                onChange={handleChange}
+                                required={registerType === 'employee'}
+                            />
+                        </div>
                         <input
                             type="text"
                             name="username"
                             placeholder={
                                 registerType === 'company'
-                                    ? 'Введите название компании'
-                                    : 'Имя пользователя'
+                                    ? 'Имя компании'
+                                    : 'Логин'
                             }
                             value={form.username}
                             onChange={handleChange}

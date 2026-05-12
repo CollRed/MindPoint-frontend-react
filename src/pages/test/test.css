@@ -236,6 +236,13 @@
     border: 1px solid #9854F6;
     outline: none;
 }
+
+.answer-btn.selected {
+    color: #9854F6;
+    background: #f7f1ff;
+    border: 1px solid #9854F6;
+    outline: none;
+}
 .choose-btn {
     display: flex;
     width: 584px;

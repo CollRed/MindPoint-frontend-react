@@ -137,6 +137,7 @@
 }
 
 .team-moodscale-right {
+    position: relative;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -235,8 +236,8 @@
     left: 0;
     width: 499px;
     height: 100%;
-    z-index: 1;
-    pointer-events: none;
+    z-index: 3;
+    pointer-events: auto;
     box-sizing: border-box;
 }
 
@@ -245,7 +246,9 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: opacity 0.25s ease, filter 0.25s ease;
 }
 
 .moodscale-dynamic-column {
@@ -338,7 +341,71 @@
     left: 0;
     width: 499px;
     height: 200px;
-    z-index: 2;
+    z-index: 5;
     pointer-events: none;
     overflow: visible;
 }
+
+.moodscale-segment {
+    cursor: pointer;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.moodscale-segment-dimmed {
+    opacity: 0.25;
+    filter: grayscale(0.2);
+}
+
+.moodscale-emojie-item {
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+}
+
+.moodscale-emojie-dimmed {
+    opacity: 0.35;
+}
+
+.moodscale-dynamic-selected-header {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+
+    z-index: 10;
+    pointer-events: none;
+}
+
+.moodscale-dynamic-selected-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    color: #4D4D4D;
+    font-family: Raleway, sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.moodscale-dynamic-selected-emoji {
+    width: 28px;
+    height: 28px;
+}
+
+.moodscale-dynamic-column-wrap {
+    cursor: pointer;
+    transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.moodscale-dynamic-column-dimmed {
+    opacity: 0.35;
+    filter: grayscale(0.2);
+}
+

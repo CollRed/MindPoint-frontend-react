@@ -32,17 +32,74 @@ export default function TestingPage() {
     const [moodPassed, setMoodPassed] = useState(null);
     const [moodValue, setMoodValue] = useState(null);
     const [moodSaving, setMoodSaving] = useState(false);
+    const [resultsSaved, setResultsSaved] = useState(false);
     const navigate = useNavigate();
+
+    const TEST_PROGRESS_KEY = 'dass9_testing_progress';
+    const TEST_COMPLETED_KEY = 'dass9_testing_completed';
 
 
     useEffect(() => {
-        authFetch('/dass9/random', {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => setQuestions(data))
-            .catch(err => console.error('Ошибка загрузки вопросов:', err));
-    }, []);
+        const initTesting = async () => {
+            try {
+                const checkRes = await authFetch('/dass9/check', {
+                    method: 'GET'
+                }, navigate);
+
+                const checkData = await checkRes.json();
+
+                if (checkData?.passed_today === true) {
+                    sessionStorage.removeItem(TEST_PROGRESS_KEY);
+                    sessionStorage.setItem(TEST_COMPLETED_KEY, 'true');
+                    navigate('/test-completed', { replace: true });
+                    return;
+                }
+
+                const savedProgress = sessionStorage.getItem(TEST_PROGRESS_KEY);
+
+                if (savedProgress) {
+                    const parsed = JSON.parse(savedProgress);
+
+                    setStep(parsed.step || 'intro');
+                    setQuestions(parsed.questions || []);
+                    setCurrentIndex(parsed.currentIndex || 0);
+                    setAnswers(parsed.answers || {});
+                    setSelected(parsed.selected || null);
+
+                    return;
+                }
+
+                const res = await authFetch('/dass9/random', {
+                    credentials: 'include'
+                }, navigate);
+
+                const data = await res.json();
+                setQuestions(data);
+
+            } catch (e) {
+                console.error('Ошибка инициализации теста:', e);
+            }
+        };
+
+        initTesting();
+    }, [navigate]);
+
+
+    useEffect(() => {
+        if (questions.length === 0) return;
+        if (step === 'finish') return;
+
+        sessionStorage.setItem(
+            TEST_PROGRESS_KEY,
+            JSON.stringify({
+                step,
+                questions,
+                currentIndex,
+                answers,
+                selected
+            })
+        );
+    }, [step, questions, currentIndex, answers, selected]);
 
     const startTest = () => {
         if (questions.length > 0) {
@@ -52,24 +109,23 @@ export default function TestingPage() {
 
     const handleAnswer = (answerIndex) => {
         const currentQuestion = questions[currentIndex];
-        setAnswers(prev => ({
-            ...prev,
+
+        const updatedAnswers = {
+            ...answers,
             [currentQuestion.id]: answerIndex
-        }));
+        };
+
+        setAnswers(updatedAnswers);
 
         if (currentIndex + 1 < questions.length) {
             setCurrentIndex(currentIndex + 1);
         } else {
+            sessionStorage.removeItem(TEST_PROGRESS_KEY);
+            sessionStorage.setItem(TEST_COMPLETED_KEY, 'true');
             setStep('finish');
         }
     };
 
-    useEffect(() => {
-        if (step === 'finish' && Object.keys(answers).length === questions.length) {
-            saveResults();
-        }
-        // eslint-disable-next-line
-    }, [step, answers, questions]);
 
     const saveResults = async () => {
         const grouped = {
@@ -80,6 +136,7 @@ export default function TestingPage() {
 
         questions.forEach((q) => {
             const answerValue = Number(answers[q.id]);
+
             if (!isNaN(answerValue)) {
                 grouped[q.type] += answerValue;
             }
@@ -95,17 +152,36 @@ export default function TestingPage() {
 
             const data = await response.json();
             console.log('Результат сохранён:', data);
-
-
         } catch (error) {
             console.error('Ошибка при сохранении:', error);
         }
     };
 
-    // Сброс выбора при смене вопроса
     useEffect(() => {
-        setSelected(null);
-    }, [currentIndex]);
+        if (
+            step === 'finish' &&
+            !resultsSaved &&
+            Object.keys(answers).length === questions.length
+        ) {
+            saveResults();
+            setResultsSaved(true);
+        }
+    }, [step, answers, questions, resultsSaved]);
+
+
+    useEffect(() => {
+        const currentQuestionId = questions[currentIndex]?.id;
+
+        if (!currentQuestionId) return;
+
+        const savedAnswer = answers[currentQuestionId];
+
+        if (savedAnswer !== undefined && savedAnswer !== null) {
+            setSelected(savedAnswer);
+        } else {
+            setSelected(null);
+        }
+    }, [currentIndex, questions, answers]);
 
     const moodIcons = {
         1: mood1,
@@ -281,7 +357,6 @@ export default function TestingPage() {
                             disabled={!selected}
                             onClick={() => {
                                 handleAnswer(selected);
-                                setSelected(null);
                             }}
                             type="button"
                         >
@@ -308,7 +383,9 @@ export default function TestingPage() {
                         <h2>Спасибо за прохождение тестирования!</h2>
                         <p>Отличная динамика, продолжай в том же духе!</p>
 
-                        <button onClick={() => navigate('/test-completed')}>
+                        <button onClick={() => {
+                            navigate('/test-completed');
+                        }}>
                             На главную
                         </button>
                     </div>

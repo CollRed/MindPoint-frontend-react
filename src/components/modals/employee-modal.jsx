@@ -1,187 +1,462 @@
-import closeIcon from "@assets/Close.svg";
-import './employee-modal.css';
+import { useState } from "react";
+import "./teamlead-modal.css";
+
+import closeIconModal from "@assets/close-team-modal.svg";
+import leadIconModal from "@assets/lead-icon-modal.svg";
+import deleteIconModal from "@assets/delete-icon-modal.svg";
+import iconModalTeam from "@assets/icon-modal-team.svg";
+import infoIcon from "@assets/info.svg";
+import questionIcon from "@assets/question.svg";
+import plusIconModal from "@assets/plus-icon-modal.svg";
+
 export default function EmployeeModal({
-    activeEmployee,
-    setActiveEmployee,
-    teams,
-    addNotification,
-    assignToTeamId,
-    setAssignToTeamId,
-    handleAssignEmployee,
-    moveToTeamId,
-    setMoveToTeamId,
-    handleMoveMember,
-    removeFromTeamId,
-    setRemoveFromTeamId,
-    handleRemoveMemberFromTeam,
-    accessTeamId,
-    setAccessTeamId,
-    handleGiveAccess,
-    refreshAllData
-}) {
+                                          activeEmployee,
+                                          setActiveEmployee,
+                                          teams,
+                                          addNotification,
+                                          handleAssignEmployee,
+                                          handleMoveMember,
+                                          handleRemoveMemberFromTeam,
+                                          handleAssignTeamLead,
+                                          refreshAllData
+                                      }) {
+    const [mode, setMode] = useState(null);
+
+    const [moveToTeamId, setMoveToTeamId] = useState("");
+    const [selectedTeamId, setSelectedTeamId] = useState("");
+    const [removeFromTeamId, setRemoveFromTeamId] = useState("");
+    const [assignAccessId, setAssignAccessId] = useState("");
+
     if (!activeEmployee) return null;
 
-    return (
-        <div className="modal-overlay">
-            <div className="modal-employee-content">
+    const closeAll = () => {
+        setMode(null);
+        setMoveToTeamId("");
+        setSelectedTeamId("");
+        setRemoveFromTeamId("");
+        setAssignAccessId("");
+        setActiveEmployee(null);
+    };
 
-                {/* HEADER */}
-                <div className="modal-employee-header">
-                    <h3>Сотрудник {activeEmployee.fullname}</h3>
-                    <img
-                        src={closeIcon}
-                        alt="Закрыть"
-                        className="close-btn"
-                        onClick={() => setActiveEmployee(null)}
-                    />
+    const employeeTeams = activeEmployee.teams || [];
+
+    const availableTeams = teams.filter(t =>
+        !employeeTeams.some(et => String(et.id) === String(t.team.id))
+    );
+
+    const selectedMoveTeam = teams.find(
+        t => String(t.team.id) === String(moveToTeamId)
+    )?.team;
+
+    const selectedAddTeam = teams.find(
+        t => String(t.team.id) === String(selectedTeamId)
+    )?.team;
+
+    const selectedRemoveTeam = employeeTeams.find(
+        t => String(t.id) === String(removeFromTeamId)
+    );
+
+    const selectedAssignTeam = employeeTeams.find(
+        t => String(t.id) === String(assignAccessId)
+    );
+
+    return (
+        <>
+            {mode === null && (
+                <div className="modal-overlay">
+                    <div className="modal-teamlead-content">
+                        <div className="teamlead-header">
+                            <h3>Сотрудник</h3>
+
+                            <img
+                                src={closeIconModal}
+                                alt="Закрыть"
+                                className="close-btn-teamlead"
+                                onClick={closeAll}
+                            />
+                        </div>
+
+                        <div className="teamlead-actions">
+                            <div
+                                className="teamlead-action-card"
+                                onClick={() => setMode("add")}
+                            >
+                                <img src={plusIconModal} className="action-icon" alt="" />
+                                <span>Добавить</span>
+                            </div>
+
+                            <div
+                                className="teamlead-action-card"
+                                onClick={() => setMode("move")}
+                            >
+                                <img src={iconModalTeam} className="action-icon" alt="" />
+                                <span>Переместить</span>
+                            </div>
+
+                            <div
+                                className="teamlead-action-card"
+                                onClick={() => setMode("giveAccess")}
+                            >
+                                <img src={leadIconModal} className="action-icon" alt="" />
+                                <span>Выдать доступ</span>
+                            </div>
+
+                            <div
+                                className="teamlead-action-card danger"
+                                onClick={() => setMode("removeConfirm")}
+                            >
+                                <img src={deleteIconModal} className="action-icon" alt="" />
+                                <span>Удалить сотрудника</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="employee-stroka"></div>
-                <div className="s123">
-                    <div className="modal-employee-section">
-                        <h4>Добавить сотрудника в другую команду?</h4>
+            )}
+
+            {mode === "add" && (
+                <div className="modal-overlay">
+                    <div className="team-action-modal">
+                        <div className="action-info-icon">
+                            <img src={infoIcon} alt="info" />
+                        </div>
+
+                        <h4 className="team-form-title">
+                            Добавить сотрудника в другую команду
+                        </h4>
 
                         <select
-                            value={assignToTeamId}
-                            onChange={(e) => setAssignToTeamId(e.target.value)}
+                            className={selectedTeamId ? "select-active" : "select-placeholder"}
+                            value={selectedTeamId}
+                            onChange={(e) => setSelectedTeamId(e.target.value)}
                         >
                             <option value="">Выберите команду</option>
 
-                            {teams
-                                // 🔥 скрываем все команды, где сотрудник уже состоит
-                                .filter(t =>
-                                    !(activeEmployee.teams || []).some(team => team.id === t.team.id)
-                                )
-                                .map(t => (
-                                    <option key={t.team.id} value={t.team.id}>
-                                        {t.team.name}
-                                    </option>
-                                ))}
+                            {availableTeams.map(t => (
+                                <option key={t.team.id} value={t.team.id}>
+                                    {t.team.name}
+                                </option>
+                            ))}
                         </select>
 
+                        <div className="team-form-buttons">
+                            <button
+                                className="btn-add-team"
+                                onClick={() => {
+                                    if (!selectedTeamId) {
+                                        addNotification("error", "Выберите команду");
+                                        return;
+                                    }
 
-                        <button
-                            className="btn-add"
-                            onClick={() => {
-                                if (!assignToTeamId) {
-                                    return addNotification("error", "Ошибка");
-                                }
-                                handleAssignEmployee(activeEmployee.id, assignToTeamId, async () => {
-                                    addNotification("success", "Успешно");
-                                    await refreshAllData();
-                                    setAssignToTeamId("");
-                                    setActiveEmployee(null);
-                                });
-                            }}
-                        >
-                            Добавить
-                        </button>
+                                    setMode("addConfirm");
+                                }}
+                            >
+                                Добавить
+                            </button>
+
+                            <button
+                                className="btn-cancel-team"
+                                onClick={() => {
+                                    setSelectedTeamId("");
+                                    setMode(null);
+                                }}
+                            >
+                                Отмена
+                            </button>
+                        </div>
                     </div>
+                </div>
+            )}
 
-                    {/* Переместить сотрудника */}
-                    <div className="modal-employee-section">
-                        <h4>Переместить сотрудника в другую команду?</h4>
+            {mode === "addConfirm" && (
+                <div className="modal-overlay">
+                    <div className="team-confirm-modal">
+                        <div className="action-info-icon">
+                            <img src={questionIcon} alt="question" />
+                        </div>
+
+                        <p className="confirm-text">
+                            Вы уверены, что хотите добавить{" "}
+                            <b>{activeEmployee.fullname}</b> в команду{" "}
+                            <b>“{selectedAddTeam?.name}”</b>?
+                        </p>
+
+                        <div className="confirm-buttons">
+                            <button
+                                className="btn-add-confirm"
+                                onClick={() => {
+                                    handleAssignEmployee(
+                                        activeEmployee.id,
+                                        selectedTeamId,
+                                        async () => {
+                                            addNotification("success", "Успешно");
+                                            await refreshAllData();
+                                            closeAll();
+                                        },
+                                        () => addNotification("error", "Ошибка")
+                                    );
+                                }}
+                            >
+                                Да
+                            </button>
+
+                            <button
+                                className="btn-cancel-confirm"
+                                onClick={() => setMode("add")}
+                            >
+                                Нет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {mode === "move" && (
+                <div className="modal-overlay">
+                    <div className="team-action-modal">
+                        <div className="action-info-icon">
+                            <img src={infoIcon} alt="info" />
+                        </div>
+
+                        <h4 className="team-form-title">
+                            Переместить сотрудника в другую команду
+                        </h4>
 
                         <select
+                            className={moveToTeamId ? "select-active" : "select-placeholder"}
                             value={moveToTeamId}
                             onChange={(e) => setMoveToTeamId(e.target.value)}
                         >
                             <option value="">Выберите команду</option>
 
-                            {teams
-                                // 🔥 скрываем все команды, где сотрудник уже состоит
-                                .filter(t =>
-                                    !(activeEmployee.teams || []).some(team => team.id === t.team.id)
-                                )
-                                .map(t => (
-                                    <option key={t.team.id} value={t.team.id}>
-                                        {t.team.name}
-                                    </option>
-                                ))}
+                            {availableTeams.map(t => (
+                                <option key={t.team.id} value={t.team.id}>
+                                    {t.team.name}
+                                </option>
+                            ))}
                         </select>
 
-
-
-
-                        <button
-                            className="btn-add"
-                            onClick={() => {
-                                if (!moveToTeamId) {
-                                    return addNotification("error", "Ошибка");
-                                }
-                                handleMoveMember(activeEmployee.id, activeEmployee.teamId, moveToTeamId, async () => {
-                                    addNotification("success", "Успешно");
-                                    await refreshAllData();
-                                    setMoveToTeamId("");
-                                    setActiveEmployee(null);
-                                });
-                            }}
-                        >
-                            Переместить
-                        </button>
-                    </div>
-
-                    {/* Выдать доступ */}
-                    <div className="modal-em-teamlead-section">
-                        <h4>Сделать тимлидом?</h4>
-
-                        <button
-                            className="btn-add"
-                            onClick={() => {
-                                handleAssignTeamLead(
-                                    activeEmployee.teamId,
-                                    activeEmployee.id,
-                                    async () => {
-                                        addNotification("success", "Сотрудник назначен тимлидом");
-                                        await refreshAllData();
-                                        setActiveEmployee(null);
-                                    },
-                                    (err) => {
-                                        console.error(err);
-                                        addNotification("error", "Ошибка назначения");
+                        <div className="team-form-buttons">
+                            <button
+                                className="btn-add-team"
+                                onClick={() => {
+                                    if (!moveToTeamId) {
+                                        addNotification("error", "Выберите команду");
+                                        return;
                                     }
-                                );
-                            }}
-                        >
-                            Назначить тимлидом
-                        </button>
+
+                                    setMode("moveConfirm");
+                                }}
+                            >
+                                Переместить
+                            </button>
+
+                            <button
+                                className="btn-cancel-team"
+                                onClick={() => {
+                                    setMoveToTeamId("");
+                                    setMode(null);
+                                }}
+                            >
+                                Отмена
+                            </button>
+                        </div>
                     </div>
+                </div>
+            )}
 
+            {mode === "moveConfirm" && (
+                <div className="modal-overlay">
+                    <div className="team-confirm-modal">
+                        <div className="action-info-icon">
+                            <img src={questionIcon} alt="question" />
+                        </div>
 
-                    {/* Удалить из команды */}
-                    <div className="modal-employee-section">
-                        <h4>Удалить сотрудника из команды?</h4>
+                        <p className="confirm-text">
+                            Вы уверены, что хотите переместить{" "}
+                            <b>{activeEmployee.fullname}</b> в команду{" "}
+                            <b>“{selectedMoveTeam?.name}”</b>?
+                        </p>
+
+                        <div className="confirm-buttons">
+                            <button
+                                className="btn-add-confirm"
+                                onClick={() => {
+                                    const fromTeamId =
+                                        activeEmployee.currentTeamId ||
+                                        activeEmployee.teamId ||
+                                        employeeTeams?.[0]?.id;
+
+                                    if (!fromTeamId) {
+                                        addNotification("error", "Не найдена текущая команда");
+                                        return;
+                                    }
+
+                                    handleMoveMember(
+                                        activeEmployee.id,
+                                        fromTeamId,
+                                        moveToTeamId,
+                                        async () => {
+                                            addNotification("success", "Успешно");
+                                            await refreshAllData();
+                                            closeAll();
+                                        },
+                                        () => addNotification("error", "Ошибка")
+                                    );
+                                }}
+                            >
+                                Да
+                            </button>
+
+                            <button
+                                className="btn-cancel-confirm"
+                                onClick={() => setMode("move")}
+                            >
+                                Нет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {mode === "giveAccess" && (
+                <div className="modal-overlay">
+                    <div className="team-action-modal">
+                        <div className="action-info-icon">
+                            <img src={infoIcon} alt="info" />
+                        </div>
+
+                        <h4 className="team-form-title">
+                            Выдать доступ тимлида
+                        </h4>
 
                         <select
-                            value={removeFromTeamId}
-                            onChange={(e) => setRemoveFromTeamId(e.target.value)}>
+                            className={assignAccessId ? "select-active" : "select-placeholder"}
+                            value={assignAccessId}
+                            onChange={(e) => setAssignAccessId(e.target.value)}
+                        >
                             <option value="">Выберите команду</option>
 
-                            {activeEmployee.teams.map(team => (
+                            {employeeTeams.map(team => (
                                 <option key={team.id} value={team.id}>
                                     {team.name}
                                 </option>
                             ))}
                         </select>
 
+                        <div className="team-form-buttons">
+                            <button
+                                className="btn-add-team"
+                                onClick={() => {
+                                    if (!assignAccessId) {
+                                        addNotification("error", "Выберите команду");
+                                        return;
+                                    }
 
-                        <button
-                            className="btn-del-employee"
-                            onClick={() => {
-                                if (!removeFromTeamId) return addNotification("error", "Ошибка");
+                                    setMode("giveAccessConfirm");
+                                }}
+                            >
+                                Выдать доступ
+                            </button>
 
-                                handleRemoveMemberFromTeam(removeFromTeamId, activeEmployee.id, async () => {
-                                    addNotification("success", "Удалён");
-                                    await refreshAllData();
-                                    setRemoveFromTeamId("");
-                                    setActiveEmployee(null);
-                                });
-                            }}
-                        >
-                            Удалить
-                        </button>
+                            <button
+                                className="btn-cancel-team"
+                                onClick={() => {
+                                    setAssignAccessId("");
+                                    setMode(null);
+                                }}
+                            >
+                                Отмена
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            )}
+
+            {mode === "giveAccessConfirm" && (
+                <div className="modal-overlay">
+                    <div className="team-confirm-modal">
+                        <div className="action-info-icon">
+                            <img src={questionIcon} alt="question" />
+                        </div>
+
+                        <p className="confirm-text">
+                            Вы уверены, что хотите предоставить{" "}
+                            <b>{activeEmployee.fullname}</b> доступ к <br />
+                            статистике команды <b>“{selectedAssignTeam?.name}”</b>?
+                        </p>
+
+                        <div className="confirm-buttons">
+                            <button
+                                className="btn-add-confirm"
+                                onClick={() => {
+                                    handleAssignTeamLead(
+                                        assignAccessId,
+                                        activeEmployee.id,
+                                        async () => {
+                                            addNotification("success", "Успешно");
+                                            await refreshAllData();
+                                            closeAll();
+                                        },
+                                        () => addNotification("error", "Ошибка")
+                                    );
+                                }}
+                            >
+                                Да
+                            </button>
+
+                            <button
+                                className="btn-cancel-confirm"
+                                onClick={() => setMode("giveAccess")}
+                            >
+                                Нет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {mode === "removeConfirm" && (
+                <div className="modal-overlay">
+                    <div className="team-confirm-modal">
+                        <div className="action-info-icon">
+                            <img src={questionIcon} alt="question" />
+                        </div>
+
+                        <p className="confirm-text">
+                            Вы уверены, что хотите удалить{" "}
+                            <b>{activeEmployee.fullname}</b> из команды{" "}
+                            <b>“{activeEmployee.currentTeamName}”</b>?
+                        </p>
+
+                        <div className="confirm-buttons">
+                            <button
+                                className="btn-add-confirm"
+                                onClick={() => {
+                                    handleRemoveMemberFromTeam(
+                                        activeEmployee.currentTeamId,
+                                        activeEmployee.id,
+                                        async () => {
+                                            addNotification("success", "Удалён");
+                                            await refreshAllData();
+                                            closeAll();
+                                        },
+                                        () => addNotification("error", "Ошибка")
+                                    );
+                                }}
+                            >
+                                Да
+                            </button>
+
+                            <button
+                                className="btn-cancel-confirm"
+                                onClick={() => setMode(null)}
+                            >
+                                Нет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }

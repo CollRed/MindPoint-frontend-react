@@ -18,11 +18,12 @@ export default function LoginPage() {
     useEffect(() => {
         const access = localStorage.getItem('access_token');
         const isManager = localStorage.getItem('is_manager') === 'true';
+        const isTeamlead = localStorage.getItem('is_teamlead') === 'true';
 
         if (!access) return;
 
         const autoRedirect = async () => {
-            if (isManager) {
+            if (isManager || isTeamlead) {
                 navigate('/home');
             } else {
                 try {
@@ -74,9 +75,10 @@ export default function LoginPage() {
             localStorage.setItem('username', result.username);
             localStorage.setItem('fullname', result.fullname);
             localStorage.setItem('is_manager', result.is_manager);
+            localStorage.setItem('is_teamlead', result.is_teamlead);
 
             // Для менеджера — сразу переход
-            if (result.is_manager) {
+            if (result.is_manager || result.is_teamlead) {
                 navigate('/home');
             } else {
                 // Для сотрудника — проверка прохождения теста
@@ -142,7 +144,7 @@ export default function LoginPage() {
                     </form>
 
                     <p className="register-link">
-                        Нету аккаунта? <a href="/register">Зарегистрироваться</a>
+                        Нет аккаунта? <a href="/register">Зарегистрироваться</a>
                     </p>
                 </div>
             </div>

@@ -6,12 +6,27 @@ import EmojiMild from "@assets/emoji-mild.svg";
 import EmojiNormal from "@assets/emoji-normal.svg";
 import EmojiLight from "@assets/emoji-light.svg";
 
-export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoints = [], period = "week" }) {
+export default function TeamMoodscaleContent({
+                                                 data = [],
+                                                 total = 0,
+                                                 dynamicPoints = [],
+                                                 period = "week",
+                                             }) {
     const [animationProgress, setAnimationProgress] = useState(0);
     const previousTotalRef = useRef(0);
     const isFirstAnimationRef = useRef(true);
     const [animatedTotal, setAnimatedTotal] = useState(0);
+    const [selectedMoodIndex, setSelectedMoodIndex] = useState(null);
+    const [selectedDynamicIndex, setSelectedDynamicIndex] = useState(null);
 
+    const selectedMoodCount = useMemo(() => {
+        if (selectedMoodIndex === null) return animatedTotal;
+
+        const item = data[selectedMoodIndex];
+        if (!item) return 0;
+
+        return item.count ?? item.people ?? Math.round((total * Number(item.value || 0)) / 100);
+    }, [selectedMoodIndex, data, total, animatedTotal]);
 
     const formatDynamicLabel = (point, periodType) => {
         if (!point) return "";
@@ -19,9 +34,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         const start = point.start_date ? new Date(point.start_date) : null;
         const end = point.end_date ? new Date(point.end_date) : null;
 
-        if (periodType === "week") {
-            return point.label || "";
-        }
+        if (periodType === "week") return point.label || "";
 
         if (periodType === "month") {
             if (!start || !end || Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
@@ -42,18 +55,8 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
             }
 
             const monthNames = [
-                "ЯНВ",
-                "ФЕВ",
-                "МАР",
-                "АПР",
-                "МАЙ",
-                "ИЮН",
-                "ИЮЛ",
-                "АВГ",
-                "СЕН",
-                "ОКТ",
-                "НОЯ",
-                "ДЕК",
+                "ЯНВ", "ФЕВ", "МАР", "АПР", "МАЙ", "ИЮН",
+                "ИЮЛ", "АВГ", "СЕН", "ОКТ", "НОЯ", "ДЕК",
             ];
 
             return {
@@ -65,8 +68,6 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         return point.label || "";
     };
 
-    const moodPercents = [0, 1, 2, 3, 4].map((index) => Math.round(data[index]?.value || 0));
-
     const chartWidth = 499;
     const chartHeight = 200;
     const chartBottomLabelsHeight = period === "year" ? 42 : 30;
@@ -77,50 +78,26 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
 
     const getChartConfig = (periodType, pointsCount) => {
         if (periodType === "week") {
-            return {
-                sidePadding: 30,
-                barWidth: 42,
-                labelWidth: 64,
-            };
+            return { sidePadding: 30, barWidth: 42, labelWidth: 64 };
         }
 
         if (periodType === "month") {
-            return {
-                sidePadding: 30,
-                barWidth: 42,
-                labelWidth: 88,
-            };
+            return { sidePadding: 30, barWidth: 42, labelWidth: 88 };
         }
 
         if (periodType === "year") {
-            return {
-                sidePadding: 22,
-                barWidth: 28,
-                labelWidth: 44,
-            };
+            return { sidePadding: 22, barWidth: 28, labelWidth: 44 };
         }
 
         if (pointsCount <= 4) {
-            return {
-                sidePadding: 30,
-                barWidth: 42,
-                labelWidth: 88,
-            };
+            return { sidePadding: 30, barWidth: 42, labelWidth: 88 };
         }
 
         if (pointsCount <= 7) {
-            return {
-                sidePadding: 28,
-                barWidth: 34,
-                labelWidth: 64,
-            };
+            return { sidePadding: 28, barWidth: 34, labelWidth: 64 };
         }
 
-        return {
-            sidePadding: 22,
-            barWidth: 28,
-            labelWidth: 44,
-        };
+        return { sidePadding: 22, barWidth: 28, labelWidth: 44 };
     };
 
     const dynamicColumns = useMemo(() => {
@@ -156,13 +133,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         const totalPercent = p1 + p2 + p3 + p4 + p5;
         if (totalPercent <= 0) return null;
 
-        return (
-            1 * p1 +
-            2 * p2 +
-            3 * p3 +
-            4 * p4 +
-            5 * p5
-        ) / totalPercent;
+        return (1 * p1 + 2 * p2 + 3 * p3 + 4 * p4 + 5 * p5) / totalPercent;
     };
 
     const getLineX = (index, totalCount) => {
@@ -191,6 +162,27 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
             x: getLineX(index, dynamicColumns.length),
         }));
     }, [dynamicColumns, chartConfig]);
+
+    const selectedDynamicPoint = useMemo(() => {
+        if (selectedDynamicIndex === null) return null;
+        return positionedColumns[selectedDynamicIndex] || null;
+    }, [selectedDynamicIndex, positionedColumns]);
+
+    const dynamicHeaderItems = useMemo(() => {
+        const source = selectedDynamicPoint?.scores;
+        if (!source) return [];
+
+        return [
+            { img: EmojiVeryHigh, class: "emojie-very-high", score: 5 },
+            { img: EmojiHigh, class: "emojie-high", score: 4 },
+            { img: EmojiMild, class: "emojie-mild", score: 3 },
+            { img: EmojiNormal, class: "emojie-normal", score: 2 },
+            { img: EmojiLight, class: "emojie-light", score: 1 },
+        ].map((item) => ({
+            ...item,
+            count: source[item.score]?.count || 0,
+        }));
+    }, [selectedDynamicPoint]);
 
     const buildSmoothPath = (points) => {
         if (!points.length) return "";
@@ -248,9 +240,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         const duration = 1200;
 
         const endValue = total ?? 0;
-        const startValue = isFirstAnimationRef.current
-            ? 0
-            : previousTotalRef.current;
+        const startValue = isFirstAnimationRef.current ? 0 : previousTotalRef.current;
 
         if (startValue === endValue) {
             setAnimatedTotal(endValue);
@@ -268,9 +258,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
 
-            const nextValue = Math.round(
-                startValue + (endValue - startValue) * eased
-            );
+            const nextValue = Math.round(startValue + (endValue - startValue) * eased);
 
             setAnimatedTotal(nextValue);
 
@@ -317,6 +305,14 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         };
     }, [JSON.stringify(data), total]);
 
+    useEffect(() => {
+        setSelectedMoodIndex(null);
+    }, [JSON.stringify(data), total]);
+
+    useEffect(() => {
+        setSelectedDynamicIndex(null);
+    }, [JSON.stringify(dynamicPoints), period]);
+
     const maskId = useMemo(
         () => `moodscale-reveal-mask-${Math.random().toString(36).slice(2, 9)}`,
         []
@@ -334,9 +330,16 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
     const minSegmentAngle = 8;
 
     const visibleData = useMemo(
-        () => data.filter((item) => item.value > 0),
+        () =>
+            data
+                .map((item, index) => ({
+                    ...item,
+                    originalIndex: index,
+                }))
+                .filter((item) => item.value > 0),
         [data]
     );
+
     const totalValue = visibleData.reduce((sum, item) => sum + item.value, 0);
     const activeSegmentsCount = visibleData.length;
     const effectiveGapPx = activeSegmentsCount <= 1 ? 0 : gapPx;
@@ -412,13 +415,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         ].join(" ");
     };
 
-    const describeRevealSectorPath = (
-        centerX,
-        centerY,
-        outerR,
-        startAngle,
-        endAngle
-    ) => {
+    const describeRevealSectorPath = (centerX, centerY, outerR, startAngle, endAngle) => {
         const safeEndAngle = Math.min(endAngle, startAngle + 359.999);
 
         const startPoint = polarToCartesian(centerX, centerY, outerR, startAngle);
@@ -472,11 +469,10 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
             }
 
             const reduction = (item.rawAngle / largeTotal) * extraNeeded;
-            const finalAngle = item.rawAngle - reduction;
 
             return {
                 ...item,
-                finalAngle,
+                finalAngle: item.rawAngle - reduction,
             };
         });
     }, [activeSegmentsCount, totalValue, visibleData]);
@@ -520,7 +516,16 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                     stroke={item.color}
                     strokeWidth={segmentStroke}
                     strokeLinejoin="round"
-                    className="moodscale-segment"
+                    className={`moodscale-segment ${
+                        selectedMoodIndex !== null && selectedMoodIndex !== item.originalIndex
+                            ? "moodscale-segment-dimmed"
+                            : ""
+                    }`}
+                    onClick={() =>
+                        setSelectedMoodIndex((prev) =>
+                            prev === item.originalIndex ? null : item.originalIndex
+                        )
+                    }
                 />
             );
         });
@@ -533,6 +538,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
         cy,
         outerRadius,
         innerRadius,
+        selectedMoodIndex,
     ]);
 
     const revealPath = useMemo(() => {
@@ -540,13 +546,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
 
         const endAngle = -90 + 360 * animationProgress;
 
-        return describeRevealSectorPath(
-            cx,
-            cy,
-            outerRadius + 24,
-            -90,
-            endAngle
-        );
+        return describeRevealSectorPath(cx, cy, outerRadius + 24, -90, endAngle);
     }, [animationProgress, cx, cy, outerRadius]);
 
     if (totalValue === 0) {
@@ -571,7 +571,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
 
                         <div className="moodscale-center">
                             <div className="moodscale-center-value">{animatedTotal}</div>
-                            <div className="moodscale-center-label">прохождений</div>
+                            <div className="moodscale-center-label">человек</div>
                         </div>
                     </div>
                 </div>
@@ -603,7 +603,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                         </defs>
 
                         {activeSegmentsCount === 1 ? (
-                            <g mask="url(#moodscale-reveal-mask)">
+                            <g mask={`url(#${maskId})`}>
                                 <path
                                     d={describeFullRingPath(cx, cy, outerRadius, innerRadius)}
                                     fill={visibleData[0].color}
@@ -611,20 +611,26 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                                     strokeWidth={roundingStroke}
                                     strokeLinejoin="round"
                                     className="moodscale-segment"
+                                    onClick={() =>
+                                        setSelectedMoodIndex((prev) =>
+                                            prev === visibleData[0].originalIndex
+                                                ? null
+                                                : visibleData[0].originalIndex
+                                        )
+                                    }
                                 />
                             </g>
                         ) : (
-                            <g mask={`url(#${maskId})`}>
-                                {finalSegments}
-                            </g>
+                            <g mask={`url(#${maskId})`}>{finalSegments}</g>
                         )}
                     </svg>
 
                     <div className="moodscale-center">
-                        <div className="moodscale-center-value">{animatedTotal}</div>
+                        <div className="moodscale-center-value">{selectedMoodCount}</div>
                         <div className="moodscale-center-label">человек</div>
                     </div>
                 </div>
+
                 <div className="moodscale-emojie">
                     {[
                         { img: EmojiVeryHigh, class: "emojie-very-high" },
@@ -636,7 +642,17 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                         const percent = Math.round(data[index]?.value || 0);
 
                         return (
-                            <div key={index} className="moodscale-emojie-item">
+                            <div
+                                key={index}
+                                className={`moodscale-emojie-item ${
+                                    selectedMoodIndex !== null && selectedMoodIndex !== index
+                                        ? "moodscale-emojie-dimmed"
+                                        : ""
+                                }`}
+                                onClick={() =>
+                                    setSelectedMoodIndex((prev) => (prev === index ? null : index))
+                                }
+                            >
                                 <div className="moodscale-emojie-icon-wrap">
                                     <img
                                         src={item.img}
@@ -644,9 +660,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                                         className={`moodscale-emojie-icon ${item.class}`}
                                     />
                                 </div>
-                                <div className="emojie-percent">
-                                    {percent}%
-                                </div>
+                                <div className="emojie-percent">{percent}%</div>
                             </div>
                         );
                     })}
@@ -655,6 +669,21 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
 
             <div className="team-moodscale-right">
                 <div className="moodscale-right-text">Динамика</div>
+
+                {selectedDynamicPoint && (
+                    <div className="moodscale-dynamic-selected-header">
+                        {dynamicHeaderItems.map((item) => (
+                            <div key={item.score} className="moodscale-dynamic-selected-item">
+                                <img
+                                    src={item.img}
+                                    alt="emoji"
+                                    className={`moodscale-dynamic-selected-emoji ${item.class}`}
+                                />
+                                <span>{item.count} чел</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 <div className="moodscale-right-chart">
                     <div className="moodscale-right-number">
@@ -681,7 +710,16 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                             {positionedColumns.map((point, index) => (
                                 <div
                                     key={index}
-                                    className="moodscale-dynamic-column-wrap"
+                                    className={`moodscale-dynamic-column-wrap ${
+                                        selectedDynamicIndex !== null && selectedDynamicIndex !== index
+                                            ? "moodscale-dynamic-column-dimmed"
+                                            : ""
+                                    }`}
+                                    onClick={() =>
+                                        setSelectedDynamicIndex((prev) =>
+                                            prev === index ? null : index
+                                        )
+                                    }
                                     style={{
                                         left: `${point.x}px`,
                                         transform: "translateX(-50%)",
@@ -705,7 +743,9 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                                             return (
                                                 <div
                                                     key={score}
-                                                    className={`moodscale-dynamic-segment moodscale-dynamic-segment-${score} ${hasValue ? "has-value" : "is-empty"}`}
+                                                    className={`moodscale-dynamic-segment moodscale-dynamic-segment-${score} ${
+                                                        hasValue ? "has-value" : "is-empty"
+                                                    }`}
                                                     style={{
                                                         height: hasValue ? `${percent}%` : "0%",
                                                         minHeight: hasValue ? "10px" : "0px",
@@ -759,12 +799,7 @@ export default function TeamMoodscaleContent({ data = [], total = 0, dynamicPoin
                                 </linearGradient>
                             </defs>
 
-                            {areaPath && (
-                                <path
-                                    d={areaPath}
-                                    fill="url(#mood-dynamic-area-gradient)"
-                                />
-                            )}
+                            {areaPath && <path d={areaPath} fill="url(#mood-dynamic-area-gradient)" />}
 
                             {linePath && (
                                 <path

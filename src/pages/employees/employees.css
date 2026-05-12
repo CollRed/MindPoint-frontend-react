@@ -1,5 +1,5 @@
 .employees-bg {
-    width: 1920px;
+    width: 100%;
     height: 836.5px;
     background-image: url('/employee-page-back.svg');
     background-size: cover;
@@ -13,7 +13,7 @@
 
 .search-bar {
     display: flex;
-    width: 1625px;
+    width: min(100%, 1625px);
     justify-content: flex-end;
     align-items: flex-end;
     flex-direction: row-reverse;
@@ -31,7 +31,7 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    width: 850px;
+    width: min(100%, 850px);
     height: 39px;
     padding: 0 15px;
     gap: 10px;
@@ -45,7 +45,7 @@
     height: 100%;
     border: none;
     outline: none;
-    color: rgba(0, 0, 0, 0.25);
+    color: #2B2B2B;
 
     font-family: Raleway, sans-serif;
     font-size: 16px;
@@ -53,6 +53,10 @@
     font-weight: 500;
     line-height: normal;
     background: transparent;
+}
+
+.search-input::placeholder {
+    color: rgba(0, 0, 0, 0.25);
 }
 
 .filter-select {
@@ -67,7 +71,7 @@
     border: 1px solid #D9D9D9;
     background: #FFF;
 
-    color: rgba(0, 0, 0, 0.25);
+    color: #000;
     font-family: Roboto, sans-serif;
     font-size: 14px;
     font-style: normal;
@@ -125,7 +129,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    width: 1630px;
+    width: min(100%, 1630px);
     height: 584px;
     gap: 28px;
 }
@@ -333,11 +337,27 @@
     align-items: center;
     gap: 14px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.team-table-row:hover {
+    background: #6C9ADD;
+}
+
+.team-table-row:hover .team-count,
+.team-table-row:hover .team-name {
+    color: #FFFFFF;
+}
+
+.team-table-row:hover .team-edit {
+    opacity: 1;
+    color: #FFFFFF;
 }
 
 .team-name {
     display: flex;
-    width: 195px;
+    width: 205px;
     color: #4D4D4D;
     gap: 4px;
 
@@ -364,22 +384,25 @@
 
 .team-edit {
     display: flex;
+    align-items: center;
+    justify-content: center;
+
     width: 28px;
 
-    color: #FFF;
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: italic;
-    font-weight: 200;
-    line-height: 22px;
+    color: rgba(77, 77, 77, 0.40);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
 
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, color 0.2s ease;
     cursor: pointer;
+    user-select: none;
 }
 
 .team-table-row:hover {
     background: #6C9ADD;
+    opacity: 1;
 }
 
 .team-table-row:hover .team-count {
@@ -398,37 +421,83 @@
     border-radius: 0 0 20px 20px;
 }
 
-.team-member-row {
+.team-member-row  {
     display: flex;
     width: 528px;
-    padding: 8px 24px 8px 32px;
+    padding: 8px 16px 8px 32px;
     align-items: center;
-    gap: 153px;
+    gap: 0;
 
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     background: #EBF2F6;
-}
-.team-employee-name {
-    width: 197px;
 
-    color: #4D4D4D;
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
-.member-role {
-    display: flex;
-    width: 122px;
 
-    color: #4D4D4D;
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: italic;
-    font-weight: 300;
-    line-height: 22px;
+.team-member-row:hover {
+    background: #6C9ADD;
 }
+
+.team-member-row:hover .team-employee-name,
+.team-member-row:hover .member-role {
+    color: #FFFFFF;
+}
+
+.team-member-row:hover .member-edit {
+    opacity: 1;
+    color: #FFFFFF;
+}
+
+    .team-employee-name {
+        width: 197px;
+
+        color: #4D4D4D;
+        font-family: Roboto, sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .member-role {
+        display: flex;
+        width: 122px;
+        margin-left: auto;
+
+        color: #4D4D4D;
+        font-family: Roboto, sans-serif;
+        font-size: 14px;
+        font-style: italic;
+        font-weight: 300;
+        line-height: 22px;
+    }
+
+    .member-edit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 28px;
+        margin-left: 12px;
+
+        color: rgba(77, 77, 77, 0.40);
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1;
+
+        opacity: 0;
+        transition: opacity 0.2s ease, color 0.2s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .team-member-row.last-row:hover {
+        border-radius: 0 0 20px 20px;
+    }
 /*Запросы на добавление в команду*/
 .request-team-list {
     display: flex;
@@ -1009,5 +1078,25 @@
 
 }
 
+@media (max-width: 1600px) {
+    .team-page-content {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-bar {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .right-team-content,
+    .left-team-content {
+        align-items: center;
+    }
+
+    .smart-pycha {
+        display: none;
+    }
+}
 
 

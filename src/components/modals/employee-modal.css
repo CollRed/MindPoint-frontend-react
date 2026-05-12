@@ -1,207 +1,296 @@
-.modal-employee-content {
+/* employee-modal.css */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.35);
+}
+
+/* ================= MAIN EMPLOYEE MODAL ================= */
+
+.modal-teamlead-content {
     background: #fff;
-    border-radius: 16px;
-    padding: 24px;
-    width: 986px;
-    height: 450px;
-    text-align: center;
+    border-radius: 15px;
+    width: 360px;
+    overflow: hidden;
     position: relative;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
     animation: slideUp 0.25s ease-out;
 }
 
-.s123 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-}
-.modal-employee-header {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-.employee-stroka {
-    width: 938px;
-    height: 1px;
-    background: rgba(0, 0, 0, 0.20);
-    margin-bottom: 24px;
-}
+/* ================= HEADER ================= */
 
-.modal-employee-section {
+.teamlead-header {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 457px;
-    height: 100%;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.20);
-    background: #FFF;
-    padding: 14px;
-    gap: 14px;
-}
-
-.modal-employee-section h4 {
-    color: #4D4D4D;
-    font-family: Roboto, sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-
-.modal-employee-section select {
-    display: flex;
-    width: 421px;
-    height: 32px;
-    padding: 4px 12px;
-    align-items: flex-start;
-    border-radius: 15px;
-    border: 1px solid #D9D9D9;
-    background: #FFFFFF;
-
-    color: rgba(0, 0, 0, 0.25);
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    outline: none;
-}
-
-.modal-em-teamlead-section h4 {
-    color: #4D4D4D;
-    font-family: Roboto, sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    display: flex;
-
-}
-.modal-em-teamlead-section {
-    display: flex;
-    flex-direction: column;
-    width: 457px;
-    padding: 4px 12px;
     align-items: center;
-    justify-content: center;
-    border-radius: 15px;
-    border: 1px solid #D9D9D9;
-    background: #FFFFFF;
-    gap: 40px;
+    justify-content: space-between;
 
-    color: rgba(0, 0, 0, 0.25);
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    outline: none;
+    height: 50px;
+    padding: 0 16px;
 
-
+    background: #8039B8;
 }
 
-.btn-add {
-    background: #793CAE;
-    width: 421px;
-    height: 32px;
+.teamlead-header h3 {
+    margin: 0;
     color: #FFF;
-    text-align: center;
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.close-btn-teamlead {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+}
+
+/* ================= ACTION MENU ================= */
+
+.teamlead-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    padding: 18px 24px 24px;
+    background: #F7F7F7;
+}
+
+.teamlead-action-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    box-sizing: border-box;
+
+    border-radius: 10px;
+    border: 1px solid #D6D6D6;
+    background: #FFF;
+
+    box-shadow: 5px 7px 15px rgba(0, 0, 0, 0.18);
+
+    color: #4D4D4D;
     font-family: Roboto, sans-serif;
     font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
 
-    border: 1px solid #722ED1;
-    padding: 4px 15px;
-    border-radius: 15px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.btn-add:hover {
-    background-color: #6a1bb5;
+.teamlead-action-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 5px 9px 18px rgba(0, 0, 0, 0.22);
 }
 
-.btn-add:focus {
-    outline: none;
+.teamlead-action-card.danger {
+    color: #E34141;
 }
 
-.btn-del-employee {
-    display: flex;
-    width: 100%;
-    height: 32px;
-    padding: 4px 15px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: 15px;
-    border: 1px solid #722ED1;
-    background: #793CAE;
-    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
-
-    color: #FFF;
-
-    text-align: center;
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
+.action-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
 }
 
-.btn-cancel {
-    display: flex;
-    width: 199px;
-    height: 32px;
-    padding: 4px 15px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-radius: 15px;
-    border: 1px solid #722ED1;
+/* ================= ACTION MODAL ================= */
+
+.team-action-modal {
+    position: relative;
+
+    width: 520px;
+    padding: 40px 24px;
+    box-sizing: border-box;
+
     background: #FFF;
-    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    border-radius: 15px;
 
-    color: #722ED1;
-
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    animation: slideUp 0.25s ease-out;
     text-align: center;
-    font-family: Roboto, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
 }
-.modal-employee-header h3 {
-    display: flex;
-    width: 910px;
-    height: 28px;
+
+.team-confirm-modal {
+    position: relative;
+
+    width: 520px;
+    padding: 40px 24px;
+    box-sizing: border-box;
+
+    background: #FFF;
+    border-radius: 20px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    animation: slideUp 0.25s ease-out;
+    text-align: center;
+}
+
+/* ================= FORM ================= */
+
+.team-form-title {
+    margin: 0 0 24px;
 
     color: #4D4D4D;
     font-family: Raleway, sans-serif;
+    text-align: left;
     font-size: 24px;
-    font-style: normal;
     font-weight: 600;
-    line-height: normal;
-    gap: 16px;
 }
 
-.close-btn {
-    display: flex;
-    width: 23px;
-    height: 23px;
-    cursor: pointer;
-}
-.modal-section h4 {
-    display: flex;
-    color: #4D4D4D;
-    justify-content: center;
+.team-action-modal select {
+    width: 100%;
+    height: 28px;
+    margin-bottom: 24px;
+    padding: 0 12px;
+
+    border-radius: 15px;
+    border: 1px solid #D9D9D9;
 
     font-family: Roboto, sans-serif;
+    font-size: 14px;
+
+    background: white;
+    outline: none;
+}
+
+.team-action-modal select.select-placeholder {
+    color: rgba(0, 0, 0, 0.25);
+}
+
+.team-action-modal select.select-active {
+    color: #4D4D4D;
+}
+
+/* ================= CONFIRM TEXT ================= */
+
+.confirm-text {
+    margin: 0 0 24px;
+
+    color: #4D4D4D;
+    text-align: center;
+    font-family: Raleway, sans-serif;
     font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    gap: 16px;
+    font-weight: 600;
+}
+
+/* ================= BUTTONS ================= */
+
+.team-form-buttons,
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.btn-add-confirm {
+    width: 130px;
+    height: 32px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #793CAE;
+
+    color: #FFF;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-cancel-confirm {
+    width: 130px;
+    height: 32px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #FFF;
+
+    color: #722ED1;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-add-team {
+    width: 224px;
+    height: 32px;
+
+    border-radius: 15px;
+    border: 1px solid #722ED1;
+    background: #8039B8;
+
+    color: #FFF;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-add-team:hover {
+    background: #6f2fa3;
+}
+
+.btn-cancel-team {
+    width: 224px;
+    height: 32px;
+
+    border-radius: 15px;
+    border: 1px solid #8039B8;
+    background: #FFF;
+
+    color: #722ED1;
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-cancel-team:hover {
+    background: rgba(128, 57, 184, 0.08);
+}
+
+/* ================= ICON CIRCLE ================= */
+
+.action-info-icon {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #8039B8;
+    border: 4px solid #FFF;
+}
+
+.action-info-icon img {
+    width: 70px;
+    height: 70px;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes slideUp {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

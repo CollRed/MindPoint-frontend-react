@@ -24,6 +24,14 @@ import ChartStressTrigger from "../../components/recommendation-trigger/chart-st
 import ChartDepressionTrigger from "../../components/recommendation-trigger/chart-depression-trigger.jsx";
 import ChartAnxietyTrigger from "../../components/recommendation-trigger/chart-anxiety-trigger.jsx";
 import CountTestTrigger from "../../components/recommendation-trigger/count-test-trigger.jsx";
+import TeamRiskStressTrigger from "../../components/recommendation-trigger/team-risk-stress-trigger.jsx";
+import TeamRiskDepressionTrigger from "../../components/recommendation-trigger/team-risk-depression-trigger.jsx";
+import TeamRiskAnxietyTrigger from "../../components/recommendation-trigger/team-risk-anxiety-trigger.jsx";
+import EmployeeRiskAnxietyTrigger from "../../components/recommendation-trigger/employee-risk-anxiety-trigger.jsx";
+import EmployeeRiskDepressionTrigger from "../../components/recommendation-trigger/employee-risk-depression-trigger.jsx";
+import EmployeeRiskStressTrigger from "../../components/recommendation-trigger/employee-risk-stress-trigger.jsx";
+import TestingCoverageTrigger from "../../components/recommendation-trigger/testing-coverage-trigger.jsx";
+import GeneralCountTestTrigger from "../../components/recommendation-trigger/general-count-test-trigger.jsx";
 import {
     fetchTeams,
 } from "../../hooks/management.js";
@@ -81,8 +89,13 @@ function HomePage() {
     const currentGeneralPeriod = generalPeriod || 'week';
     const currentTeamPeriod = teamPeriod || 'week';
 
+    const generalTeamIdsForApi =
+        selectedGeneralTeamIds.length === teams.length
+            ? []
+            : selectedGeneralTeamIds;
+
     const { moodData: generalMoodData, loadingMoodData: loadingGeneralMoodData } =
-        useTeamsMoodDistribution(currentGeneralPeriod, selectedGeneralTeamIds);
+        useTeamsMoodDistribution(currentGeneralPeriod, generalTeamIdsForApi);
 
     const { moodData: teamMoodData, loadingMoodData: loadingTeamMoodData } =
         useTeamsMoodDistribution(
@@ -153,7 +166,7 @@ function HomePage() {
         severityData: generalSeverityData,
         loadingSeverityData: loadingGeneralSeverityData,
         errorSeverityData: errorGeneralSeverityData
-    } = useSeverityDistribution(currentGeneralPeriod, selectedGeneralTeamIds);
+    } = useSeverityDistribution(currentGeneralPeriod, generalTeamIdsForApi);
 
     const {
         severityData: teamSeverityData,
@@ -185,7 +198,7 @@ function HomePage() {
         coverageData,
         loadingCoverage,
         errorCoverage
-    } = useTestingCoverage(currentGeneralPeriod, selectedGeneralTeamIds);
+    } = useTestingCoverage(currentGeneralPeriod, generalTeamIdsForApi);
 
     const totalPages = Math.ceil((coverageData?.teams?.length || 0) / rowsPerPage);
 
@@ -194,6 +207,11 @@ function HomePage() {
         currentPage * rowsPerPage
     );
 
+    const hasTestingCoverageTrigger = coverageData?.recommendation_trigger === true;
+
+    const problemCoverageTeams = coverageData?.teams?.filter(
+        team => team.recommendation_trigger === true
+    ) || [];
 
     const [currentRiskPage, setCurrentRiskPage] = useState(1);
     const riskRowsPerPage = 11;
@@ -229,13 +247,15 @@ function HomePage() {
         testCount,
         loadingTestCount,
         errorTestCount
-    } = useDassTestCountCommon(currentGeneralPeriod, selectedGeneralTeamIds);
+    } = useDassTestCountCommon(currentGeneralPeriod, generalTeamIdsForApi);
+
+    const hasGeneralTestCountTrigger = testCount?.trigger === true;
 
     const {
         riskData: generalRiskData,
         loadingRiskData: loadingGeneralRiskData,
         errorRiskData: errorGeneralRiskData,
-    } = useRiskCategories(currentGeneralPeriod, selectedGeneralTeamIds);
+    } = useRiskCategories(currentGeneralPeriod, generalTeamIdsForApi);
 
     const {
         riskData: teamRiskData,
@@ -248,50 +268,16 @@ function HomePage() {
 
 
     const generalTotalRisk = {
-        stress: 0,
-        anxiety: 0,
-        depression: 0,
+        stress: Math.round(generalRiskData?.stress?.risk_percent ?? 0),
+        anxiety: Math.round(generalRiskData?.anxiety?.risk_percent ?? 0),
+        depression: Math.round(generalRiskData?.depression?.risk_percent ?? 0),
     };
-
-    if (generalRiskData?.teams?.length > 0) {
-        const teams = generalRiskData.teams;
-        const count = teams.length;
-
-        generalTotalRisk.stress = Math.round(
-            teams.reduce((sum, team) => sum + (team.stress?.risk_percent || 0), 0) / count
-        );
-
-        generalTotalRisk.anxiety = Math.round(
-            teams.reduce((sum, team) => sum + (team.anxiety?.risk_percent || 0), 0) / count
-        );
-
-        generalTotalRisk.depression = Math.round(
-            teams.reduce((sum, team) => sum + (team.depression?.risk_percent || 0), 0) / count
-        );
-    }
 
     const teamTotalRisk = {
-        stress: 0,
-        anxiety: 0,
-        depression: 0,
+        stress: Math.round(teamRiskData?.stress?.risk_percent ?? 0),
+        anxiety: Math.round(teamRiskData?.anxiety?.risk_percent ?? 0),
+        depression: Math.round(teamRiskData?.depression?.risk_percent ?? 0),
     };
-
-    if (teamRiskData?.teams?.length > 0) {
-        const teams = teamRiskData.teams;
-        const count = teams.length;
-
-        teamTotalRisk.stress = Math.round(
-            teams.reduce((sum, team) => sum + (team.stress?.risk_percent || 0), 0) / count
-        );
-
-        teamTotalRisk.anxiety = Math.round(
-            teams.reduce((sum, team) => sum + (team.anxiety?.risk_percent || 0), 0) / count
-        );
-
-        teamTotalRisk.depression = Math.round(
-            teams.reduce((sum, team) => sum + (team.depression?.risk_percent || 0), 0) / count
-        );
-    }
 
     const triggerByTrendType = {
         stress: severityTrends?.stress_trigger === true,
@@ -331,12 +317,16 @@ function HomePage() {
         depression: <ChartDepressionTrigger />,
     };
 
-    const selectedRiskTeam = teamRiskData?.teams?.[0];
-
     const teamRiskTriggers = {
-        stress: selectedRiskTeam?.stress?.recommendation_trigger === true,
-        anxiety: selectedRiskTeam?.anxiety?.recommendation_trigger === true,
-        depression: selectedRiskTeam?.depression?.recommendation_trigger === true,
+        stress: teamRiskData?.stress?.recommendation_trigger === true,
+        anxiety: teamRiskData?.anxiety?.recommendation_trigger === true,
+        depression: teamRiskData?.depression?.recommendation_trigger === true,
+    };
+
+    const teamRiskTriggerComponents = {
+        teamStress: <TeamRiskStressTrigger />,
+        teamAnxiety: <TeamRiskAnxietyTrigger />,
+        teamDepression: <TeamRiskDepressionTrigger />,
     };
 
 
@@ -464,6 +454,18 @@ function HomePage() {
 
     const hasCountTestTrigger = testCountData?.recommendation_trigger === true;
 
+    const generalTriggerByType = {
+        stress: (generalSeverityData?.stress || []).some(item => item.recommendation_trigger === true),
+        anxiety: (generalSeverityData?.anxiety || []).some(item => item.recommendation_trigger === true),
+        depression: (generalSeverityData?.depression || []).some(item => item.recommendation_trigger === true),
+    };
+
+    const generalRiskTriggerComponents = {
+        stress: <EmployeeRiskStressTrigger />,
+        anxiety: <EmployeeRiskAnxietyTrigger />,
+        depression: <EmployeeRiskDepressionTrigger />,
+    };
+
 
 
     return (
@@ -520,15 +522,40 @@ function HomePage() {
                                         />
 
                                     </div>
-                                    <div className="count-test">
+                                    <div className={`count-test ${hasGeneralTestCountTrigger ? "error" : ""}`}>
+                                        {hasGeneralTestCountTrigger && activeTrigger === "general-count-test" && (
+                                            <>
+                                                <div
+                                                    className="overlay"
+                                                    onClick={() => setActiveTrigger(null)}
+                                                />
+                                                <GeneralCountTestTrigger />
+                                            </>
+                                        )}
+
                                         <div className="text-count">
                                             <div className="main-text">
                                                 Количество прохождений по всем командам:
-                                                <span className="main-text-count">
-                                                    {testCount?.teams?.reduce((sum, t) => sum + (t.current_count || 0), 0) ?? 0}
-                                                </span>
+
+                                                <span className={`main-text-count ${hasGeneralTestCountTrigger ? "error" : ""}`}>
+                {testCount?.count ?? 0}
+
+                                                    {hasGeneralTestCountTrigger && (
+                                                        <img
+                                                            src={bigError}
+                                                            alt="Рекомендация"
+                                                            className="count-test-error-icon"
+                                                            onClick={() =>
+                                                                setActiveTrigger(prev =>
+                                                                    prev === "general-count-test" ? null : "general-count-test"
+                                                                )
+                                                            }
+                                                        />
+                                                    )}
+                                                    </span>
                                             </div>
                                         </div>
+
                                         <img src={pychaHome} alt="Пуча" className="pucha-home"/>
                                     </div>
                                 </div>
@@ -686,24 +713,57 @@ function HomePage() {
                         <div className="main-body-content">
                             <div className="percent-employee">
                                 <div className="percent-employee-head">
-                                    <div className="percent-employee-left">Процент сотрудников на каждом уровне риска</div>
+                                    {generalTriggerByType[employeeActiveType] && activeTrigger === `generalRisk-${employeeActiveType}` && (
+                                        <>
+                                            <div
+                                                className="overlay"
+                                                onClick={() => setActiveTrigger(null)}
+                                            />
+
+                                            {generalRiskTriggerComponents[employeeActiveType]}
+                                        </>
+                                    )}
+                                    <div className="percent-employee-left">
+                                        <span>Процент сотрудников на каждом уровне риска</span>
+
+                                        {generalTriggerByType[employeeActiveType] && (
+                                            <img
+                                                src={bigError}
+                                                alt="Рекомендация"
+                                                className="percent-employee-error-icon"
+                                                onClick={() =>
+                                                    setActiveTrigger(prev =>
+                                                        prev === `generalRisk-${employeeActiveType}`
+                                                            ? null
+                                                            : `generalRisk-${employeeActiveType}`
+                                                    )
+                                                }
+                                            />
+                                        )}
+                                    </div>
                                     <div className="percent-employee-right">
                                         {Object.keys(components).map((type) => (
                                             <div
                                                 key={type}
-                                                className={`employee-tab ${employeeActiveType === type ? 'active' : ''}`}
-                                                onClick={() => setEmployeeActiveType(type)}
+                                                className={`employee-tab
+                                                ${employeeActiveType === type ? 'active' : ''}
+                                                ${generalTriggerByType[type] ? 'trigger' : ''}
+                                            `}
+                                                onClick={() => {
+                                                    setEmployeeActiveType(type);
+                                                    setActiveTrigger(null);
+                                                }}
                                             >
-            <span
-                ref={(el) => (employeeTabsRef.current[type] = el)}
-                className="employee-button"
-            >
-                {type === 'stress'
-                    ? 'Стресс'
-                    : type === 'anxiety'
-                        ? 'Тревога'
-                        : 'Депрессия'}
-            </span>
+                                            <span
+                                                ref={(el) => (employeeTabsRef.current[type] = el)}
+                                                className="employee-button"
+                                            >
+                                                {type === 'stress'
+                                                    ? 'Стресс'
+                                                    : type === 'anxiety'
+                                                        ? 'Тревога'
+                                                        : 'Депрессия'}
+                                            </span>
                                             </div>
                                         ))}
 
@@ -731,7 +791,33 @@ function HomePage() {
                                 </div>
                             </div>
                             <div className="percent-testing">
-                                <div className="percent-testing-head">Процент прохождения тестирования командами</div>
+                                <div className="percent-testing-head">
+                                    <span>Процент прохождения тестирования командами</span>
+
+                                    {hasTestingCoverageTrigger && (
+                                        <img
+                                            src={bigError}
+                                            alt="Рекомендация"
+                                            className="percent-testing-error-icon"
+                                            onClick={() =>
+                                                setActiveTrigger(prev =>
+                                                    prev === "testing-coverage" ? null : "testing-coverage"
+                                                )
+                                            }
+                                        />
+                                    )}
+
+                                    {hasTestingCoverageTrigger && activeTrigger === "testing-coverage" && (
+                                        <>
+                                            <div
+                                                className="overlay"
+                                                onClick={() => setActiveTrigger(null)}
+                                            />
+
+                                            <TestingCoverageTrigger teams={problemCoverageTeams} />
+                                        </>
+                                    )}
+                                </div>
                                 <div className="percent-testing-uphead">
                                     <div className="percent-testing-teams">Команды</div>
                                     <div className="percent-testing-number-team">
@@ -749,7 +835,10 @@ function HomePage() {
                                 <div className="12345">
                                     {paginatedTeams?.map((team, index) => (
                                         <div
-                                            className={`percent-testing-row ${index === paginatedTeams.length - 1 ? 'last-row' : ''}`}
+                                            className={`percent-testing-row
+                                                ${index === paginatedTeams.length - 1 ? 'last-row' : ''}
+                                                ${team.recommendation_trigger ? 'problem' : ''}
+                                            `}
                                             key={team.team_id}
                                         >
                                             <div className="percent-testing-rowteam">
@@ -807,30 +896,81 @@ function HomePage() {
                                     />
 
                                 </div>
-                                <div className="team-stress">
+                                <div className={`team-stress ${teamRiskTriggers.stress ? "error" : ""}`}>
                                     <h1>Стресс</h1>
                                     <p>Зона риска</p>
+
+                                    {teamRiskTriggers.stress && (
+                                        <img
+                                            src={bigError}
+                                            alt="Риск"
+                                            className="team-error-icon"
+                                            onClick={() =>
+                                                setActiveTrigger(prev =>
+                                                    prev === "teamStress" ? null : "teamStress"
+                                                )
+                                            }
+                                        />
+                                    )}
+
                                     <div className="team-stress-sphere">
                                         <Sphera color={teamRiskTriggers.stress ? "#E34141" : "#9169EC"} />
                                         <span className="sphere-text">{teamTotalRisk.stress}%</span>
                                     </div>
                                 </div>
-                                <div className="team-anxiety">
+                                <div className={`team-anxiety ${teamRiskTriggers.anxiety ? "error" : ""}`}>
                                     <h1>Тревога</h1>
                                     <p>Зона риска</p>
+
+                                    {teamRiskTriggers.anxiety && (
+                                        <img
+                                            src={bigError}
+                                            alt="Риск"
+                                            className="team-error-icon"
+                                            onClick={() =>
+                                                setActiveTrigger(prev =>
+                                                    prev === "teamAnxiety" ? null : "teamAnxiety"
+                                                )
+                                            }
+                                        />
+                                    )}
+
                                     <div className="team-anxiety-sphere">
                                         <Sphera color={teamRiskTriggers.anxiety ? "#E34141" : "#9169EC"} />
                                         <span className="sphere-text">{teamTotalRisk.anxiety}%</span>
                                     </div>
                                 </div>
-                                <div className="team-depression">
+                                <div className={`team-depression ${teamRiskTriggers.depression ? "error" : ""}`}>
                                     <h1>Депрессия</h1>
                                     <p>Зона риска</p>
+
+                                    {teamRiskTriggers.depression && (
+                                        <img
+                                            src={bigError}
+                                            alt="Риск"
+                                            className="team-error-icon"
+                                            onClick={() =>
+                                                setActiveTrigger(prev =>
+                                                    prev === "teamDepression" ? null : "teamDepression"
+                                                )
+                                            }
+                                        />
+                                    )}
+
                                     <div className="team-depression-sphere">
                                         <Sphera color={teamRiskTriggers.depression ? "#E34141" : "#9169EC"} />
                                         <span className="sphere-text">{teamTotalRisk.depression}%</span>
                                     </div>
                                 </div>
+                                {teamRiskTriggerComponents[activeTrigger] && (
+                                    <>
+                                        <div
+                                            className="overlay"
+                                            onClick={() => setActiveTrigger(null)}
+                                        />
+                                        {teamRiskTriggerComponents[activeTrigger]}
+                                    </>
+                                )}
                             </div>
                             <div className="team-headright-content">
                                 <div className="team-counter-test">

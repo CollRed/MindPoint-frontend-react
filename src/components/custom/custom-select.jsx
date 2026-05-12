@@ -19,6 +19,7 @@ function CustomSelect({
         };
 
         document.addEventListener("mousedown", handleClickOutside);
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -27,6 +28,7 @@ function CustomSelect({
     const normalizedOptions = useMemo(() => {
         return options.map((option) => {
             const team = option.team ? option.team : option;
+
             return {
                 id: team.id,
                 name: team.name,
@@ -34,26 +36,48 @@ function CustomSelect({
         });
     }, [options]);
 
-    const toggleOption = (teamId) => {
-        const isSelected = selectedValues.includes(teamId);
+    const allIds = normalizedOptions.map((option) => option.id);
 
-        if (isSelected) {
-            onChange(selectedValues.filter((id) => id !== teamId));
-        } else {
-            onChange([...selectedValues, teamId]);
-        }
-    };
+    // [] = режим "Все"
+    const isAllSelected = selectedValues.length === 0;
 
     const selectedTeams = normalizedOptions.filter((team) =>
         selectedValues.includes(team.id)
     );
 
     const headerText =
-        selectedTeams.length === 0
-            ? placeholder
-            : selectedTeams.length === 1
-                ? selectedTeams[0].name
-                : `Выбрано команд: ${selectedTeams.length}`;
+        isAllSelected
+            ? "Все"
+            : selectedTeams.length === 0
+                ? placeholder
+                : selectedTeams.length === 1
+                    ? selectedTeams[0].name
+                    : `Выбрано команд: ${selectedTeams.length}`;
+
+    const toggleAll = () => {
+        // включаем режим "Все"
+        onChange([]);
+    };
+
+    const toggleOption = (teamId) => {
+        // если было выбрано "Все", то при клике на конкретную команду
+        // убираем "Все" и выбираем только эту команду
+        if (isAllSelected) {
+            onChange([teamId]);
+            return;
+        }
+
+        const isSelected = selectedValues.includes(teamId);
+
+        if (isSelected) {
+            const updatedValues = selectedValues.filter((id) => id !== teamId);
+
+            // если сняли последнюю конкретную команду — возвращаем "Все"
+            onChange(updatedValues.length > 0 ? updatedValues : []);
+        } else {
+            onChange([...selectedValues, teamId]);
+        }
+    };
 
     return (
         <div className="custom-select" ref={ref}>
@@ -61,11 +85,7 @@ function CustomSelect({
                 className="custom-select-header"
                 onClick={() => setIsOpen((prev) => !prev)}
             >
-                <span
-                    className={`custom-select-header-text ${
-                        selectedTeams.length === 0 ? "placeholder" : ""
-                    }`}
-                >
+                <span className="custom-select-header-text">
                     {headerText}
                 </span>
 
@@ -78,6 +98,19 @@ function CustomSelect({
 
             {isOpen && (
                 <ul className="custom-select-list">
+                    <li
+                        onClick={toggleAll}
+                        className={`custom-select-option ${isAllSelected ? "selected" : ""}`}
+                    >
+                        <span className="custom-select-option-text">
+                            Все
+                        </span>
+
+                        <span className={`custom-select-check ${isAllSelected ? "checked" : ""}`}>
+                            {isAllSelected && "✓"}
+                        </span>
+                    </li>
+
                     {normalizedOptions.map((option) => {
                         const isSelected = selectedValues.includes(option.id);
 
@@ -89,6 +122,10 @@ function CustomSelect({
                             >
                                 <span className="custom-select-option-text">
                                     {option.name}
+                                </span>
+
+                                <span className={`custom-select-check ${isSelected ? "checked" : ""}`}>
+                                    {isSelected && "✓"}
                                 </span>
                             </li>
                         );
